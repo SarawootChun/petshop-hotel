@@ -661,7 +661,9 @@ async function deleteBk(id){
 }
 async function clearBks(){
   loading(true);
-  try{await sbFetch('bookings',{method:'DELETE',filter:'id=gt.0'});}
+  try{
+    await sbFetch('bookings',{method:'DELETE',filter:'id=gt.0'});
+  }catch(e){console.error('clearBks error:',e);}
   finally{loading(false);}
 }
 
