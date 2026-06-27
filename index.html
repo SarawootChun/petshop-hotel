@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" translate="no">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abcd Petshop Hotel</title>
+<meta name="google" content="notranslate">
+<meta http-equiv="Content-Language" content="th">
+<title>Abcd Petshop Hotel 🐾</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#faf9f7;color:#2d2d2d;min-height:100vh}
@@ -206,15 +208,22 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
 .cancel-btns{display:flex;gap:8px;justify-content:center}
 .btn-do-cancel{background:#d94f4f;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-weight:600;cursor:pointer}
 .btn-back{background:#f0f0f0;border:none;padding:9px 18px;border-radius:9px;font-weight:600;cursor:pointer}
-.loading-bar{position:fixed;top:0;left:0;width:100%;height:3px;background:#b5926b;z-index:999;display:none;animation:loadpulse 1s infinite}
-@keyframes loadpulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+.bank-settings{background:#fff;border:1px solid #eee;border-radius:12px;padding:16px;margin-bottom:14px}
+.bank-settings h4{font-size:.85rem;font-weight:700;margin-bottom:12px;color:#555}
+.qr-preview{max-width:160px;border-radius:10px;margin-top:8px;display:none}
+.btn-save-bank{background:#2d2d2d;color:#fff;border:none;padding:9px 20px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.85rem;margin-top:10px}
+.btn-save-bank:hover{background:#b5926b}
+.bill-bank{background:#f0f8ff;border:1.5px solid #3498db;border-radius:10px;padding:12px 14px;margin:10px 0}
+.bill-bank-title{font-size:.75rem;font-weight:700;color:#3498db;margin-bottom:6px}
+.bill-bank-row{display:flex;justify-content:space-between;font-size:.82rem;padding:2px 0}
+.bill-qr{text-align:center;margin-top:8px}
+.bill-qr img{max-width:120px;border-radius:8px}
 </style>
 </head>
 <body>
 <div class="loading-bar" id="loading-bar"></div>
 <nav>
   <div class="logo">Abcd <span>Petshop Hotel</span> 🐾</div>
-  <div class="nav-tabs">
     <button class="nav-tab active" data-sec="rooms">ห้องพัก</button>
     <button class="nav-tab" data-sec="book">จองห้อง</button>
     <button class="nav-tab" data-sec="bookings">รายการจอง</button>
@@ -244,6 +253,10 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
       <div class="member-badge" id="member-badge"></div>
       <div class="form-group"><label>ชื่อเจ้าของ</label><input type="text" id="f-owner" placeholder="เช่น คุณมาลี"></div>
       <div class="form-group"><label>เบอร์โทรศัพท์</label><input type="tel" id="f-phone" placeholder="08x-xxx-xxxx"></div>
+      <div class="form-group"><label>📱 LINE User ID <span style="font-weight:400;color:#aaa">(สำหรับส่งบิลอัตโนมัติ)</span></label>
+        <input type="text" id="f-line-id" placeholder="เช่น U1a2b3c4d5e6f7g8h9...">
+        <div style="font-size:.7rem;color:#aaa;margin-top:3px">ลูกค้าต้อง Add LINE OA ก่อน จึงจะได้ User ID</div>
+      </div>
       <div class="form-row">
         <div class="form-group"><label>วันเช็คอิน</label>
           <div class="date-inputs">
@@ -400,6 +413,19 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
       </div>
       <div id="staff-msg" style="font-size:.76rem;margin-top:6px"></div>
     </div>
+    <div class="bank-settings">
+      <h4>🏦 ข้อมูลบัญชีธนาคาร (แสดงในบิล)</h4>
+      <div class="form-group"><label>ธนาคาร</label><input type="text" id="bank-name" placeholder="เช่น กสิกรไทย, SCB, กรุงไทย"></div>
+      <div class="form-group"><label>ชื่อบัญชี</label><input type="text" id="bank-account-name" placeholder="เช่น นาย สมชาย ใจดี"></div>
+      <div class="form-group"><label>เลขบัญชี</label><input type="text" id="bank-account-no" placeholder="เช่น 123-4-56789-0"></div>
+      <div class="form-group"><label>QR Code พร้อมเพย์ (รูปภาพ)</label>
+        <input type="file" id="bank-qr-file" accept="image/*" style="padding:6px">
+        <img id="qr-preview" class="qr-preview">
+        <div style="font-size:.72rem;color:#aaa;margin-top:4px">รองรับ JPG, PNG ขนาดไม่เกิน 1MB</div>
+      </div>
+      <button class="btn-save-bank" id="btn-save-bank">💾 บันทึกข้อมูลบัญชี</button>
+      <div id="bank-msg" style="margin-top:8px;font-size:.78rem"></div>
+    </div>
     <div id="admin-list"></div>
   </div>
 </section>
@@ -489,7 +515,7 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
       </div>
       <button class="btn-line" id="btn-line">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.94 1.6 5.56 4.1 7.26L5 22l4.34-2.14C10.2 20.27 11.09 20.4 12 20.4c5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg>
-        ส่งบิลผ่าน LINE
+        ส่งบิลหาลูกค้าผ่าน LINE OA
       </button>
       <button class="btn-copy-bill" id="btn-copy-bill">📋 คัดลอกบิล</button>
       <button class="btn-close-bill" id="btn-close-bill">ปิด</button>
@@ -510,13 +536,13 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
 
 <script>
 // ══════════════════════════════════════════
-// ⚙️ SUPABASE CONFIG — แก้ค่าตรงนี้
+// ⚙️ SUPABASE CONFIG
 // ══════════════════════════════════════════
 const SUPABASE_URL  = 'https://ozbuudwreolgucdynqug.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_l5Hkgr9HP30fdfjcLGueZQ_6cFGpkua';
 
 // ══════════════════════════════════════════
-// HELPERS — ต้องอยู่บนสุด (hoisted)
+// HELPERS
 // ══════════════════════════════════════════
 function goToSection(name) {
   document.querySelectorAll('section').forEach(function(s){s.style.display='none';s.classList.remove('active');});
@@ -552,18 +578,35 @@ function loading(on){document.getElementById('loading-bar').style.display=on?'bl
 // ══════════════════════════════════════════
 // SUPABASE API
 // ══════════════════════════════════════════
-async function sbFetch(table,opts){
-  opts=opts||{};
-  var method=opts.method||'GET',filter=opts.filter||'',body=opts.body||null,prefer=opts.prefer||'';
-  var url=SUPABASE_URL+'/rest/v1/'+table+(filter?'?'+filter:'');
-  var headers={'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'};
-  if(method==='POST'&&!prefer)prefer='return=representation';
-  if(prefer)headers['Prefer']=prefer;
-  var res=await fetch(url,{method:method,headers:headers,body:body?JSON.stringify(body):null});
-  if(!res.ok)throw new Error(await res.text());
-  if(res.status===204||method==='DELETE')return [];
-  var txt=await res.text();
-  return txt?JSON.parse(txt):[];
+async function sbFetch(table, opts){
+  opts = opts || {};
+  var method = opts.method || 'GET';
+  var filter = opts.filter || '';
+  var body = opts.body || null;
+  var prefer = opts.prefer || '';
+  var url = SUPABASE_URL + '/rest/v1/' + table;
+  if(filter) url += '?' + filter;
+  var headers = {
+    'apikey': SUPABASE_ANON,
+    'Authorization': 'Bearer ' + SUPABASE_ANON,
+    'Content-Type': 'application/json'
+  };
+  if(method === 'POST' && !prefer) prefer = 'return=representation';
+  if(method === 'PATCH' && !prefer) prefer = 'return=minimal';
+  if(prefer) headers['Prefer'] = prefer;
+  var res = await fetch(url, {
+    method: method,
+    headers: headers,
+    body: body ? JSON.stringify(body) : null
+  });
+  if(!res.ok){
+    var errText = await res.text();
+    console.error('Supabase error:', res.status, errText);
+    throw new Error(errText);
+  }
+  if(res.status === 204 || method === 'DELETE') return [];
+  var txt = await res.text();
+  return txt ? JSON.parse(txt) : [];
 }
 
 // ── BOOKINGS ──────────────────────────────
@@ -579,7 +622,7 @@ async function loadBks(){
       discountType:r.discount_type,discountValue:r.discount_value,discountAmount:r.discount_amount,
       depRate:r.dep_rate,totalPrice:r.total_price,deposit:r.deposit,
       paidRemaining:r.paid_remaining,payNote:r.pay_note,paidAt:r.paid_at,
-      commission:r.commission,staffId:r.staff_id,staffName:r.staff_name,
+      commission:r.commission,staffId:r.staff_id,staffName:r.staff_name,lineUserId:r.line_user_id,
       commPaid:r.comm_paid,commNote:r.comm_note,commPaidAt:r.comm_paid_at,
       memberId:r.member_id,bookedAt:r.booked_at
     };});
@@ -598,6 +641,7 @@ async function insertBk(b){
       dep_rate:b.depRate,total_price:b.totalPrice,deposit:b.deposit,
       paid_remaining:false,pay_note:'',commission:b.commission,
       staff_id:b.staffId||null,staff_name:b.staffName||'',
+      line_user_id:b.lineUserId||null,
       comm_paid:false,comm_note:'',member_id:b.memberId||null,booked_at:b.bookedAt
     }});
   }finally{loading(false);}
@@ -614,16 +658,18 @@ async function deleteBk(id){
 }
 async function clearBks(){
   loading(true);
-  try{await sbFetch('bookings',{method:'DELETE',filter:'id=gt.0'});}
+  try{
+    await sbFetch('bookings',{method:'DELETE',filter:'id=gt.0'});
+  }catch(e){console.error('clearBks error:',e);}
   finally{loading(false);}
 }
 
 // ── MEMBERS ───────────────────────────────
 async function loadMembers(){
   try{
-    var rows=await sbFetch('members','order=created_at.asc');
+    var rows = await sbFetch('members', {filter:'order=created_at.asc'});
     return rows.map(function(r){return{memberId:r.member_id,name:r.name,phone:r.phone,cats:r.cats||[]};});
-  }catch(e){return [];}
+  }catch(e){console.error('loadMembers error:',e);return[];}
 }
 async function upsertMember(m){
   await fetch(SUPABASE_URL+'/rest/v1/members',{
@@ -640,9 +686,9 @@ async function deleteMemberDB(memberId){
 // ── STAFF ─────────────────────────────────
 async function loadStaff(){
   try{
-    var rows=await sbFetch('staff','order=created_at.asc');
+    var rows = await sbFetch('staff', {filter:'order=created_at.asc'});
     return rows.map(function(r){return{id:r.id,name:r.name};});
-  }catch(e){return [];}
+  }catch(e){console.error('loadStaff error:',e);return[];}
 }
 async function insertStaff(s){
   await sbFetch('staff',{method:'POST',body:{id:s.id,name:s.name}});
@@ -879,12 +925,13 @@ async function openDepositModal(){
   const n=nts(cin,cout),extra=Math.max(0,catCount-free),catEx=extra*PRICE_EXTRA*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc,dep=Math.ceil(total*(depRate/100));
   const comm=calcComm(isConn,extra,n);
   const staffId=document.getElementById('f-staff').value||null;
+  const lineUserId=document.getElementById('f-line-id').value.trim()||null;
   const staff=await loadStaff(),staffName=staffId?staff.find(s=>s.id===staffId)?.name||null:null;
   const discVal=parseFloat(document.getElementById('f-discount').value)||0;
   pendingData={id:Date.now(),roomIds,type:isConn?'Standard Connect':'Standard',
     owner,catNames:getCatNames(),catCount,phone,checkIn:cin,checkOut:cout,
     nights:n,basePrice:baseP,catExtra:catEx,discountType,discountValue:discVal,discountAmount:disc,
-    depRate,totalPrice:total,deposit:dep,commission:comm,staffId,staffName,
+    depRate,totalPrice:total,deposit:dep,commission:comm,staffId,staffName,lineUserId,
     memberId:filledMemberId||null,bookedAt:new Date().toLocaleDateString('th-TH')};
   document.getElementById('dep-amount').textContent=fmt(dep);
   document.getElementById('dep-note').textContent=`จากยอดรวม ${fmt(total)} (มัดจำ ${depRate}%)`;
@@ -899,11 +946,9 @@ function submitBooking(){
   const saved=Object.assign({},pendingData);pendingData=null;
   document.getElementById('deposit-modal').classList.remove('open');
   document.getElementById('dep-cb').checked=false;document.getElementById('btn-dep-ok').disabled=true;
-  // บันทึก Supabase
   insertBk(saved).then(()=>{
     autoSaveMember(saved.owner,saved.phone,saved.catNames,saved.memberId);
   }).catch(e=>console.error(e));
-  // รีเซ็ตฟอร์ม
   ['f-owner','f-phone','f-search','f-discount','f-staff'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   clearDateVal('in');clearDateVal('out');
   const depEl=document.getElementById('f-dep-pct');if(depEl)depEl.value=30;
@@ -963,10 +1008,35 @@ async function confirmComm(){
   closeCommModal();renderBookings();renderSummary();renderCommission();
 }
 
+// ══════════════════════════════════════════
+// ✅ FIX 1: buildBillTxt — เพิ่ม function wrapper ที่หายไป
+// ══════════════════════════════════════════
 function buildBillTxt(b){
   const rem=b.totalPrice-b.deposit;
-  return `🐾 Abcd Petshop Hotel — ใบสรุปการจอง\n━━━━━━━━━━━━━━━━━\n🔖 #${String(b.id).slice(-6)}${b.memberId?' | '+b.memberId:''} | ${b.bookedAt}\n👤 ${b.owner} | 📞 ${b.phone}\n━━━━━━━━━━━━━━━━━\n🏨 ห้อง ${b.roomIds.join('+')} (${b.type})\n📅 ${b.checkIn} → ${b.checkOut} (${b.nights} คืน)\n🐱 ${b.catCount} ตัว: ${b.catNames.join(', ')}\n━━━━━━━━━━━━━━━━━\n💰 ค่าห้อง: ${fmt(b.basePrice*b.nights)}${b.catExtra>0?'\n➕ ค่าแมวเพิ่ม: '+fmt(b.catExtra):''}${b.discountAmount>0?'\n🏷️ ส่วนลด: −'+fmt(b.discountAmount):''}\n💵 ยอดรวม: ${fmt(b.totalPrice)}\n✅ มัดจำ (${b.depRate||30}%): ${fmt(b.deposit)}\n${b.paidRemaining?'✅ ชำระครบแล้ว':'🔴 ยอดค้าง: '+fmt(rem)}\n━━━━━━━━━━━━━━━━━\nขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾`;
+  return `🐾 Abcd Petshop Hotel — ใบสรุปการจอง\n━━━━━━━━━━━━━━━━━\n🔖 #${String(b.id).slice(-6)}${b.memberId?' | '+b.memberId:''} | ${b.bookedAt}\n👤 ${b.owner} | 📞 ${b.phone}\n━━━━━━━━━━━━━━━━━\n🏨 ห้อง ${b.roomIds.join('+')} (${b.type})\n📅 ${b.checkIn} → ${b.checkOut} (${b.nights} คืน)\n🐱 ${b.catCount} ตัว: ${b.catNames.join(', ')}\n━━━━━━━━━━━━━━━━━\n💰 ค่าห้อง: ${fmt(b.basePrice*b.nights)}${b.catExtra>0?'\n➕ ค่าแมวเพิ่ม: '+fmt(b.catExtra):''}${b.discountAmount>0?'\n🏷️ ส่วนลด: −'+fmt(b.discountAmount):''}\n💵 ยอดรวม: ${fmt(b.totalPrice)}\n✅ มัดจำ (${b.depRate||30}%): ${fmt(b.deposit)}\n${b.paidRemaining?'✅ ชำระครบแล้ว':'🔴 ยอดค้าง: '+fmt(rem)}${buildBankTxt()}\n━━━━━━━━━━━━━━━━━\nขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾`;
 }
+
+// ── LINE OA ───────────────────────────────
+async function sendBillToLineOA(b){
+  if(!b){alert('ไม่พบข้อมูลการจองครับ');return;}
+  const lineId = b.lineUserId;
+  if(!lineId){
+    alert('❌ ไม่พบ LINE User ID ของลูกค้าครับ\n\nวิธีแก้: กลับไปแก้ไขการจอง แล้วใส่ LINE User ID ของลูกค้าก่อนครับ');
+    return;
+  }
+  const msg = buildBillTxt(b);
+  try{
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-line`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${SUPABASE_ANON}`},
+      body:JSON.stringify({userId:lineId,message:msg})
+    });
+    const data = await res.json();
+    if(data.success){alert('✅ ส่งบิลผ่าน LINE OA สำเร็จแล้วครับ!');}
+    else{alert('❌ ส่งไม่สำเร็จ: '+(data.error||'ไม่ทราบสาเหตุ')+'\n\nลองตรวจสอบ LINE User ID และ Channel Token ครับ');}
+  }catch(e){alert('❌ เกิดข้อผิดพลาด: '+e.message);}
+}
+
 function openBill(b){
   billData=b;const rem=b.totalPrice-b.deposit;
   document.getElementById('bill-content').innerHTML=`
@@ -990,38 +1060,57 @@ function openBill(b){
     <hr class="bill-divider">
     <div class="bill-row bold"><span>ยอดรวม</span><span>${fmt(b.totalPrice)}</span></div>
     <div class="bill-row green"><span>✅ มัดจำ (${b.depRate||30}%)</span><span>${fmt(b.deposit)}</span></div>
-    ${b.paidRemaining?`<div class="bill-row green"><span>✅ ชำระครบแล้ว</span><span>${fmt(rem)}</span></div>`:`<div class="bill-row red"><span>🔴 ยอดค้างชำระ</span><span>${fmt(rem)}</span></div>`}
+    ${b.paidRemaining
+      ?`<div class="bill-row green"><span>✅ ชำระครบแล้ว</span><span>${fmt(rem)}</span></div>`
+      :`<div class="bill-row red"><span>🔴 ยอดค้างชำระ</span><span>${fmt(rem)}</span></div>`}
+    ${!b.paidRemaining ? buildBankHTML() : ''}
     <div class="bill-footer">ขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾</div>`;
   document.getElementById('bill-modal').classList.add('open');
 }
 function exportBill(type){
   if(!billData)return;
   const b=billData,rem=b.totalPrice-b.deposit;
+  const bankHtml = (!b.paidRemaining && bankSettings.accountNo) ? `
+    <div style="background:#f0f8ff;border:1.5px solid #3498db;border-radius:8px;padding:10px 12px;margin:10px 0">
+      <div style="font-size:12px;font-weight:700;color:#3498db;margin-bottom:5px">🏦 ชำระยอดค้างผ่านบัญชีธนาคาร</div>
+      ${bankSettings.bankName?`<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0"><span>ธนาคาร</span><span>${bankSettings.bankName}</span></div>`:''}
+      ${bankSettings.accountName?`<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0"><span>ชื่อบัญชี</span><span>${bankSettings.accountName}</span></div>`:''}
+      ${bankSettings.accountNo?`<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0"><span>เลขบัญชี</span><span><strong>${bankSettings.accountNo}</strong></span></div>`:''}
+      ${bankSettings.qrBase64?`<div style="text-align:center;margin-top:6px"><div style="font-size:11px;color:#888;margin-bottom:4px">สแกน QR พร้อมเพย์</div><img src="${bankSettings.qrBase64}" style="max-width:100px;border-radius:6px"></div>`:''}
+    </div>` : '';
   if(type==='pdf'){
-    const pa=document.getElementById('bill-print-area');
-    pa.innerHTML=`<style>@media print{body>*:not(#bill-print-area){display:none!important}#bill-print-area{display:block!important;font-family:'Segoe UI',sans-serif;padding:24px;max-width:500px;margin:0 auto;color:#2d2d2d;font-size:13px}.r{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f0f0}.bold{font-weight:700;font-size:15px}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:8px 0}.foot{background:#fdf8f3;border-radius:8px;padding:8px;margin-top:10px;font-size:12px;color:#b5926b;text-align:center}}@media screen{#bill-print-area{display:none}}</style>
-    <div style="text-align:center;margin-bottom:14px"><h2 style="font-size:18px;font-weight:800">🐾 Abcd Petshop Hotel</h2><p style="font-size:12px;color:#999">ใบสรุปการจอง</p></div><hr>
-    <div class="r"><span>เลขที่</span><span>#${String(b.id).slice(-6)}</span></div>
-    ${b.memberId?`<div class="r"><span>รหัสสมาชิก</span><span>${b.memberId}</span></div>`:''}
-    <div class="r"><span>วันที่จอง</span><span>${b.bookedAt}</span></div><hr>
-    <div class="r"><span>ชื่อ</span><span>${b.owner}</span></div>
-    <div class="r"><span>เบอร์</span><span>${b.phone}</span></div><hr>
-    <div class="r"><span>ห้อง</span><span>${b.roomIds.join('+')} (${b.type})</span></div>
-    <div class="r"><span>เช็คอิน</span><span>${b.checkIn}</span></div>
-    <div class="r"><span>เช็คเอาท์</span><span>${b.checkOut}</span></div>
-    <div class="r"><span>จำนวนคืน</span><span>${b.nights} คืน</span></div><hr>
-    <div style="font-size:12px;color:#888;margin:4px 0 8px">🐱 ${b.catCount} ตัว: ${b.catNames.join(' · ')}</div>
-    <div class="r"><span>ค่าห้อง</span><span>${fmt(b.basePrice*b.nights)}</span></div>
-    ${b.catExtra>0?`<div class="r"><span>ค่าแมวเพิ่ม</span><span>${fmt(b.catExtra)}</span></div>`:''}
-    ${b.discountAmount>0?`<div class="r" style="color:#f0a500"><span>ส่วนลด</span><span>−${fmt(b.discountAmount)}</span></div>`:''}
-    <hr><div class="r bold"><span>ยอดรวม</span><span>${fmt(b.totalPrice)}</span></div>
-    <div class="r green"><span>✅ มัดจำ (${b.depRate||30}%)</span><span>${fmt(b.deposit)}</span></div>
-    ${b.paidRemaining?`<div class="r green"><span>✅ ชำระครบแล้ว</span><span>${fmt(rem)}</span></div>`:`<div class="r red"><span>🔴 ยอดค้างชำระ</span><span>${fmt(rem)}</span></div>`}
-    <div class="foot">ขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾</div>`;
-    pa.style.display='block';
-    setTimeout(()=>{window.print();setTimeout(()=>pa.style.display='none',1000);},200);
+    const billHTML=`<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><title>บิล #${String(b.id).slice(-6)}</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Sarabun','Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;color:#2d2d2d;font-size:14px}h2{font-size:20px;font-weight:800;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#999;font-size:13px;margin-bottom:16px}.row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:13px}.bold{font-weight:700;font-size:15px}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}.disc{color:#f0a500;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:10px 0}.cats{font-size:12px;color:#888;margin:4px 0 8px}.footer{background:#fdf8f3;border-radius:8px;padding:10px;margin-top:14px;font-size:12px;color:#b5926b;text-align:center}@media print{body{padding:16px}button{display:none!important}}</style>
+</head><body>
+<h2>🐾 Abcd Petshop Hotel</h2><div class="sub">ใบสรุปการจอง</div><hr>
+<div class="row"><span>เลขที่</span><span>#${String(b.id).slice(-6)}</span></div>
+${b.memberId?`<div class="row"><span>รหัสสมาชิก</span><span>${b.memberId}</span></div>`:''}
+<div class="row"><span>วันที่จอง</span><span>${b.bookedAt}</span></div><hr>
+<div class="row"><span>ชื่อ</span><span>${b.owner}</span></div>
+<div class="row"><span>เบอร์</span><span>${b.phone}</span></div><hr>
+<div class="row"><span>ห้อง</span><span>${b.roomIds.join('+')} (${b.type})</span></div>
+<div class="row"><span>เช็คอิน</span><span>${b.checkIn}</span></div>
+<div class="row"><span>เช็คเอาท์</span><span>${b.checkOut}</span></div>
+<div class="row"><span>จำนวนคืน</span><span>${b.nights} คืน</span></div><hr>
+<div class="cats">🐱 ${b.catCount} ตัว: ${b.catNames.join(' · ')}</div>
+<div class="row"><span>ค่าห้อง</span><span>${fmt(b.basePrice*b.nights)}</span></div>
+${b.catExtra>0?`<div class="row"><span>ค่าแมวเพิ่ม</span><span>${fmt(b.catExtra)}</span></div>`:''}
+${b.discountAmount>0?`<div class="row disc"><span>ส่วนลด</span><span>−${fmt(b.discountAmount)}</span></div>`:''}
+<hr><div class="row bold"><span>ยอดรวม</span><span>${fmt(b.totalPrice)}</span></div>
+<div class="row green"><span>✅ มัดจำ (${b.depRate||30}%)</span><span>${fmt(b.deposit)}</span></div>
+${b.paidRemaining?`<div class="row green"><span>✅ ชำระครบแล้ว</span><span>${fmt(rem)}</span></div>`:`<div class="row red"><span>🔴 ยอดค้างชำระ</span><span>${fmt(rem)}</span></div>`}
+${bankHtml}
+<div class="footer">ขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾</div>
+<br><button onclick="window.print();return false" style="width:100%;padding:12px;background:#2d2d2d;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-top:8px">🖨️ พิมพ์ / บันทึก PDF</button>
+</body></html>`;
+    const win=window.open('','_blank','width=600,height=800');
+    if(win&&!win.closed){win.document.open();win.document.write(billHTML);win.document.close();win.focus();}
+    else{const blob=new Blob([billHTML],{type:'text/html;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`bill-${String(b.id).slice(-6)}.html`;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),5000);alert('💡 ไฟล์ดาวน์โหลดแล้ว!\nเปิดไฟล์ .html แล้วกด Ctrl+P เพื่อบันทึกเป็น PDF ครับ');}
   } else {
-    const W=560,pad=28,lines=[
+    const W=560,pad=28;
+    const hasBankQR=!b.paidRemaining&&bankSettings.qrBase64;
+    const lines=[
       {t:'title',v:'🐾 Abcd Petshop Hotel'},{t:'sub',v:'ใบสรุปการจอง'},{t:'div'},
       {t:'row',l:'เลขที่',r:`#${String(b.id).slice(-6)}`},
       ...(b.memberId?[{t:'row',l:'รหัสสมาชิก',r:b.memberId}]:[]),
@@ -1037,29 +1126,39 @@ function exportBill(type){
       {t:'div'},{t:'row',l:'ยอดรวม',r:fmt(b.totalPrice),bold:true},
       {t:'row',l:`✅ มัดจำ (${b.depRate||30}%)`,r:fmt(b.deposit),c:'#2da56e'},
       b.paidRemaining?{t:'row',l:'✅ ชำระครบแล้ว',r:fmt(rem),c:'#2da56e'}:{t:'row',l:'🔴 ยอดค้างชำระ',r:fmt(rem),c:'#d94f4f'},
-      {t:'foot',v:'ขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾'}];
-    let H=pad;lines.forEach(ln=>{H+=ln.t==='title'?36:ln.t==='sub'?22:ln.t==='div'?16:ln.t==='foot'?44:24;});H+=pad;
+      ...(!b.paidRemaining&&bankSettings.accountNo?[
+        {t:'div'},{t:'bank-header',v:'🏦 ชำระผ่านบัญชีธนาคาร'},
+        ...(bankSettings.bankName?[{t:'row',l:'ธนาคาร',r:bankSettings.bankName}]:[]),
+        ...(bankSettings.accountName?[{t:'row',l:'ชื่อบัญชี',r:bankSettings.accountName}]:[]),
+        {t:'row',l:'เลขบัญชี',r:bankSettings.accountNo,bold:true,c:'#3498db'},
+      ]:[]),
+      {t:'foot',v:'ขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾'},
+    ];
+    let H=pad;
+    lines.forEach(ln=>{H+=ln.t==='title'?36:ln.t==='sub'?22:ln.t==='div'?16:ln.t==='foot'?44:ln.t==='bank-header'?22:24;});
+    if(hasBankQR)H+=140;H+=pad;
     const canvas=document.createElement('canvas');canvas.width=W*2;canvas.height=H*2;
-    const ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    const ctx=canvas.getContext('2d');ctx.scale(2,2);
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
     let y=pad;
+    const drawLine=()=>{ctx.strokeStyle='#f5f5f5';ctx.lineWidth=.8;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+18);ctx.lineTo(W-pad,y+18);ctx.stroke();};
     lines.forEach(ln=>{
       if(ln.t==='title'){ctx.font='bold 17px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(ln.v,W/2,y+14);y+=36;}
       else if(ln.t==='sub'){ctx.font='12px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(ln.v,W/2,y+10);y+=22;}
       else if(ln.t==='div'){ctx.strokeStyle='#e8e8e8';ctx.lineWidth=1;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+8);ctx.lineTo(W-pad,y+8);ctx.stroke();ctx.setLineDash([]);y+=16;}
       else if(ln.t==='info'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(ln.v,pad,y+10);y+=24;}
+      else if(ln.t==='bank-header'){ctx.font='bold 12px Segoe UI';ctx.fillStyle='#3498db';ctx.textAlign='left';ctx.fillText(ln.v,pad,y+12);y+=22;}
       else if(ln.t==='foot'){ctx.fillStyle='#fdf8f3';ctx.beginPath();if(ctx.roundRect)ctx.roundRect(pad,y+4,W-pad*2,32,6);else ctx.rect(pad,y+4,W-pad*2,32);ctx.fill();ctx.font='11px Segoe UI';ctx.fillStyle='#b5926b';ctx.textAlign='center';ctx.fillText(ln.v,W/2,y+24);y+=44;}
-      else{ctx.font=(ln.bold?'bold ':'')+'13px Segoe UI';ctx.fillStyle=ln.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(ln.l,pad,y+12);ctx.textAlign='right';ctx.fillText(ln.r,W-pad,y+12);ctx.strokeStyle='#f5f5f5';ctx.lineWidth=.8;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+18);ctx.lineTo(W-pad,y+18);ctx.stroke();y+=24;}
+      else{ctx.font=(ln.bold?'bold ':'')+'13px Segoe UI';ctx.fillStyle=ln.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(ln.l,pad,y+12);ctx.textAlign='right';ctx.fillText(ln.r,W-pad,y+12);drawLine();y+=24;}
     });
-    canvas.toBlob(function(blob){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`bill-${String(b.id).slice(-6)}.jpg`;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);},'image/jpeg',0.95);
+    if(hasBankQR){
+      const img=new Image();img.onload=function(){ctx.drawImage(img,(W-100)/2,y,100,100);ctx.font='10px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='center';ctx.fillText('สแกน QR พร้อมเพย์',W/2,y+115);canvas.toBlob(function(blob){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`bill-${String(b.id).slice(-6)}.jpg`;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);},'image/jpeg',0.95);};img.src=bankSettings.qrBase64;
+    } else {
+      canvas.toBlob(function(blob){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`bill-${String(b.id).slice(-6)}.jpg`;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);},'image/jpeg',0.95);
+    }
   }
 }
-function sendLine(){
-  if(!billData)return;
-  navigator.clipboard.writeText(buildBillTxt(billData)).then(()=>{
-    alert('📋 คัดลอกบิลแล้ว!\nกด OK เพื่อเปิด LINE แล้ววางข้อความได้เลยครับ');
-    window.open('https://line.me/','_blank');
-  }).catch(()=>window.open('https://line.me/R/msg/text/?'+encodeURIComponent(buildBillTxt(billData)),'_blank'));
-}
+function sendLine(){if(!billData)return;navigator.clipboard.writeText(buildBillTxt(billData)).then(()=>{alert('📋 คัดลอกบิลแล้ว!\nกด OK เพื่อเปิด LINE แล้ววางข้อความได้เลยครับ');window.open('https://line.me/','_blank');}).catch(()=>window.open('https://line.me/R/msg/text/?'+encodeURIComponent(buildBillTxt(billData)),'_blank'));}
 function copyBill(){if(!billData)return;navigator.clipboard.writeText(buildBillTxt(billData)).then(()=>alert('📋 คัดลอกบิลแล้ว!'));}
 function showMsg(t,type){const el=document.getElementById('book-msg');el.className='msg '+type;el.textContent=t;setTimeout(()=>{el.textContent='';el.className='';},5000);}
 
@@ -1215,6 +1314,49 @@ async function deleteMember(mid){
   await deleteMemberDB(mid);renderMembers();
 }
 
+// ── BANK SETTINGS ─────────────────────────
+var bankSettings={bankName:'',accountName:'',accountNo:'',qrBase64:''};
+async function loadBankSettings(){
+  try{const s=localStorage.getItem('petshop_bank_settings');if(s)bankSettings=JSON.parse(s);}catch(e){}
+}
+async function saveBankSettings(){
+  localStorage.setItem('petshop_bank_settings',JSON.stringify(bankSettings));
+}
+async function renderBankSettings(){
+  await loadBankSettings();
+  const el=id=>document.getElementById(id);
+  if(el('bank-name'))el('bank-name').value=bankSettings.bankName||'';
+  if(el('bank-account-name'))el('bank-account-name').value=bankSettings.accountName||'';
+  if(el('bank-account-no'))el('bank-account-no').value=bankSettings.accountNo||'';
+  if(bankSettings.qrBase64){const prev=el('qr-preview');if(prev){prev.src=bankSettings.qrBase64;prev.style.display='block';}}
+}
+async function doSaveBankSettings(){
+  bankSettings.bankName=document.getElementById('bank-name').value.trim();
+  bankSettings.accountName=document.getElementById('bank-account-name').value.trim();
+  bankSettings.accountNo=document.getElementById('bank-account-no').value.trim();
+  await saveBankSettings();
+  const msg=document.getElementById('bank-msg');
+  msg.style.color='#2da56e';msg.textContent='✅ บันทึกข้อมูลบัญชีแล้ว';
+  setTimeout(()=>msg.textContent='',2500);
+}
+function buildBankHTML(){
+  if(!bankSettings.bankName&&!bankSettings.accountNo)return'';
+  return `<div class="bill-bank">
+    <div class="bill-bank-title">🏦 ชำระยอดค้างผ่านบัญชีธนาคาร</div>
+    ${bankSettings.bankName?`<div class="bill-bank-row"><span>ธนาคาร</span><span>${bankSettings.bankName}</span></div>`:''}
+    ${bankSettings.accountName?`<div class="bill-bank-row"><span>ชื่อบัญชี</span><span>${bankSettings.accountName}</span></div>`:''}
+    ${bankSettings.accountNo?`<div class="bill-bank-row"><span>เลขบัญชี</span><span><strong>${bankSettings.accountNo}</strong></span></div>`:''}
+    ${bankSettings.qrBase64?`<div class="bill-qr"><div style="font-size:.72rem;color:#888;margin-bottom:4px">สแกน QR พร้อมเพย์</div><img src="${bankSettings.qrBase64}" style="max-width:120px;border-radius:8px"></div>`:''}
+  </div>`;
+}
+function buildBankTxt(){
+  if(!bankSettings.accountNo)return'';
+  return `\n🏦 ชำระผ่านบัญชี: ${bankSettings.bankName||''}\nชื่อบัญชี: ${bankSettings.accountName||''}\nเลขบัญชี: ${bankSettings.accountNo}`;
+}
+
+// ══════════════════════════════════════════
+// ✅ FIX 2: renderStaffAdmin — เพิ่ม function wrapper ที่หายไป
+// ══════════════════════════════════════════
 async function renderStaffAdmin(){
   const staff=await loadStaff(),wrap=document.getElementById('staff-list-admin');
   if(!staff.length){wrap.innerHTML='<div style="font-size:.8rem;color:#aaa;margin-bottom:8px">ยังไม่มีพนักงาน</div>';return;}
@@ -1245,6 +1387,7 @@ function adminLogin(){
 }
 async function renderAdmin(){
   renderStaffAdmin();
+  await renderBankSettings();
   const bks=await loadBks(),list=document.getElementById('admin-list');
   if(!bks.length){list.innerHTML='<div class="empty">🐱 ยังไม่มีการจองค่ะ</div>';return;}
   list.innerHTML=[...bks].reverse().map(b=>`<div class="booking-item">
@@ -1301,7 +1444,7 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('btn-comm-cancel').addEventListener('click',closeCommModal);
   document.getElementById('btn-pdf').addEventListener('click',function(){exportBill('pdf');});
   document.getElementById('btn-jpg').addEventListener('click',function(){exportBill('jpg');});
-  document.getElementById('btn-line').addEventListener('click',sendLine);
+  document.getElementById('btn-line').addEventListener('click',()=>sendBillToLineOA(billData));
   document.getElementById('btn-copy-bill').addEventListener('click',copyBill);
   document.getElementById('btn-close-bill').addEventListener('click',function(){document.getElementById('bill-modal').classList.remove('open');});
   document.getElementById('cal-prev').addEventListener('click',function(){calNav(-1);});
@@ -1315,8 +1458,22 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('btn-add-cat-m').addEventListener('click',function(){addMemberCatField();});
   document.getElementById('btn-save-m').addEventListener('click',saveMember);
   document.getElementById('btn-add-staff').addEventListener('click',addStaff);
-  renderRooms();addMemberCatField();populateStaffSelect();
+  document.getElementById('btn-save-bank').addEventListener('click',doSaveBankSettings);
+  document.getElementById('bank-qr-file').addEventListener('change',function(e){
+    const file=e.target.files[0];if(!file)return;
+    if(file.size>1024*1024){alert('รูปต้องมีขนาดไม่เกิน 1MB ครับ');return;}
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      bankSettings.qrBase64=ev.target.result;
+      const prev=document.getElementById('qr-preview');
+      if(prev){prev.src=ev.target.result;prev.style.display='block';}
+    };
+    reader.readAsDataURL(file);
+  });
+  renderRooms();addMemberCatField();populateStaffSelect();loadBankSettings();
 });
 </script>
 </body>
 </html>
+HTMLEOF
+echo "File created: $(wc -l < /home/claude/petshop_fixed.html) lines"
