@@ -684,7 +684,10 @@ input:focus,select:focus{border-color:var(--primary);background:var(--card)}
     <div class="bill-header"><h3 id="bill-hotel-name">🐾 Abcd Petshop Hotel</h3><p id="bill-sub-lbl">ใบสรุปการจอง</p></div>
     <div id="bill-content"></div>
     <div class="bill-action-btns">
-      <div class="bill-export-row"><button class="btn-export btn-pdf" id="btn-pdf">📄 PDF</button></div>
+      <div class="bill-export-row">
+        <button class="btn-export btn-pdf" id="btn-pdf">📄 PDF</button>
+        <button class="btn-export" style="background:#3498db;color:#fff" id="btn-jpg">🖼️ JPG</button>
+      </div>
       <button class="btn-copy-bill" id="btn-copy-bill">📋 คัดลอกบิล</button>
       <button class="btn-close-bill" id="btn-close-bill">ปิด</button>
     </div>
@@ -1216,11 +1219,17 @@ function updateSelInfo(){
   form.style.display='block';
 }
 async function populateStaffSelect(){
-  // Load from Supabase staff table (NOT from accounts)
-  const staff=await loadStaff(),sel=document.getElementById('f-staff');
+  // Load from accounts with role=staff or sub_admin
+  const accs=initAccounts().filter(a=>a.role==='staff'||a.role==='sub_admin');
+  const sel=document.getElementById('f-staff');
   if(!sel)return;const cur=sel.value;
-  sel.innerHTML=`<option value="">-- ${t('staff').replace('👤 ','')} --</option>`;
-  staff.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;sel.appendChild(o);});
+  sel.innerHTML=`<option value="">-- ไม่ระบุ --</option>`;
+  accs.forEach(a=>{
+    const o=document.createElement('option');
+    o.value=a.username;
+    o.textContent=(a.role==='sub_admin'?'🔧 ':'👤 ')+a.name;
+    sel.appendChild(o);
+  });
   if(cur)sel.value=cur;
 }
 async function searchMember(){
@@ -1291,8 +1300,12 @@ async function openDepositModal(){
   for(const rid of roomIds)if(rangeConflict(bks,rid,cin,cout))return showMsg(`Room ${rid} already booked`,'error');
   const ic=bookingMode==='connect'&&sel2,baseP=ic?getConnPrice():getStdPrice(),free=ic?FREE_CONN:FREE_STD;
   const n=nts(cin,cout),extra=Math.max(0,catCount-free),catEx=extra*PRICE_EXTRA*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc,dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
-  const staffId=document.getElementById('f-staff').value||null,lineUserId=document.getElementById('f-line-id').value.trim()||null;
-  const staff=await loadStaff(),staffName=staffId?staff.find(s=>s.id===staffId)?.name||null:null;
+  const staffUsername=document.getElementById('f-staff').value||null;
+  const lineUserId=document.getElementById('f-line-id').value.trim()||null;
+  const accs=initAccounts();
+  const staffAcc=staffUsername?accs.find(a=>a.username===staffUsername):null;
+  const staffId=staffUsername||null;
+  const staffName=staffAcc?staffAcc.name:null;
   const discVal=parseFloat(document.getElementById('f-discount').value)||0;
   pendingData={id:Date.now(),roomIds,type:ic?'Standard Connect':'Standard',owner,catNames:getCatNames(),catCount,phone,email:email||'',
     checkIn:cin,checkOut:cout,nights:n,basePrice:baseP,catExtra:catEx,discountType,discountValue:discVal,discountAmount:disc,
@@ -1354,7 +1367,66 @@ function buildBankTxt(){if(!bankSettings.accountNo)return'';return`\n🏦${bankS
 function buildBillTxt(b){const rem=b.totalPrice-b.deposit;const orgI=lsGet('petshop_org',{name:'Abcd Petshop Hotel',icon:'🐾'});return`${orgI.icon} ${orgI.name}\n#${String(b.id).slice(-6)} | ${b.bookedAt}\n${b.owner} | ${b.phone}\nRoom ${b.roomIds.join('+')} (${b.type})\n${b.checkIn}→${b.checkOut} (${b.nights}nights)\n🐱${b.catNames.join(',')}\n${fmt(b.basePrice*b.nights)}${b.catExtra>0?' +'+fmt(b.catExtra):''}${b.discountAmount>0?' -'+fmt(b.discountAmount):''}\nTotal: ${fmt(b.totalPrice)}\nDeposit: ${fmt(b.deposit)}\n${b.paidRemaining?'✅ Paid':'Balance: '+fmt(rem)}${buildBankTxt()}`;}
 function openBill(b){billData=b;const rem=b.totalPrice-b.deposit;const orgI=lsGet('petshop_org',{name:'Abcd Petshop Hotel',icon:'🐾'});document.getElementById('bill-hotel-name').textContent=orgI.icon+' '+orgI.name;document.getElementById('bill-content').innerHTML=`<hr class="bill-divider"><div class="bill-row"><span>#</span><span>${String(b.id).slice(-6)}</span></div>${b.memberId?`<div class="bill-row"><span>MemberID</span><span>${b.memberId}</span></div>`:''}<div class="bill-row"><span>Date</span><span>${b.bookedAt}</span></div><hr class="bill-divider"><div class="bill-row"><span>Name</span><span>${b.owner}</span></div><div class="bill-row"><span>Tel</span><span>${b.phone}</span></div>${b.email?`<div class="bill-row"><span>Email</span><span>${b.email}</span></div>`:''}<hr class="bill-divider"><div class="bill-row"><span>Room</span><span>${b.roomIds.join('+')}(${b.type})</span></div><div class="bill-row"><span>${t('checkin')}</span><span>${b.checkIn}</span></div><div class="bill-row"><span>${t('checkout')}</span><span>${b.checkOut}</span></div><div class="bill-row"><span>Nights</span><span>${b.nights}</span></div><hr class="bill-divider"><div class="bill-cats">🐱${b.catNames.join('·')}</div><div class="bill-row"><span>Room</span><span>${fmt(b.basePrice*b.nights)}</span></div>${b.catExtra>0?`<div class="bill-row"><span>+Cat</span><span>${fmt(b.catExtra)}</span></div>`:''}${b.discountAmount>0?`<div class="bill-row disc"><span>Disc</span><span>-${fmt(b.discountAmount)}</span></div>`:''}<hr class="bill-divider"><div class="bill-row bold"><span>Total</span><span>${fmt(b.totalPrice)}</span></div><div class="bill-row green"><span>✅ Deposit(${b.depRate||30}%)</span><span>${fmt(b.deposit)}</span></div>${b.paidRemaining?`<div class="bill-row green"><span>✅ Paid</span><span>${fmt(rem)}</span></div>`:`<div class="bill-row red"><span>Balance</span><span>${fmt(rem)}</span></div>`}${!b.paidRemaining?buildBankHTML():''}${b.checkedOut?`<div style="background:#edfaf4;border-radius:8px;padding:6px;text-align:center;font-size:.76rem;color:#2da56e;margin-top:6px;font-weight:700">✅ Checked Out</div>`:''}<div class="bill-footer" id="bill-footer-txt">Thank you! ${orgI.icon} ${orgI.name}</div>`;document.getElementById('bill-modal').classList.add('open');}
 function copyBill(){if(!billData)return;navigator.clipboard.writeText(buildBillTxt(billData)).then(()=>showAlert('📋 Copied!','success'));}
-function exportBillPDF(b){const rem=b.totalPrice-b.deposit;const orgI=lsGet('petshop_org',{name:'Abcd Petshop Hotel',icon:'🐾'});const html=`<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>Bill #${String(b.id).slice(-6)}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Sarabun','Segoe UI',sans-serif;padding:28px;max-width:460px;margin:0 auto;color:#2d2d2d;font-size:13px}h2{font-size:17px;font-weight:800;text-align:center}.sub{text-align:center;color:#999;font-size:11px;margin-bottom:12px}.row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:12px}.bold{font-weight:700;font-size:13px}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:7px 0}.cats{font-size:11px;color:#888;margin:2px 0 5px}.footer{background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center}@media print{button{display:none!important}}</style></head><body><h2>${orgI.icon} ${orgI.name}</h2><div class="sub">${t('bill')}</div><hr><div class="row"><span>#</span><span>${String(b.id).slice(-6)}</span></div><div class="row"><span>Date</span><span>${b.bookedAt}</span></div><hr><div class="row"><span>Name</span><span>${b.owner}</span></div><div class="row"><span>Tel</span><span>${b.phone}</span></div>${b.email?`<div class="row"><span>Email</span><span>${b.email}</span></div>`:''}<hr><div class="row"><span>Room</span><span>${b.roomIds.join('+')}(${b.type})</span></div><div class="row"><span>Check-in</span><span>${b.checkIn}</span></div><div class="row"><span>Check-out</span><span>${b.checkOut}</span></div><div class="row"><span>Nights</span><span>${b.nights}</span></div><hr><div class="cats">🐱${b.catNames.join('·')}</div><div class="row"><span>Room</span><span>${fmt(b.basePrice*b.nights)}</span></div>${b.catExtra>0?`<div class="row"><span>+Cat</span><span>${fmt(b.catExtra)}</span></div>`:''}${b.discountAmount>0?`<div class="row" style="color:#f0a500"><span>Disc</span><span>-${fmt(b.discountAmount)}</span></div>`:''}<hr><div class="row bold"><span>Total</span><span>${fmt(b.totalPrice)}</span></div><div class="row green"><span>✅ Deposit(${b.depRate||30}%)</span><span>${fmt(b.deposit)}</span></div>${b.paidRemaining?`<div class="row green"><span>✅ Paid</span><span>${fmt(rem)}</span></div>`:`<div class="row red"><span>Balance</span><span>${fmt(rem)}</span></div>`}<div class="footer">${orgI.icon} ${orgI.name}</div><br><button onclick="window.print()" style="width:100%;padding:10px;background:#2d2d2d;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ Print / PDF</button></body></html>`;const w=window.open('','_blank','width=540,height=740');if(w){w.document.write(html);w.document.close();}}
+function exportBillJPG(b){
+  const rem=b.totalPrice-b.deposit;
+  const orgI=lsGet('petshop_org',{name:'Abcd Petshop Hotel',icon:'🐾'});
+  const W=520,pad=24;
+  const lines=[
+    {t:'title',v:orgI.icon+' '+orgI.name},
+    {t:'sub',v:t('bill')},
+    {t:'div'},
+    {t:'row',l:'#',r:String(b.id).slice(-6)},
+    ...(b.memberId?[{t:'row',l:'Member',r:b.memberId}]:[]),
+    {t:'row',l:'Date',r:b.bookedAt},
+    {t:'div'},
+    {t:'row',l:'Name',r:b.owner},
+    {t:'row',l:'Tel',r:b.phone},
+    ...(b.email?[{t:'row',l:'Email',r:b.email}]:[]),
+    {t:'div'},
+    {t:'row',l:'Room',r:b.roomIds.join('+')+'('+b.type+')'},
+    {t:'row',l:'Check-in',r:b.checkIn},
+    {t:'row',l:'Check-out',r:b.checkOut},
+    {t:'row',l:'Nights',r:String(b.nights)},
+    {t:'div'},
+    {t:'info',v:'🐱 '+b.catNames.join(' · ')},
+    {t:'row',l:'Room fee',r:fmt(b.basePrice*b.nights)},
+    ...(b.catExtra>0?[{t:'row',l:'+Cat fee',r:fmt(b.catExtra)}]:[]),
+    ...(b.discountAmount>0?[{t:'row',l:'Discount',r:'-'+fmt(b.discountAmount),c:'#f0a500'}]:[]),
+    {t:'div'},
+    {t:'row',l:'Total',r:fmt(b.totalPrice),bold:true},
+    {t:'row',l:'✅ Deposit('+( b.depRate||30)+'%)',r:fmt(b.deposit),c:'#2da56e'},
+    b.paidRemaining
+      ?{t:'row',l:'✅ Paid',r:fmt(rem),c:'#2da56e'}
+      :{t:'row',l:'Balance',r:fmt(rem),c:'#d94f4f'},
+    {t:'foot',v:orgI.icon+' '+orgI.name},
+  ];
+  let H=pad;
+  lines.forEach(ln=>{H+=ln.t==='title'?34:ln.t==='sub'?20:ln.t==='div'?14:ln.t==='foot'?40:ln.t==='info'?22:22;});
+  H+=pad;
+  const canvas=document.createElement('canvas');
+  canvas.width=W*2;canvas.height=H*2;
+  const ctx=canvas.getContext('2d');ctx.scale(2,2);
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  // get primary color
+  const primary=getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()||'#b5926b';
+  let y=pad;
+  const drawSep=()=>{ctx.strokeStyle='#ececec';ctx.lineWidth=.8;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+7);ctx.lineTo(W-pad,y+7);ctx.stroke();ctx.setLineDash([]);};
+  lines.forEach(ln=>{
+    if(ln.t==='title'){ctx.font='bold 16px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(ln.v,W/2,y+13);y+=34;}
+    else if(ln.t==='sub'){ctx.font='11px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(ln.v,W/2,y+9);y+=20;}
+    else if(ln.t==='div'){drawSep();y+=14;}
+    else if(ln.t==='info'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(ln.v,pad,y+9);y+=22;}
+    else if(ln.t==='foot'){ctx.fillStyle='#fdf8f3';ctx.fillRect(pad,y+4,W-pad*2,30);ctx.font='10px Segoe UI';ctx.fillStyle=primary;ctx.textAlign='center';ctx.fillText(ln.v,W/2,y+22);y+=40;}
+    else{
+      ctx.font=(ln.bold?'bold ':'')+'12px Segoe UI';
+      ctx.fillStyle=ln.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(ln.l,pad,y+11);
+      ctx.textAlign='right';ctx.fillText(ln.r,W-pad,y+11);
+      ctx.strokeStyle='#f0f0f0';ctx.lineWidth=.6;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+18);ctx.lineTo(W-pad,y+18);ctx.stroke();
+      y+=22;
+    }
+  });
+  canvas.toBlob(blob=>{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`bill-${String(b.id).slice(-6)}.jpg`;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);},'image/jpeg',0.95);
+}const rem=b.totalPrice-b.deposit;const orgI=lsGet('petshop_org',{name:'Abcd Petshop Hotel',icon:'🐾'});const html=`<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>Bill #${String(b.id).slice(-6)}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Sarabun','Segoe UI',sans-serif;padding:28px;max-width:460px;margin:0 auto;color:#2d2d2d;font-size:13px}h2{font-size:17px;font-weight:800;text-align:center}.sub{text-align:center;color:#999;font-size:11px;margin-bottom:12px}.row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:12px}.bold{font-weight:700;font-size:13px}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:7px 0}.cats{font-size:11px;color:#888;margin:2px 0 5px}.footer{background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center}@media print{button{display:none!important}}</style></head><body><h2>${orgI.icon} ${orgI.name}</h2><div class="sub">${t('bill')}</div><hr><div class="row"><span>#</span><span>${String(b.id).slice(-6)}</span></div><div class="row"><span>Date</span><span>${b.bookedAt}</span></div><hr><div class="row"><span>Name</span><span>${b.owner}</span></div><div class="row"><span>Tel</span><span>${b.phone}</span></div>${b.email?`<div class="row"><span>Email</span><span>${b.email}</span></div>`:''}<hr><div class="row"><span>Room</span><span>${b.roomIds.join('+')}(${b.type})</span></div><div class="row"><span>Check-in</span><span>${b.checkIn}</span></div><div class="row"><span>Check-out</span><span>${b.checkOut}</span></div><div class="row"><span>Nights</span><span>${b.nights}</span></div><hr><div class="cats">🐱${b.catNames.join('·')}</div><div class="row"><span>Room</span><span>${fmt(b.basePrice*b.nights)}</span></div>${b.catExtra>0?`<div class="row"><span>+Cat</span><span>${fmt(b.catExtra)}</span></div>`:''}${b.discountAmount>0?`<div class="row" style="color:#f0a500"><span>Disc</span><span>-${fmt(b.discountAmount)}</span></div>`:''}<hr><div class="row bold"><span>Total</span><span>${fmt(b.totalPrice)}</span></div><div class="row green"><span>✅ Deposit(${b.depRate||30}%)</span><span>${fmt(b.deposit)}</span></div>${b.paidRemaining?`<div class="row green"><span>✅ Paid</span><span>${fmt(rem)}</span></div>`:`<div class="row red"><span>Balance</span><span>${fmt(rem)}</span></div>`}<div class="footer">${orgI.icon} ${orgI.name}</div><br><button onclick="window.print()" style="width:100%;padding:10px;background:#2d2d2d;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ Print / PDF</button></body></html>`;const w=window.open('','_blank','width=540,height=740');if(w){w.document.write(html);w.document.close();}}
 
 // ════════════════════════════════════════
 // BOOKINGS RENDER
@@ -1387,7 +1459,7 @@ async function renderBookings(){
         <div class="bi-btns">
           <button class="btn-bill" data-bid="${b.id}">🧾</button>
           ${!b.paidRemaining?`<button class="btn-confirm-pay" data-bid="${b.id}">💵</button>`:''}
-          ${b.staffName&&!b.commPaid&&isAdminUp()?`<button class="btn-confirm-comm" data-bid="${b.id}">🟣</button>`:''}
+          ${b.staffName&&!b.commPaid?`<button class="btn-confirm-comm" data-bid="${b.id}">🟣คอม</button>`:''}
           ${isActive?`<button class="btn-checkout-bk" data-bid="${b.id}">✅CO</button>`:''}
           <button class="btn-cancel-bk" data-bid="${b.id}">✕</button>
         </div>
@@ -1626,6 +1698,7 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('btn-comm-ok').addEventListener('click',confirmComm);
   document.getElementById('btn-comm-cancel').addEventListener('click',closeCommModal);
   document.getElementById('btn-pdf').addEventListener('click',()=>{if(billData)exportBillPDF(billData);});
+  document.getElementById('btn-jpg').addEventListener('click',()=>{if(billData)exportBillJPG(billData);});
   document.getElementById('btn-copy-bill').addEventListener('click',copyBill);
   document.getElementById('btn-close-bill').addEventListener('click',()=>document.getElementById('bill-modal').classList.remove('open'));
   document.getElementById('cal-prev').addEventListener('click',()=>calNav(-1));
