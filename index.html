@@ -529,10 +529,23 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
     <h4>🔐 บัญชีผู้ใช้งาน</h4>
     <div id="accounts-list"></div>
     <div style="margin-top:10px;padding:12px;background:#f8f8f8;border-radius:10px">
-      <div style="font-size:.8rem;font-weight:700;color:#555;margin-bottom:8px">➕ เพิ่มบัญชีพนักงาน</div>
+      <div style="font-size:.8rem;font-weight:700;color:#555;margin-bottom:8px">➕ เพิ่มบัญชีใหม่</div>
       <div class="form-row" style="margin-bottom:7px">
         <div><label>Username</label><input type="text" id="new-acc-user" placeholder="username"></div>
-        <div><label>Password</label><input type="password" id="new-acc-pass" placeholder="password"></div>
+        <div><label>ชื่อที่แสดง</label><input type="text" id="new-acc-name" placeholder="เช่น สมชาย"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:7px">
+        <div><label>Password</label><input type="password" id="new-acc-pass" placeholder="อย่างน้อย 4 ตัว"></div>
+        <div><label>สิทธิ์</label>
+          <select id="new-acc-role">
+            <option value="staff">👤 พนักงาน (จำกัด)</option>
+            <option value="sub_admin">🔧 แอดมินย่อย (ดูยอด+จัดการได้)</option>
+          </select>
+        </div>
+      </div>
+      <div style="font-size:.68rem;color:#aaa;margin-bottom:7px">
+        👤 พนักงาน = จอง/รายการจอง/ค่าคอมตัวเอง<br>
+        🔧 แอดมินย่อย = ทุกอย่างยกเว้นจัดการบัญชี/ห้อง
       </div>
       <button class="btn-add-staff" id="btn-add-acc">+ เพิ่มบัญชี</button>
       <div id="acc-msg" style="font-size:.76rem;margin-top:6px"></div>
@@ -863,7 +876,17 @@ function lineCheckoutMsg(b) {
 // ══════════════════════════════════════════
 // SUPABASE HELPERS
 // ══════════════════════════════════════════
+// ── OFFLINE MODE DETECTION ────────────────
+var _offlineMode = false;
+var _localDB = {
+  bookings: lsGet('localdb_bookings', []),
+  members:  lsGet('localdb_members',  []),
+  staff:    lsGet('localdb_staff',    [])
+};
+function saveLocalDB(table) { lsSet('localdb_'+table, _localDB[table]); }
+
 async function sbFetch(table, opts) {
+  if (_offlineMode) throw new Error('OFFLINE');
   opts = opts || {};
   const method = opts.method || 'GET';
   const filter = opts.filter || '';
@@ -879,24 +902,88 @@ async function sbFetch(table, opts) {
   if (method === 'POST' && !prefer) prefer = 'return=representation';
   if (method === 'PATCH' && !prefer) prefer = 'return=minimal';
   if (prefer) headers['Prefer'] = prefer;
-  const res = await fetch(url, {
-    method, headers,
-    body: body ? JSON.stringify(body) : null
-  });
-  if (!res.ok) {
-    const errText = await res.text();
-    console.error('Supabase error:', res.status, errText);
-    throw new Error(errText);
+  try {
+    const res = await fetch(url, {
+      method, headers,
+      body: body ? JSON.stringify(body) : null
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error('Supabase error:', res.status, errText);
+      throw new Error(errText);
+    }
+    if (res.status === 204 || method === 'DELETE') return [];
+    const txt = await res.text();
+    return txt ? JSON.parse(txt) : [];
+  } catch(e) {
+    if (e.message === 'Failed to fetch' || e.name === 'TypeError') {
+      console.warn('Supabase unreachable, switching to offline mode');
+      _offlineMode = true;
+      throw e;
+    }
+    throw e;
   }
-  if (res.status === 204 || method === 'DELETE') return [];
-  const txt = await res.text();
-  return txt ? JSON.parse(txt) : [];
 }
+
+// ── LOCAL FALLBACK DB OPS ─────────────────
+function localGet(table, filter) {
+  let rows = [...(_localDB[table]||[])];
+  return rows;
+}
+function localPost(table, body) {
+  _localDB[table].push(body);
+  saveLocalDB(table);
+  return [body];
+}
+function localPatch(table, filter, body) {
+  // filter like "id=eq.12345"
+  const m = filter.match(/id=eq\.(.+)/);
+  if (!m) return;
+  _localDB[table] = _localDB[table].map(r => {
+    if (String(r.id) === String(m[1])) return Object.assign({}, r, body);
+    return r;
+  });
+  saveLocalDB(table);
+}
+function localDelete(table, filter) {
+  const m = filter.match(/id=eq\.(.+)/)||filter.match(/member_id=eq\.(.+)/);
+  if (!m) { _localDB[table]=[]; saveLocalDB(table); return; }
+  const key = filter.startsWith('member_id') ? 'member_id' : 'id';
+  _localDB[table] = _localDB[table].filter(r => String(r[key]) !== String(m[1]));
+  saveLocalDB(table);
+}
+function localDeleteStaff(filter) {
+  const m = filter.match(/id=eq\.(.+)/);
+  if (!m) return;
+  _localDB['staff'] = _localDB['staff'].filter(r => String(r.id) !== String(m[1]));
+  saveLocalDB('staff');
+}
+
+// ══════════════════════════════════════════
+// DB COLUMN DETECTION (checked_out optional)
+// ══════════════════════════════════════════
+var _hasCheckedOut = null; // null=unknown, true/false
+async function detectCheckedOut() {
+  if (_hasCheckedOut !== null) return _hasCheckedOut;
+  try {
+    await sbFetch('bookings', {filter:'select=checked_out&limit=1'});
+    _hasCheckedOut = true;
+  } catch(e) {
+    _hasCheckedOut = false;
+    console.warn('checked_out column not found, using localStorage fallback');
+  }
+  return _hasCheckedOut;
+}
+function getCheckedOutLocal(id) { return (lsGet('co_ids',[])).includes(Number(id)); }
+function setCheckedOutLocal(id) { const arr=lsGet('co_ids',[]); if(!arr.includes(Number(id))){ arr.push(Number(id)); lsSet('co_ids',arr); } }
 
 // BOOKINGS
 async function loadBks() {
   try {
-    const rows = await sbFetch('bookings', {filter:'order=created_at.asc'});
+    const hasCol = await detectCheckedOut();
+    const sel = hasCol ? 'order=created_at.asc' : 'order=created_at.asc';
+    const rows = await sbFetch('bookings', {filter: sel});
+    const coIds = lsGet('co_ids', []);
     return rows.map(r => ({
       id: r.id, roomIds: r.room_ids, type: r.type, owner: r.owner,
       catNames: r.cat_names, catCount: r.cat_count, phone: r.phone, email: r.email||'',
@@ -908,12 +995,13 @@ async function loadBks() {
       commission: r.commission, staffId: r.staff_id, staffName: r.staff_name,
       lineUserId: r.line_user_id, commPaid: r.comm_paid, commNote: r.comm_note,
       commPaidAt: r.comm_paid_at, memberId: r.member_id, bookedAt: r.booked_at,
-      checkedOut: r.checked_out||false
+      checkedOut: hasCol ? (r.checked_out||false) : coIds.includes(Number(r.id))
     }));
   } catch(e) { console.error(e); return []; }
 }
 
 async function insertBk(b) {
+  const hasCol = await detectCheckedOut();
   const payload = {
     id: b.id, room_ids: b.roomIds, type: b.type, owner: b.owner,
     cat_names: b.catNames, cat_count: b.catCount, phone: b.phone, email: b.email||null,
@@ -924,8 +1012,9 @@ async function insertBk(b) {
     paid_remaining: false, pay_note: '', commission: b.commission,
     staff_id: b.staffId||null, staff_name: b.staffName||'',
     line_user_id: b.lineUserId||null, comm_paid: false, comm_note: '',
-    member_id: b.memberId||null, booked_at: b.bookedAt, checked_out: false
+    member_id: b.memberId||null, booked_at: b.bookedAt
   };
+  if (hasCol) payload.checked_out = false;
   const result = await sbFetch('bookings', {method:'POST', body:payload, prefer:'return=representation'});
   return result;
 }
@@ -937,8 +1026,23 @@ async function updateBk(id, patch) {
     commPaid:'comm_paid', commNote:'comm_note', commPaidAt:'comm_paid_at',
     checkedOut:'checked_out'
   };
-  Object.keys(patch).forEach(k => { snake[map[k]||k] = patch[k]; });
-  await sbFetch('bookings', {method:'PATCH', filter:'id=eq.'+id, body:snake, prefer:'return=minimal'});
+  // Handle checkedOut separately - may not exist in DB
+  if ('checkedOut' in patch) {
+    const hasCol = await detectCheckedOut();
+    if (hasCol) {
+      snake['checked_out'] = patch.checkedOut;
+    } else {
+      if (patch.checkedOut) setCheckedOutLocal(id);
+    }
+    const rest = Object.assign({}, patch);
+    delete rest.checkedOut;
+    Object.keys(rest).forEach(k => { snake[map[k]||k] = rest[k]; });
+  } else {
+    Object.keys(patch).forEach(k => { snake[map[k]||k] = patch[k]; });
+  }
+  if (Object.keys(snake).length > 0) {
+    await sbFetch('bookings', {method:'PATCH', filter:'id=eq.'+id, body:snake, prefer:'return=minimal'});
+  }
 }
 
 async function deleteBk(id) {
@@ -1144,10 +1248,17 @@ function updateSelInfo() {
 }
 
 async function populateStaffSelect() {
-  const staff=await loadStaff(),sel=document.getElementById('f-staff'),cur=sel.value;
-  sel.innerHTML='<option value="">-- ไม่ระบุ --</option>';
-  staff.forEach(s=>sel.innerHTML+=`<option value="${s.id}">${s.name}</option>`);
-  if(cur)sel.value=cur;
+  const staff = await loadStaff();
+  const sel = document.getElementById('f-staff');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">-- ไม่ระบุ --</option>';
+  staff.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id; opt.textContent = s.name;
+    sel.appendChild(opt);
+  });
+  if (cur) sel.value = cur;
 }
 
 async function searchMember() {
@@ -1724,30 +1835,63 @@ async function renderAdmin() {
 
 // Staff accounts management
 function renderAccountsList() {
-  const accs=initAccounts(),wrap=document.getElementById('accounts-list');
-  wrap.innerHTML=accs.map(a=>`<div class="account-row">
-    <div class="acc-info">👤 <strong>${a.username}</strong> — ${a.name}<span class="acc-role ${a.role}">${a.role==='owner'?'👑 เจ้าของ':'พนักงาน'}</span></div>
-    ${a.role!=='owner'?`<button class="btn-del-acc" data-uname="${a.username}">ลบ</button>`:''}
+  const accs = initAccounts(), wrap = document.getElementById('accounts-list');
+  const roleLabel = r => r==='owner'?'👑 เจ้าของหลัก':r==='sub_admin'?'🔧 แอดมินย่อย':'👤 พนักงาน';
+  const roleBg = r => r==='owner'?'#fdf3ff':r==='sub_admin'?'#f0f8ff':'#f5f0eb';
+  const roleColor = r => r==='owner'?'#7c5cbf':r==='sub_admin'?'#3498db':'#b5926b';
+  wrap.innerHTML = accs.map(a => `<div class="account-row">
+    <div class="acc-info">
+      <strong>${a.username}</strong> — ${a.name}
+      <span class="acc-role" style="background:${roleBg(a.role)};color:${roleColor(a.role)}">${roleLabel(a.role)}</span>
+    </div>
+    <div style="display:flex;gap:5px;align-items:center">
+      ${a.username!==OWNER_USERNAME ? `
+        <button class="btn-edit-m" data-uname="${a.username}" style="font-size:.68rem;padding:3px 8px">🔑 รหัส</button>
+        <button class="btn-del-acc" data-uname="${a.username}">ลบ</button>` : `<span style="font-size:.68rem;color:#aaa">ลบไม่ได้</span>`}
+    </div>
   </div>`).join('');
-  wrap.querySelectorAll('.btn-del-acc').forEach(btn=>btn.addEventListener('click',()=>{
-    if(!confirm(`ลบบัญชี ${btn.dataset.uname} ใช่ไหม?`))return;
-    let accs=initAccounts();accs=accs.filter(a=>a.username!==btn.dataset.uname);
-    lsSet('petshop_accounts',accs);renderAccountsList();
-    document.getElementById('acc-msg').style.color='#2da56e';document.getElementById('acc-msg').textContent='✅ ลบบัญชีแล้ว';
+
+  wrap.querySelectorAll('.btn-del-acc').forEach(btn => btn.addEventListener('click', () => {
+    if (!confirm(`ลบบัญชี "${btn.dataset.uname}" ใช่ไหม?`)) return;
+    let accs = initAccounts();
+    accs = accs.filter(a => a.username !== btn.dataset.uname);
+    lsSet('petshop_accounts', accs);
+    renderAccountsList();
+    showAccMsg('✅ ลบบัญชีแล้ว', '#2da56e');
+  }));
+
+  wrap.querySelectorAll('.btn-edit-m[data-uname]').forEach(btn => btn.addEventListener('click', () => {
+    const np = prompt(`กรอกรหัสผ่านใหม่สำหรับ "${btn.dataset.uname}"`);
+    if (!np || np.length < 4) { alert('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'); return; }
+    let accs = initAccounts();
+    const idx = accs.findIndex(a => a.username === btn.dataset.uname);
+    if (idx >= 0) { accs[idx].password = np; lsSet('petshop_accounts', accs); }
+    showAccMsg('✅ เปลี่ยนรหัสผ่านแล้ว', '#2da56e');
   }));
 }
+
+function showAccMsg(txt, color) {
+  const el = document.getElementById('acc-msg');
+  el.style.color = color; el.textContent = txt;
+  setTimeout(() => el.textContent = '', 2500);
+}
+
 function addAccount() {
-  const user=document.getElementById('new-acc-user').value.trim(),pass=document.getElementById('new-acc-pass').value.trim();
-  const msg=document.getElementById('acc-msg');
-  if(!user||!pass){msg.style.color='#d94f4f';msg.textContent='กรุณากรอก Username และ Password';return;}
-  let accs=initAccounts();
-  if(accs.find(a=>a.username===user)){msg.style.color='#d94f4f';msg.textContent='Username นี้มีอยู่แล้ว';return;}
-  accs.push({username:user,password:pass,role:'staff',name:user});
-  lsSet('petshop_accounts',accs);
-  document.getElementById('new-acc-user').value='';document.getElementById('new-acc-pass').value='';
-  msg.style.color='#2da56e';msg.textContent='✅ เพิ่มบัญชีพนักงานแล้ว';setTimeout(()=>msg.textContent='',2500);
+  const user = document.getElementById('new-acc-user').value.trim();
+  const pass = document.getElementById('new-acc-pass').value.trim();
+  const name = document.getElementById('new-acc-name').value.trim() || user;
+  const role = document.getElementById('new-acc-role').value;
+  if (!user || !pass) { showAccMsg('กรุณากรอก Username และ Password', '#d94f4f'); return; }
+  if (pass.length < 4) { showAccMsg('Password ต้องมีอย่างน้อย 4 ตัวอักษร', '#d94f4f'); return; }
+  let accs = initAccounts();
+  if (accs.find(a => a.username === user)) { showAccMsg('Username นี้มีอยู่แล้ว', '#d94f4f'); return; }
+  accs.push({username:user, password:pass, role, name});
+  lsSet('petshop_accounts', accs);
+  ['new-acc-user','new-acc-pass','new-acc-name'].forEach(id => document.getElementById(id).value = '');
+  showAccMsg(`✅ เพิ่มบัญชี ${roleLabel(role)} "${user}" แล้ว`, '#2da56e');
   renderAccountsList();
 }
+function roleLabel(r){return r==='owner'?'เจ้าของ':r==='sub_admin'?'แอดมินย่อย':'พนักงาน';}
 
 // Rooms management
 function renderRoomsManage() {
