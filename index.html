@@ -1603,8 +1603,7 @@ function doSaveBank(){bankSettings.bankName=document.getElementById('bank-name')
 function renderOrgSettings(){const org=lsGet('petshop_org',{name:'Abcd Petshop Hotel',icon:'🐾',slogan:'',priceStd:250,priceConn:450});const e=id=>document.getElementById(id);if(e('org-name'))e('org-name').value=org.name||'';if(e('org-icon'))e('org-icon').value=org.icon||'🐾';if(e('org-slogan'))e('org-slogan').value=org.slogan||'';if(e('org-price-std'))e('org-price-std').value=org.priceStd||250;if(e('org-price-conn'))e('org-price-conn').value=org.priceConn||450;}
 function saveOrgSettings(){const org={name:document.getElementById('org-name').value.trim()||'Abcd Petshop Hotel',icon:document.getElementById('org-icon').value.trim()||'🐾',slogan:document.getElementById('org-slogan').value.trim(),priceStd:parseInt(document.getElementById('org-price-std').value)||250,priceConn:parseInt(document.getElementById('org-price-conn').value)||450};lsSet('petshop_org',org);applyLang();const m=document.getElementById('org-msg');m.style.color='#2da56e';m.textContent='✅ Saved!';setTimeout(()=>m.textContent='',2500);}
 
-// Accounts
-function initAccounts(){let a=lsGet('petshop_accs',null);if(!a){a=[{username:OWNER_UN,password:'abcd147258',role:'owner',name:'เจ้าของร้าน',canAdmin:true}];lsSet('petshop_accs',a);}if(!a.find(x=>x.username===OWNER_UN)){a.unshift({username:OWNER_UN,password:'abcd147258',role:'owner',name:'เจ้าของร้าน',canAdmin:true});lsSet('petshop_accs',a);}return a;}
+// Accounts (ใช้ initAccounts() จาก AUTH section ด้านบน)
 function renderAccountsList(){
   if(!isOwner())return;
   const accs=initAccounts(),wrap=document.getElementById('accounts-list');
@@ -1687,7 +1686,10 @@ async function renderAdmin(){
 // INIT
 // ════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',function(){
-  loadTheme();renderLangButtons();applyLang();
+  initAccounts(); // ensure accounts exist before anything
+  loadTheme();
+  renderLangButtons();
+  applyLang();
   if(checkSession())showApp();
   document.getElementById('btn-login-main').addEventListener('click',doLogin);
   document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
