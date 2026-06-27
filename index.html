@@ -1466,7 +1466,7 @@ document.addEventListener('DOMContentLoaded',function(){
     reader.onload=function(ev){
       bankSettings.qrBase64=ev.target.result;
       const prev=document.getElementById('qr-preview');
-      if(prev){prev.src=ev.target.result;prev.style.display='block';}
+      if(prev){prev.src=ev.target.result;prev.style.display='block';} 
     };
     reader.readAsDataURL(file);
   });
@@ -1475,5 +1475,3 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 </body>
 </html>
-HTMLEOF
-echo "File created: $(wc -l < /home/claude/petshop_fixed.html) lines"
