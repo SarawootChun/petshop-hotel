@@ -254,6 +254,10 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
       <div class="member-badge" id="member-badge"></div>
       <div class="form-group"><label>ชื่อเจ้าของ</label><input type="text" id="f-owner" placeholder="เช่น คุณมาลี"></div>
       <div class="form-group"><label>เบอร์โทรศัพท์</label><input type="tel" id="f-phone" placeholder="08x-xxx-xxxx"></div>
+      <div class="form-group"><label>📱 LINE User ID <span style="font-weight:400;color:#aaa">(สำหรับส่งบิลอัตโนมัติ)</span></label>
+        <input type="text" id="f-line-id" placeholder="เช่น U1a2b3c4d5e6f7g8h9...">
+        <div style="font-size:.7rem;color:#aaa;margin-top:3px">ลูกค้าต้อง Add LINE OA ก่อน จึงจะได้ User ID</div>
+      </div>
       <div class="form-row">
         <div class="form-group"><label>วันเช็คอิน</label>
           <div class="date-inputs">
@@ -513,7 +517,7 @@ input:focus,select:focus{border-color:#b5926b;background:#fff}
       </div>
       <button class="btn-line" id="btn-line">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.94 1.6 5.56 4.1 7.26L5 22l4.34-2.14C10.2 20.27 11.09 20.4 12 20.4c5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg>
-        ส่งบิลผ่าน LINE
+        ส่งบิลหาลูกค้าผ่าน LINE OA
       </button>
       <button class="btn-copy-bill" id="btn-copy-bill">📋 คัดลอกบิล</button>
       <button class="btn-close-bill" id="btn-close-bill">ปิด</button>
@@ -603,7 +607,7 @@ async function loadBks(){
       discountType:r.discount_type,discountValue:r.discount_value,discountAmount:r.discount_amount,
       depRate:r.dep_rate,totalPrice:r.total_price,deposit:r.deposit,
       paidRemaining:r.paid_remaining,payNote:r.pay_note,paidAt:r.paid_at,
-      commission:r.commission,staffId:r.staff_id,staffName:r.staff_name,
+      commission:r.commission,      staffId:r.staff_id,staffName:r.staff_name,lineUserId:r.line_user_id,
       commPaid:r.comm_paid,commNote:r.comm_note,commPaidAt:r.comm_paid_at,
       memberId:r.member_id,bookedAt:r.booked_at
     };});
@@ -622,6 +626,7 @@ async function insertBk(b){
       dep_rate:b.depRate,total_price:b.totalPrice,deposit:b.deposit,
       paid_remaining:false,pay_note:'',commission:b.commission,
       staff_id:b.staffId||null,staff_name:b.staffName||'',
+      line_user_id:b.lineUserId||null,
       comm_paid:false,comm_note:'',member_id:b.memberId||null,booked_at:b.bookedAt
     }});
   }finally{loading(false);}
@@ -903,12 +908,13 @@ async function openDepositModal(){
   const n=nts(cin,cout),extra=Math.max(0,catCount-free),catEx=extra*PRICE_EXTRA*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc,dep=Math.ceil(total*(depRate/100));
   const comm=calcComm(isConn,extra,n);
   const staffId=document.getElementById('f-staff').value||null;
+  const lineUserId=document.getElementById('f-line-id').value.trim()||null;
   const staff=await loadStaff(),staffName=staffId?staff.find(s=>s.id===staffId)?.name||null:null;
   const discVal=parseFloat(document.getElementById('f-discount').value)||0;
   pendingData={id:Date.now(),roomIds,type:isConn?'Standard Connect':'Standard',
     owner,catNames:getCatNames(),catCount,phone,checkIn:cin,checkOut:cout,
     nights:n,basePrice:baseP,catExtra:catEx,discountType,discountValue:discVal,discountAmount:disc,
-    depRate,totalPrice:total,deposit:dep,commission:comm,staffId,staffName,
+    depRate,totalPrice:total,deposit:dep,    commission:comm,staffId,staffName,lineUserId,
     memberId:filledMemberId||null,bookedAt:new Date().toLocaleDateString('th-TH')};
   document.getElementById('dep-amount').textContent=fmt(dep);
   document.getElementById('dep-note').textContent=`จากยอดรวม ${fmt(total)} (มัดจำ ${depRate}%)`;
@@ -987,7 +993,26 @@ async function confirmComm(){
   closeCommModal();renderBookings();renderSummary();renderCommission();
 }
 
-function buildBillTxt(b){
+// ── LINE OA ───────────────────────────────
+async function sendBillToLineOA(b){
+  if(!b){alert('ไม่พบข้อมูลการจองครับ');return;}
+  const lineId = b.lineUserId;
+  if(!lineId){
+    alert('❌ ไม่พบ LINE User ID ของลูกค้าครับ\n\nวิธีแก้: กลับไปแก้ไขการจอง แล้วใส่ LINE User ID ของลูกค้าก่อนครับ');
+    return;
+  }
+  const msg = buildBillTxt(b);
+  try{
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-line`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${SUPABASE_ANON}`},
+      body:JSON.stringify({userId:lineId,message:msg})
+    });
+    const data = await res.json();
+    if(data.success){alert('✅ ส่งบิลผ่าน LINE OA สำเร็จแล้วครับ!');}
+    else{alert('❌ ส่งไม่สำเร็จ: '+(data.error||'ไม่ทราบสาเหตุ')+'\n\nลองตรวจสอบ LINE User ID และ Channel Token ครับ');}
+  }catch(e){alert('❌ เกิดข้อผิดพลาด: '+e.message);}
+}
   const rem=b.totalPrice-b.deposit;
   return `🐾 Abcd Petshop Hotel — ใบสรุปการจอง\n━━━━━━━━━━━━━━━━━\n🔖 #${String(b.id).slice(-6)}${b.memberId?' | '+b.memberId:''} | ${b.bookedAt}\n👤 ${b.owner} | 📞 ${b.phone}\n━━━━━━━━━━━━━━━━━\n🏨 ห้อง ${b.roomIds.join('+')} (${b.type})\n📅 ${b.checkIn} → ${b.checkOut} (${b.nights} คืน)\n🐱 ${b.catCount} ตัว: ${b.catNames.join(', ')}\n━━━━━━━━━━━━━━━━━\n💰 ค่าห้อง: ${fmt(b.basePrice*b.nights)}${b.catExtra>0?'\n➕ ค่าแมวเพิ่ม: '+fmt(b.catExtra):''}${b.discountAmount>0?'\n🏷️ ส่วนลด: −'+fmt(b.discountAmount):''}\n💵 ยอดรวม: ${fmt(b.totalPrice)}\n✅ มัดจำ (${b.depRate||30}%): ${fmt(b.deposit)}\n${b.paidRemaining?'✅ ชำระครบแล้ว':'🔴 ยอดค้าง: '+fmt(rem)}${buildBankTxt()}\n━━━━━━━━━━━━━━━━━\nขอบคุณที่ใช้บริการ Abcd Petshop Hotel 🐾`;
 }
@@ -1093,17 +1118,23 @@ ${bankHtml}
 </html>`;
     // เปิดหน้าต่างใหม่
     const win = window.open('', '_blank', 'width=600,height=800');
-    if(win){
+    if(win && !win.closed){
       win.document.open();
       win.document.write(billHTML);
       win.document.close();
+      win.focus();
     } else {
-      // fallback: Blob URL
+      // popup blocked → download แทน
       const blob = new Blob([billHTML], {type:'text/html;charset=utf-8'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href=url; a.target='_blank'; a.click();
+      a.href=url;
+      a.download=`bill-${String(b.id).slice(-6)}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
       setTimeout(()=>URL.revokeObjectURL(url),5000);
+      alert('💡 ไฟล์ดาวน์โหลดแล้ว!\nเปิดไฟล์ .html แล้วกด Ctrl+P เพื่อบันทึกเป็น PDF ครับ');
     }
   } else {
     // JPG via Canvas
@@ -1463,7 +1494,7 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('btn-comm-cancel').addEventListener('click',closeCommModal);
   document.getElementById('btn-pdf').addEventListener('click',function(){exportBill('pdf');});
   document.getElementById('btn-jpg').addEventListener('click',function(){exportBill('jpg');});
-  document.getElementById('btn-line').addEventListener('click',sendLine);
+  document.getElementById('btn-line').addEventListener('click',()=>sendBillToLineOA(billData));
   document.getElementById('btn-copy-bill').addEventListener('click',copyBill);
   document.getElementById('btn-close-bill').addEventListener('click',function(){document.getElementById('bill-modal').classList.remove('open');});
   document.getElementById('cal-prev').addEventListener('click',function(){calNav(-1);});
