@@ -580,18 +580,36 @@ function loading(on){document.getElementById('loading-bar').style.display=on?'bl
 // ══════════════════════════════════════════
 // SUPABASE API
 // ══════════════════════════════════════════
-async function sbFetch(table,opts){
-  opts=opts||{};
-  var method=opts.method||'GET',filter=opts.filter||'',body=opts.body||null,prefer=opts.prefer||'';
-  var url=SUPABASE_URL+'/rest/v1/'+table+(filter?'?'+filter:'');
-  var headers={'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'};
-  if(method==='POST'&&!prefer)prefer='return=representation';
-  if(prefer)headers['Prefer']=prefer;
-  var res=await fetch(url,{method:method,headers:headers,body:body?JSON.stringify(body):null});
-  if(!res.ok)throw new Error(await res.text());
-  if(res.status===204||method==='DELETE')return [];
-  var txt=await res.text();
-  return txt?JSON.parse(txt):[];
+async function sbFetch(table, opts){
+  opts = opts || {};
+  var method = opts.method || 'GET';
+  var filter = opts.filter || '';
+  var body = opts.body || null;
+  var prefer = opts.prefer || '';
+  // สร้าง URL ให้ถูกต้อง
+  var url = SUPABASE_URL + '/rest/v1/' + table;
+  if(filter) url += '?' + filter;
+  var headers = {
+    'apikey': SUPABASE_ANON,
+    'Authorization': 'Bearer ' + SUPABASE_ANON,
+    'Content-Type': 'application/json'
+  };
+  if(method === 'POST' && !prefer) prefer = 'return=representation';
+  if(method === 'PATCH' && !prefer) prefer = 'return=minimal';
+  if(prefer) headers['Prefer'] = prefer;
+  var res = await fetch(url, {
+    method: method,
+    headers: headers,
+    body: body ? JSON.stringify(body) : null
+  });
+  if(!res.ok){
+    var errText = await res.text();
+    console.error('Supabase error:', res.status, errText);
+    throw new Error(errText);
+  }
+  if(res.status === 204 || method === 'DELETE') return [];
+  var txt = await res.text();
+  return txt ? JSON.parse(txt) : [];
 }
 
 // ── BOOKINGS ──────────────────────────────
@@ -650,9 +668,9 @@ async function clearBks(){
 // ── MEMBERS ───────────────────────────────
 async function loadMembers(){
   try{
-    var rows=await sbFetch('members','order=created_at.asc');
+    var rows = await sbFetch('members', {filter:'order=created_at.asc'});
     return rows.map(function(r){return{memberId:r.member_id,name:r.name,phone:r.phone,cats:r.cats||[]};});
-  }catch(e){return [];}
+  }catch(e){console.error('loadMembers error:',e);return[];}
 }
 async function upsertMember(m){
   await fetch(SUPABASE_URL+'/rest/v1/members',{
@@ -669,9 +687,9 @@ async function deleteMemberDB(memberId){
 // ── STAFF ─────────────────────────────────
 async function loadStaff(){
   try{
-    var rows=await sbFetch('staff','order=created_at.asc');
+    var rows = await sbFetch('staff', {filter:'order=created_at.asc'});
     return rows.map(function(r){return{id:r.id,name:r.name};});
-  }catch(e){return [];}
+  }catch(e){console.error('loadStaff error:',e);return[];}
 }
 async function insertStaff(s){
   await sbFetch('staff',{method:'POST',body:{id:s.id,name:s.name}});
