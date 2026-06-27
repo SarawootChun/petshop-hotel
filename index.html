@@ -720,16 +720,34 @@ var _ldb={bookings:lsGet('ldb_bk',[]),members:lsGet('ldb_mb',[]),staff:lsGet('ld
 function saveLDB(t){lsSet('ldb_'+{bookings:'bk',members:'mb',staff:'st'}[t],_ldb[t]);}
 
 // ── column detect cache ──
-var _colCache={}; // {table_col: bool}
+// ตรวจ column จริงครั้งแรกเท่านั้น ไม่ส่ง query ทุกครั้ง
+var _colCache={};
 async function hasCol(table,col){
   const key=table+'_'+col;
   if(key in _colCache)return _colCache[key];
   if(_offline){_colCache[key]=false;return false;}
   try{
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=${col}&limit=1`,
-      {headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}});
-    _colCache[key]=r.ok;return r.ok;
+    // ใช้ HEAD-like: select column เดียว limit 0 เพื่อตรวจ schema
+    const r=await fetch(
+      `${SUPABASE_URL}/rest/v1/${table}?select=${col}&limit=0`,
+      {headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}}
+    );
+    _colCache[key]=r.ok;
+    if(!r.ok)console.warn(`Column "${col}" not found in "${table}" — skipping`);
+    return r.ok;
   }catch{_colCache[key]=false;return false;}
+}
+
+// ── probe all optional columns once on startup ──
+async function probeOptionalCols(){
+  // รัน parallel — ผลเก็บใน _colCache ให้พร้อมก่อนใช้งาน
+  await Promise.all([
+    hasCol('bookings','email'),
+    hasCol('bookings','line_user_id'),
+    hasCol('bookings','checked_out'),
+    hasCol('members','email'),
+  ]);
+  console.log('Column probe done:',JSON.stringify(_colCache));
 }
 
 // ── fetch wrapper ──
@@ -793,22 +811,23 @@ async function loadBks(){
 }
 
 async function insertBk(b){
-  // Build payload — only include columns that exist
+  // เริ่มจาก core columns ที่มีแน่นอน
   const payload={
-    id:b.id,room_ids:b.roomIds,type:b.type,owner:b.owner,
-    cat_names:b.catNames,cat_count:b.catCount,phone:b.phone,
-    check_in:b.checkIn,check_out:b.checkOut,nights:b.nights,
-    base_price:b.basePrice,cat_extra:b.catExtra,
-    discount_type:b.discountType,discount_value:b.discountValue,discount_amount:b.discountAmount,
-    dep_rate:b.depRate,total_price:b.totalPrice,deposit:b.deposit,
-    paid_remaining:false,pay_note:'',commission:b.commission,
-    staff_id:b.staffId||null,staff_name:b.staffName||'',
-    line_user_id:b.lineUserId||null,comm_paid:false,comm_note:'',
-    member_id:b.memberId||null,booked_at:b.bookedAt
+    id:b.id, room_ids:b.roomIds, type:b.type, owner:b.owner,
+    cat_names:b.catNames, cat_count:b.catCount, phone:b.phone,
+    check_in:b.checkIn, check_out:b.checkOut, nights:b.nights,
+    base_price:b.basePrice, cat_extra:b.catExtra,
+    discount_type:b.discountType, discount_value:b.discountValue, discount_amount:b.discountAmount,
+    dep_rate:b.depRate, total_price:b.totalPrice, deposit:b.deposit,
+    paid_remaining:false, pay_note:'', commission:b.commission,
+    staff_id:b.staffId||null, staff_name:b.staffName||'',
+    comm_paid:false, comm_note:'',
+    member_id:b.memberId||null, booked_at:b.bookedAt
   };
-  // optional columns
-  if(await hasCol('bookings','email')&&b.email)payload.email=b.email;
-  if(await hasCol('bookings','checked_out'))payload.checked_out=false;
+  // เพิ่ม optional columns เฉพาะที่มีจริงใน DB
+  if(_colCache['bookings_email']     && b.email)       payload.email        = b.email;
+  if(_colCache['bookings_line_user_id'] && b.lineUserId) payload.line_user_id = b.lineUserId;
+  if(_colCache['bookings_checked_out'])                  payload.checked_out  = false;
   try{
     if(_offline)throw new Error('OFFLINE');
     return await sbFetch('bookings',{method:'POST',body:payload,prefer:'return=representation'});
@@ -853,8 +872,9 @@ async function loadMembers(){
   }
 }
 async function upsertMember(m){
-  const body={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
-  if(await hasCol('members','email'))body.email=m.email||null;
+  const body={member_id:m.memberId, name:m.name, phone:m.phone, cats:m.cats||[]};
+  // เพิ่ม email เฉพาะที่ column มีจริง
+  if(_colCache['members_email']) body.email = m.email||null;
   try{
     if(_offline)throw new Error('OFFLINE');
     await fetch(`${SUPABASE_URL}/rest/v1/members`,{method:'POST',
@@ -945,8 +965,12 @@ function showApp(){
     document.getElementById('rooms-section').style.display=isOwner()?'':'none';
   // Sub text
   document.getElementById('admin-sub').textContent=isOwner()?'สำหรับเจ้าของร้านและแอดมิน':'แอดมินย่อย — จัดการระบบทั่วไป';
-  testConn().then(ok=>updateConnBanner(ok));
-  populateStaffSelect().then(()=>showSection('rooms'));
+  testConn().then(ok=>{
+      updateConnBanner(ok);
+      // probe optional columns หลังรู้ว่า online/offline
+      if(!_offline) probeOptionalCols();
+    });
+    populateStaffSelect().then(()=>showSection('rooms'));
   loadBankSettings();
 }
 
