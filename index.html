@@ -299,7 +299,7 @@ input:focus,select:focus{border-color:var(--primary);background:var(--card)}
     <div class="login-title" id="login-title-el">Abcd <span>Petshop Hotel</span></div>
     <div class="login-sub" id="login-sub-el">กรุณาเข้าสู่ระบบก่อนใช้งาน</div>
     <div class="lang-row" id="lang-row"></div>
-    <input type="text" id="login-user" placeholder="Username" autocomplete="username">
+  <input type="text" id="login-user" placeholder="Username" autocomplete="username">
     <input type="password" id="login-pass" placeholder="Password" autocomplete="current-password">
     <button class="btn-login-main" id="btn-login-main">เข้าสู่ระบบ</button>
     <div class="login-err" id="login-err"></div>
@@ -321,6 +321,7 @@ input:focus,select:focus{border-color:var(--primary);background:var(--card)}
     <button class="nav-tab" data-sec="admin" id="tab-admin">แอดมิน</button>
   </div>
   <div class="nav-right">
+    <div id="nav-lang-row" style="display:flex;gap:3px"></div>
     <span class="user-badge" id="user-badge">👤</span>
     <button class="btn-logout" id="btn-logout">ออก</button>
   </div>
@@ -850,14 +851,29 @@ function applyLang(){
 }
 
 function renderLangButtons(){
-  ['lang-row','admin-lang-row'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=Object.entries(LANG_META).map(([code,m])=>
-      `<button class="lang-btn${curLang===code?' active':''}" data-lang="${code}">${m.label}</button>`
-    ).join('');
-    el.querySelectorAll('.lang-btn').forEach(btn=>btn.addEventListener('click',()=>{
-      curLang=btn.dataset.lang;lsSet('petshop_lang',curLang);applyLang();
-    }));
+  ['lang-row','admin-lang-row','nav-lang-row'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML='';
+    Object.entries(LANG_META).forEach(([code,m])=>{
+      const btn=document.createElement('button');
+      // nav bar uses smaller style
+      if(id==='nav-lang-row'){
+        btn.style.cssText='padding:2px 7px;border-radius:20px;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:.62rem;font-weight:600;color:var(--sub);transition:all .2s';
+        if(curLang===code){btn.style.background='var(--primary)';btn.style.color='#fff';btn.style.borderColor='var(--primary)';}
+      } else {
+        btn.className='lang-btn'+(curLang===code?' active':'');
+      }
+      btn.textContent=m.label;
+      btn.dataset.lang=code;
+      btn.addEventListener('click',()=>{
+        curLang=code;
+        lsSet('petshop_lang',curLang);
+        applyLang();
+        renderLangButtons();
+      });
+      el.appendChild(btn);
+    });
   });
 }
 
