@@ -311,7 +311,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
   <div class="nr">
     <div class="nlr" id="nlr"></div>
-    <button class="boutl" id="bguestadmin" style="display:none;background:var(--pl);color:var(--p);border:1.5px solid var(--p)" title="Admin Login">👑</button>
+    <button class="boutl" id="bguestadmin" style="display:none;background:var(--pl);color:var(--p);border:1.5px solid var(--p);font-size:.72rem;padding:4px 9px" title="Admin Login">👑 Login</button>
     <span class="ubadge" id="ubadge" style="display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:.72rem">👑 <span id="ubadge_name" style="font-size:.7rem;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Login</span></span>
     <button class="boutl" id="bout">ออก</button>
   </div>
@@ -745,7 +745,12 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   <div class="billbox">
     <div class="billhd"><h3 id="billname">🐾 Abcd Petshop Hotel</h3><p>ใบสรุปการจอง</p></div>
     <div id="billcont"></div>
-    <div class="billbtns">
+    <!-- ปุ่มสำหรับ pending preview (ก่อนบันทึก) -->
+    <div id="bill-pend-wrap" style="display:none;margin-bottom:10px">
+      <button id="bbill-confslip" style="width:100%;padding:11px;background:#2da56e;color:#fff;border:none;border-radius:11px;font-size:.86rem;font-weight:700;cursor:pointer">📎 แนบสลิปมัดจำ และ ✅ ยืนยันการจอง</button>
+      <button id="bbill-backedit" style="width:100%;padding:8px;background:#f5f5f5;color:#555;border:none;border-radius:11px;font-size:.78rem;cursor:pointer;margin-top:6px">← ย้อนกลับแก้ไข</button>
+    </div>
+    <div class="billbtns" id="bill-saved-btns">
       <div class="billexprow">
         <button class="bexp bpdf" id="bpdf">📄 PDF</button>
         <button class="bexp bjpg" id="bjpg">🖼️ JPG</button>
@@ -2062,7 +2067,47 @@ async function openDepModal(){
   txt('depfl','ยอดค้าง '+fmt(total-dep)+' ชำระวันเช็คอิน');
   txt('depinl',fmt(dep));
   el('depcb').checked=false;el('bdepok').disabled=true;
-  openOv('ov-dep');
+  // แสดง preview สลิปก่อน แล้วค่อยยืนยัน
+  openPendingBill(pending);
+}
+function openPendingBill(p){
+  // แสดงบิล preview ก่อนบันทึก (pending mode)
+  if(!p)return;
+  var o=getOrg();
+  el('billname').textContent=o.icon+' '+o.name;
+  var r=p.totalPrice-p.deposit;
+  el('billcont').innerHTML=
+    '<div style="background:#fff8e1;border:1.5px solid #f0a500;border-radius:8px;padding:7px 10px;font-size:.72rem;color:#c77700;margin-bottom:8px;text-align:center">📋 ตรวจสอบรายการก่อนยืนยันการจอง</div>'+
+    '<hr class="billdv">'+
+    '<div class="billrow"><span>#</span><span>'+String(p.id).slice(-6)+'</span></div>'+
+    (p.memberId?'<div class="billrow"><span>สมาชิก</span><span>'+p.memberId+'</span></div>':'')+
+    '<div class="billrow"><span>วันที่จอง</span><span>'+p.bookedAt+'</span></div>'+
+    '<hr class="billdv">'+
+    '<div class="billrow"><span>ชื่อ</span><span>'+p.owner+'</span></div>'+
+    '<div class="billrow"><span>เบอร์</span><span>'+p.phone+'</span></div>'+
+    (p.email?'<div class="billrow"><span>อีเมล</span><span>'+p.email+'</span></div>':'')+
+    '<hr class="billdv">'+
+    '<div class="billrow"><span>ห้อง</span><span>'+p.roomIds.join('+')+'('+p.type+')</span></div>'+
+    '<div class="billrow"><span>เช็คอิน</span><span>'+p.checkIn+'</span></div>'+
+    '<div class="billrow"><span>เช็คเอาท์</span><span>'+p.checkOut+'</span></div>'+
+    '<div class="billrow"><span>จำนวนคืน</span><span>'+p.nights+' คืน</span></div>'+
+    '<hr class="billdv">'+
+    '<div class="billcats">🐱'+p.catNames.join(' · ')+'</div>'+
+    '<div class="billrow"><span>ค่าห้อง</span><span>'+fmt(p.basePrice*p.nights)+'</span></div>'+
+    (p.catExtra>0?'<div class="billrow"><span>ค่าแมวเพิ่ม</span><span>'+fmt(p.catExtra)+'</span></div>':'')+
+    (p.discountAmount>0?'<div class="billrow dc"><span>ส่วนลด</span><span>-'+fmt(p.discountAmount)+'</span></div>':'')+
+    '<hr class="billdv">'+
+    '<div class="billrow bd"><span>ยอดรวม</span><span>'+fmt(p.totalPrice)+'</span></div>'+
+    '<div class="billrow gn"><span>✅ มัดจำที่ต้องโอน ('+p.depRate+'%)</span><span>'+fmt(p.deposit)+'</span></div>'+
+    '<div class="billrow rd"><span>🔴 ยอดค้างชำระ</span><span>'+fmt(r)+'</span></div>'+
+    buildBankHTML()+
+    '<div class="billft">ขอบคุณที่ใช้บริการ '+o.icon+' '+o.name+'</div>';
+  // ตั้ง billData เพื่อให้ PDF/JPG ทำงานได้
+  billData=p;
+  // แสดง pending buttons + export buttons
+  el('bill-pend-wrap').style.display='block';
+  el('bill-saved-btns').style.display='';
+  openOv('ov-bill');
 }
 
 async function submitBooking(){
@@ -2088,7 +2133,7 @@ async function submitBooking(){
   var pp=el('pprev');if(pp)pp.style.display='none';
   var ip=el('idcard-prev');if(ip){ip.src='';ip.style.display='none';}
   filledMemId=null;catCnt=1;sel1=null;sel2=null;depRate=30;discType='pct';
-  renderCatInputs([]);updateSelInfo();billData=saved;
+  renderCatInputs([]);updateSelInfo();saved._saved=true;billData=saved;
   showSec('bookings');renderBookings();renderRooms();
   setTimeout(function(){if(billData)openBill(billData);},500);
 }
@@ -2220,6 +2265,9 @@ function openBill(b){
     (!b.paidRemaining?buildBankHTML():'')+
     (b.checkedOut?'<div style="background:#edfaf4;border-radius:8px;padding:6px;text-align:center;font-size:.76rem;color:#2da56e;margin-top:6px;font-weight:700">✅ เช็คเอาท์แล้ว</div>':'')+
     '<div class="billft">ขอบคุณที่ใช้บริการ '+o.icon+' '+o.name+'</div>';
+  // saved mode — show normal buttons, hide pending
+  el('bill-pend-wrap').style.display='none';
+  el('bill-saved-btns').style.display='';
   openOv('ov-bill');
 }
 
@@ -2235,57 +2283,104 @@ function fallbackCopy(text){
 }
 
 function exportPDF(b){
+  // แสดงบิลใน overlay ในหน้าเดิม — ไม่ใช้ window.open() เพื่อหลีกเลี่ยง popup blocker
   var r=b.totalPrice-b.deposit;var o=getOrg();
-  var html='<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>Bill</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Sarabun,sans-serif;padding:28px;max-width:460px;margin:0 auto;font-size:13px}h2{font-size:16px;font-weight:800;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#999;font-size:11px;margin-bottom:11px}.row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:12px}.bold{font-weight:700}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:7px 0}.cats{font-size:11px;color:#888;margin:2px 0 5px}.foot{background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center}@media print{button{display:none!important}}</style></head><body>'+
-    '<h2>'+o.icon+' '+o.name+'</h2><div class="sub">ใบสรุปการจอง</div><hr>'+
-    '<div class="row"><span>#</span><span>'+String(b.id).slice(-6)+'</span></div>'+
-    '<div class="row"><span>วันที่</span><span>'+b.bookedAt+'</span></div><hr>'+
-    '<div class="row"><span>ชื่อ</span><span>'+b.owner+'</span></div>'+
-    '<div class="row"><span>เบอร์</span><span>'+b.phone+'</span></div><hr>'+
-    '<div class="row"><span>ห้อง</span><span>'+b.roomIds.join('+')+'('+b.type+')</span></div>'+
-    '<div class="row"><span>เช็คอิน</span><span>'+b.checkIn+'</span></div>'+
-    '<div class="row"><span>เช็คเอาท์</span><span>'+b.checkOut+'</span></div>'+
-    '<div class="row"><span>คืน</span><span>'+b.nights+'</span></div><hr>'+
-    '<div class="cats">🐱'+b.catNames.join('·')+'</div>'+
-    '<div class="row"><span>ค่าห้อง</span><span>'+fmt(b.basePrice*b.nights)+'</span></div>'+
-    (b.catExtra>0?'<div class="row"><span>+แมว</span><span>'+fmt(b.catExtra)+'</span></div>':'')+
-    (b.discountAmount>0?'<div class="row" style="color:#f0a500"><span>ส่วนลด</span><span>-'+fmt(b.discountAmount)+'</span></div>':'')+
-    '<hr><div class="row bold"><span>รวม</span><span>'+fmt(b.totalPrice)+'</span></div>'+
-    '<div class="row green"><span>✅ มัดจำ('+(b.depRate||30)+'%)</span><span>'+fmt(b.deposit)+'</span></div>'+
-    (b.paidRemaining?'<div class="row green"><span>✅ ชำระครบ</span><span>'+fmt(r)+'</span></div>':'<div class="row red"><span>🔴 ค้าง</span><span>'+fmt(r)+'</span></div>')+
-    '<div class="foot">'+o.icon+' '+o.name+'</div><br>'+
-    '<button onclick="window.print()" style="width:100%;padding:10px;background:#2d2d2d;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ พิมพ์/PDF</button></body></html>';
-  // ใช้ Blob URL แทน document.write เพื่อหลีกเลี่ยง file:// cross-origin error
-  try{
-    var blob=new Blob([html],{type:'text/html;charset=utf-8'});
-    var burl=URL.createObjectURL(blob);
-    var w=window.open(burl,'_blank','width=520,height=720');
-    if(!w){alert2('❌ Browser บล็อก Popup','er',5000);}
-    else{setTimeout(function(){URL.revokeObjectURL(burl);},15000);}
-  }catch(e){alert2('❌ เปิด PDF ไม่ได้: '+e.message,'er',5000);}
+  var isPending=!b._saved;
+  var docTitle=isPending?'ใบยืนยันการจอง (รอมัดจำ)':'ใบสรุปการจอง';
+  // สร้าง inner content (ใช้ inline style ทั้งหมด)
+  var s0='display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:12px';
+  var content=
+    '<div style="font-size:16px;font-weight:800;text-align:center;margin-bottom:3px">'+o.icon+' '+o.name+'</div>'+
+    '<div style="text-align:center;color:#999;font-size:11px;margin-bottom:8px">'+docTitle+'</div>'+
+    (isPending?'<div style="background:#fff8e1;border:1.5px solid #f0a500;border-radius:7px;padding:6px 10px;text-align:center;font-size:11px;color:#c77700;margin-bottom:8px">📋 ใบนี้เป็นการแจ้งยอดเพื่อโอนมัดจำ ยังไม่ได้ยืนยันในระบบ</div>':'')+
+    '<hr style="border:none;border-top:1.5px dashed #ddd;margin:7px 0">'+
+    '<div style="'+s0+'"><span>#</span><span>'+String(b.id).slice(-6)+'</span></div>'+
+    '<div style="'+s0+'"><span>วันที่</span><span>'+b.bookedAt+'</span></div>'+
+    '<hr style="border:none;border-top:1px dashed #eee;margin:5px 0">'+
+    '<div style="'+s0+'"><span>ชื่อ</span><span>'+b.owner+'</span></div>'+
+    '<div style="'+s0+'"><span>เบอร์</span><span>'+b.phone+'</span></div>'+
+    (b.email?'<div style="'+s0+'"><span>อีเมล</span><span>'+b.email+'</span></div>':'')+
+    (b.memberId?'<div style="'+s0+'"><span>สมาชิก</span><span>'+b.memberId+'</span></div>':'')+
+    '<hr style="border:none;border-top:1px dashed #eee;margin:5px 0">'+
+    '<div style="'+s0+'"><span>ห้อง</span><span>'+b.roomIds.join('+')+'('+b.type+')</span></div>'+
+    '<div style="'+s0+'"><span>เช็คอิน</span><span>'+b.checkIn+'</span></div>'+
+    '<div style="'+s0+'"><span>เช็คเอาท์</span><span>'+b.checkOut+'</span></div>'+
+    '<div style="'+s0+'"><span>จำนวนคืน</span><span>'+b.nights+' คืน</span></div>'+
+    '<hr style="border:none;border-top:1px dashed #eee;margin:5px 0">'+
+    '<div style="font-size:11px;color:#888;margin:3px 0 5px">🐱 '+b.catNames.join(' · ')+'</div>'+
+    '<div style="'+s0+'"><span>ค่าห้อง</span><span>'+fmt(b.basePrice*b.nights)+'</span></div>'+
+    (b.catExtra>0?'<div style="'+s0+'"><span>ค่าแมวเพิ่ม</span><span>'+fmt(b.catExtra)+'</span></div>':'')+
+    (b.discountAmount>0?'<div style="'+s0+';color:#f0a500"><span>ส่วนลด</span><span>-'+fmt(b.discountAmount)+'</span></div>':'')+
+    '<hr style="border:none;border-top:1.5px dashed #ddd;margin:7px 0">'+
+    '<div style="'+s0+';font-weight:700"><span>ยอดรวม</span><span>'+fmt(b.totalPrice)+'</span></div>'+
+    '<div style="'+s0+';color:#2da56e;font-weight:700"><span>✅ มัดจำ ('+(b.depRate||30)+'%)</span><span>'+fmt(b.deposit)+'</span></div>'+
+    (b.paidRemaining
+      ?'<div style="'+s0+';color:#2da56e;font-weight:700"><span>✅ ชำระครบแล้ว</span><span>'+fmt(r)+'</span></div>'
+      :'<div style="'+s0+';color:#d94f4f;font-weight:700"><span>🔴 ยอดค้างชำระ</span><span>'+fmt(r)+'</span></div>')+
+    '<div style="background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center;color:#999">ขอบคุณที่ใช้บริการ '+o.icon+' '+o.name+'</div>';
+  // ลบ overlay เก่าถ้ามี
+  var old=document.getElementById('_pdfov');if(old)document.body.removeChild(old);
+  var ost=document.getElementById('_pdfst');if(ost)document.head.removeChild(ost);
+  // สร้าง print style (ซ่อนทุกอย่างยกเว้น overlay เวลาพิมพ์)
+  var st=document.createElement('style');st.id='_pdfst';
+  st.textContent='@media print{body>*:not(#_pdfov){display:none!important}#_pdfov{position:static!important;overflow:visible!important;padding:16px!important}._nprt{display:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}';
+  document.head.appendChild(st);
+  // สร้าง overlay
+  var ov=document.createElement('div');ov.id='_pdfov';
+  ov.style.cssText='position:fixed;inset:0;background:#fff;z-index:99998;overflow-y:auto;padding:16px;box-sizing:border-box;font-family:Sarabun,sans-serif';
+  function closeOv(){var o2=document.getElementById('_pdfov');if(o2)document.body.removeChild(o2);var s2=document.getElementById('_pdfst');if(s2)document.head.removeChild(s2);}
+  var btns=document.createElement('div');
+  btns.className='_nprt';
+  btns.style.cssText='display:flex;gap:8px;margin-bottom:14px;position:sticky;top:0;background:#fff;padding-bottom:10px;border-bottom:2px solid #eee;z-index:1';
+  btns.innerHTML='<button onclick="window.print()" style="flex:1;padding:11px;background:#2d2d2d;color:#fff;border:none;border-radius:9px;cursor:pointer;font-size:.86rem;font-weight:700">🖨️ พิมพ์ / บันทึกเป็น PDF</button>';
+  var closeBtn=document.createElement('button');
+  closeBtn.textContent='✕ ปิด';
+  closeBtn.style.cssText='padding:11px 16px;background:#f0f0f0;border:none;border-radius:9px;cursor:pointer;font-size:.84rem';
+  closeBtn.onclick=closeOv;
+  btns.appendChild(closeBtn);
+  var inner=document.createElement('div');inner.style.cssText='max-width:440px;margin:0 auto';inner.innerHTML=content;
+  ov.appendChild(btns);ov.appendChild(inner);
+  document.body.appendChild(ov);
 }
 
 function exportJPG(b){
   var r=b.totalPrice-b.deposit;var o=getOrg();
+  var isPending=!b._saved;
   var W=500,pad=22,p2=getComputedStyle(document.documentElement).getPropertyValue('--p').trim()||'#b5926b';
-  var lines=[{t:'h',v:o.icon+' '+o.name},{t:'s',v:'ใบสรุปการจอง'},{t:'d'},{t:'r',l:'#',r:String(b.id).slice(-6)},{t:'r',l:'วันที่',r:b.bookedAt},{t:'d'},{t:'r',l:'ชื่อ',r:b.owner},{t:'r',l:'เบอร์',r:b.phone},{t:'d'},{t:'r',l:'ห้อง',r:b.roomIds.join('+')+'('+b.type+')'},{t:'r',l:'เช็คอิน',r:b.checkIn},{t:'r',l:'เช็คเอาท์',r:b.checkOut},{t:'r',l:'คืน',r:String(b.nights)},{t:'d'},{t:'i',v:'🐱'+b.catNames.join('·')},{t:'r',l:'ค่าห้อง',r:fmt(b.basePrice*b.nights)}];
+  var lines=[{t:'h',v:o.icon+' '+o.name},{t:'s',v:isPending?'ใบยืนยันการจอง (รอมัดจำ)':'ใบสรุปการจอง'}];
+  if(isPending)lines.push({t:'pn',v:'📋 ยังไม่ได้ยืนยันในระบบ — ส่งให้ลูกค้าโอนมัดจำ'});
+  lines.push({t:'d'},{t:'r',l:'#',r:String(b.id).slice(-6)},{t:'r',l:'วันที่',r:b.bookedAt},{t:'d'},{t:'r',l:'ชื่อ',r:b.owner},{t:'r',l:'เบอร์',r:b.phone},{t:'d'},{t:'r',l:'ห้อง',r:b.roomIds.join('+')+'('+b.type+')'},{t:'r',l:'เช็คอิน',r:b.checkIn},{t:'r',l:'เช็คเอาท์',r:b.checkOut},{t:'r',l:'คืน',r:String(b.nights)},{t:'d'},{t:'i',v:'🐱'+b.catNames.join('·')},{t:'r',l:'ค่าห้อง',r:fmt(b.basePrice*b.nights)});
   if(b.catExtra>0)lines.push({t:'r',l:'+แมว',r:fmt(b.catExtra)});
   if(b.discountAmount>0)lines.push({t:'r',l:'ส่วนลด',r:'-'+fmt(b.discountAmount),c:'#f0a500'});
   lines.push({t:'d'},{t:'r',l:'รวม',r:fmt(b.totalPrice),bold:true},{t:'r',l:'✅ มัดจำ('+(b.depRate||30)+'%)',r:fmt(b.deposit),c:'#2da56e'});
-  lines.push(b.paidRemaining?{t:'r',l:'✅ ชำระครบ',r:fmt(r),c:'#2da56e'}:{t:'r',l:'🔴 ค้าง',r:fmt(r),c:'#d94f4f'});
+  lines.push(b.paidRemaining?{t:'r',l:'✅ ชำระครบ',r:fmt(r),c:'#2da56e'}:{t:'r',l:'🔴 ค้างชำระ',r:fmt(r),c:'#d94f4f'});
   lines.push({t:'f',v:o.icon+' '+o.name});
-  var H=pad;lines.forEach(function(l){H+=l.t==='h'?32:l.t==='s'?20:l.t==='d'?13:l.t==='f'?38:21;});H+=pad;
+  var H=pad;lines.forEach(function(l){H+=l.t==='h'?32:l.t==='s'?20:l.t==='d'?13:l.t==='f'?38:l.t==='pn'?26:21;});H+=pad;
   var cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;var ctx=cv.getContext('2d');ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
   var y=pad;
   lines.forEach(function(l){
     if(l.t==='h'){ctx.font='bold 15px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+12);y+=32;}
     else if(l.t==='s'){ctx.font='11px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+9);y+=20;}
+    else if(l.t==='pn'){ctx.fillStyle='#fff8e1';ctx.fillRect(pad,y+2,W-pad*2,20);ctx.font='10px Segoe UI';ctx.fillStyle='#c77700';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+14);y+=26;}
     else if(l.t==='d'){ctx.strokeStyle='#ececec';ctx.lineWidth=.8;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+6);ctx.lineTo(W-pad,y+6);ctx.stroke();ctx.setLineDash([]);y+=13;}
     else if(l.t==='i'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(l.v,pad,y+9);y+=21;}
     else if(l.t==='f'){ctx.fillStyle='#fdf8f3';ctx.fillRect(pad,y+3,W-pad*2,28);ctx.font='10px Segoe UI';ctx.fillStyle=p2;ctx.textAlign='center';ctx.fillText(l.v,W/2,y+20);y+=38;}
     else{ctx.font=(l.bold?'bold ':'')+'12px Segoe UI';ctx.fillStyle=l.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(l.l,pad,y+10);ctx.textAlign='right';ctx.fillText(l.r,W-pad,y+10);ctx.strokeStyle='#f0f0f0';ctx.lineWidth=.6;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+17);ctx.lineTo(W-pad,y+17);ctx.stroke();y+=21;}
   });
-  cv.toBlob(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='bill-'+String(b.id).slice(-6)+'.jpg';a.click();setTimeout(function(){URL.revokeObjectURL(url);},3000);},'image/jpeg',0.95);
+  var dataUrl=cv.toDataURL('image/jpeg',0.95);
+  var isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if(isMobile){
+    // มือถือ: แสดงรูปในหน้าต่าง — กดค้างเพื่อบันทึก
+    var mo=document.createElement('div');
+    mo.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:10px';
+    mo.innerHTML='<div style="color:#fff;font-size:.82rem;text-align:center;font-weight:700">📱 กดค้างที่รูปเพื่อบันทึกลงเครื่อง</div>'+
+      '<img src="'+dataUrl+'" style="max-width:100%;max-height:70vh;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.4)">'+
+      '<button style="background:#fff;border:none;padding:9px 28px;border-radius:20px;font-size:.84rem;font-weight:700;cursor:pointer" id="_jpgclose">✕ ปิด</button>';
+    document.body.appendChild(mo);
+    mo.querySelector('#_jpgclose').addEventListener('click',function(){document.body.removeChild(mo);});
+  }else{
+    var a=document.createElement('a');a.href=dataUrl;a.download='bill-'+String(b.id).slice(-6)+'.jpg';a.click();
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -2855,17 +2950,24 @@ function renderErrLog(){
     var logs=lsG('errlog_'+d,[]);
     var isToday=d===today;
     var label=isToday?'<span style="background:#edfaf4;color:#2da56e;border-radius:10px;padding:1px 6px;font-size:.6rem;margin-left:4px">🆕 วันนี้</span>':'<span style="background:#f5f5f5;color:#999;border-radius:10px;padding:1px 6px;font-size:.6rem;margin-left:4px">เก่า</span>';
-    // show last 3 entries inline for today
+    // แสดงเวลา error ล่าสุด
+    var lastEntry=logs.length?logs[logs.length-1]:null;
+    var lastTime=lastEntry&&lastEntry.t?'<span style="font-size:.6rem;color:#f0a500;margin-left:4px">⏰ '+lastEntry.t.slice(11,19)+'</span>':'';
+    // show last 3 entries inline
     var preview='';
-    if(isToday&&logs.length){
-      preview='<div style="margin-top:4px;max-height:80px;overflow-y:auto">'+logs.slice(-3).reverse().map(function(e){
+    if(logs.length){
+      preview='<div style="margin-top:4px;max-height:90px;overflow-y:auto">'+logs.slice(-3).reverse().map(function(e){
         var hm=e.t?e.t.slice(11,19):'';
-        return'<div style="font-size:.65rem;color:#888;border-left:2px solid #f0a500;padding:1px 5px;margin:2px 0"><span style="color:#555;font-weight:600">'+hm+'</span> '+String(e.m||'').slice(0,80)+'</div>';
-      }).join('')+(logs.length>3?'<div style="font-size:.6rem;color:#bbb;padding:2px 5px">...และอีก '+(logs.length-3)+' รายการ</div>':'')+'</div>';
+        var isNew=isToday;
+        return'<div style="font-size:.65rem;color:#888;border-left:2px solid '+(isNew?'#f0a500':'#ddd')+';padding:2px 6px;margin:2px 0;background:#fafafa;border-radius:0 4px 4px 0">'+
+          '<span style="color:#d94f4f;font-weight:700;font-size:.62rem">'+hm+'</span> '+
+          '<span style="color:#444">'+String(e.m||'').slice(0,90)+'</span>'+
+          (e.s?'<span style="color:#bbb;font-size:.58rem;display:block">📍'+String(e.s).slice(0,60)+'</span>':'')+'</div>';
+      }).join('')+(logs.length>3?'<div style="font-size:.6rem;color:#bbb;padding:2px 6px">...และอีก '+(logs.length-3)+' รายการ (กด ⬇ DL เพื่อดูทั้งหมด)</div>':'')+'</div>';
     }
     return'<div style="padding:7px 0;border-bottom:1px solid #f0f0f0">'+
       '<div style="display:flex;align-items:center;justify-content:space-between">'+
-      '<span style="font-size:.78rem">📅 '+d+label+' <span style="color:#888">('+logs.length+' รายการ)</span></span>'+
+      '<span style="font-size:.78rem">📅 '+d+label+lastTime+' <span style="color:#888">('+logs.length+')</span></span>'+
       '<div style="display:flex;gap:5px">'+
       '<button class="bs" style="background:#edfaf4;color:#2da56e" onclick="dlErrLog(\''+d+'\')">⬇ DL</button>'+
       '<button class="bs bx" onclick="clrErrLog(\''+d+'\')">🗑</button>'+
@@ -2943,12 +3045,23 @@ function toggleLogin(){
 
 // ดึง settings จาก cloud ก่อนแสดง login (เพื่อรู้ค่า loginEnabled)
 async function preloadSettings(){
+  // helper: apply cloud settings — loginEnabled จาก cloud จะ override local
+  // ยกเว้น: ถ้า local=false แต่ cloud=true ให้คง local=false ไว้ (ป้องกัน stale Firebase ทำให้ login กลับมา)
+  function applyCloud(d){
+    var localLogin=lsG('loginEnabled',null);
+    SYNC_KEYS.forEach(function(k){
+      if(d[k]!=null){
+        if(k==='loginEnabled'&&localLogin===false&&d[k]===true)return;// local false wins
+        lsS(k,d[k]);
+      }
+    });
+  }
   // ลอง Firebase ก่อน
   await initFB();
   if(_fbReady){
     try{
       var d=await fbRest('cfg/app_settings','GET');
-      if(d){SYNC_KEYS.forEach(function(k){if(d[k]!=null)lsS(k,d[k]);});return;}
+      if(d){applyCloud(d);return;}
     }catch(e){}
   }
   // ลอง Supabase
@@ -2960,7 +3073,7 @@ async function preloadSettings(){
       var rows=await r.json();
       if(rows&&rows[0]&&rows[0].value){
         var d2=JSON.parse(rows[0].value);
-        SYNC_KEYS.forEach(function(k){if(d2[k]!=null)lsS(k,d2[k]);});
+        applyCloud(d2);
       }
     }
   }catch(e){}
@@ -3082,6 +3195,17 @@ document.addEventListener('DOMContentLoaded',function(){
   el('bjpg').addEventListener('click',function(){if(billData)exportJPG(billData);});
   el('bcopybill').addEventListener('click',copyBill);
   el('bclosebill').addEventListener('click',closeAllOv);
+  // PENDING BILL ACTIONS
+  el('bbill-confslip').addEventListener('click',function(){
+    closeAllOv();
+    // รีเซ็ตสลิป แล้วเปิด deposit modal
+    _slipDep=null;var sp=el('slip-dep-prev');if(sp){sp.src='';sp.style.display='none';}
+    el('depcb').checked=false;el('bdepok').disabled=true;
+    openOv('ov-dep');
+  });
+  el('bbill-backedit').addEventListener('click',function(){
+    pending=null;closeAllOv();
+  });
 
   // CAL
   el('calprev').addEventListener('click',function(){calNav(-1);});
