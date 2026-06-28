@@ -1464,43 +1464,51 @@ async function fbRest(path,method,body){
 async function initFB(){
   var base=getFBUrl();
   if(!base)return;
-  // ทดสอบก่อน แล้วค่อย set _fbReady=true
   _fbReady=false;
+  // ถ้าเปิดจาก file:// → บล็อก fetch ทุกตัว ไม่ต้องลอง
+  if(location.protocol==='file:'){
+    var b=el('cbanner');
+    if(b){b.style.cssText='background:#fdecea;color:#d94f4f;text-align:center;font-size:.68rem;font-weight:600;padding:6px;';b.innerHTML='⚠️ เปิดจากไฟล์โดยตรง — Sync ไม่ทำงาน | <a href="https://sarawootchun.github.io/petshop-hotel/" target="_blank" style="color:#d94f4f;font-weight:800">เปิดจาก GitHub Pages แทน »</a>';}
+    var fmsg=el('fbmsg');
+    if(fmsg)fmsg.innerHTML='<span style="color:#d94f4f">⚠️ ไม่สามารถซิงค์ได้เมื่อเปิดจาก file:// — กรุณาใช้ <a href="https://sarawootchun.github.io/petshop-hotel/" target="_blank" style="color:#e65100">GitHub Pages</a> แทน</span>';
+    console.warn('[FB] Blocked: running from file:// protocol');
+    return;
+  }
   try{
     var testUrl=base.replace(/\/$/,'')+'/cfg/ping.json';
     console.log('[FB] testing URL:',testUrl);
-    var res=await fetch(testUrl,{method:'GET'});
+    var res=await fetch(testUrl,{method:'GET',mode:'cors',credentials:'omit'});
     var txt=await res.text();
-    console.log('[FB] test response status:',res.status,'body:',txt.substring(0,200));
-    if(!res.ok && res.status!==404){
-      // 401/403 = rules ไม่ถูกต้อง, 400 = URL ผิด
-      throw new Error('HTTP '+res.status+': '+txt.substring(0,100));
+    console.log('[FB] status:',res.status,'body:',txt.substring(0,200));
+    if(!res.ok&&res.status!==404){
+      throw new Error('HTTP '+res.status+': '+txt.substring(0,120));
     }
-    // status 200 หรือ 404 = DB accessible (404 แค่แปลว่า node ว่าง)
+    // 200 หรือ null (404) = เข้าถึงได้
     _fbReady=true;
     connBannerFB(true);
     alert2('🔥 Firebase เชื่อมต่อแล้ว — sync อัตโนมัติ','ok',3000);
     if(!_fbListening){
       _fbListening=true;
-      setInterval(function(){
-        if(_fbReady){invalidateBkCache();renderBookings();renderRooms();}
-      },15000);
+      setInterval(function(){if(_fbReady){invalidateBkCache();renderBookings();renderRooms();}},15000);
     }
   }catch(e){
     _fbReady=false;
     var msg=e.message||'';
     console.warn('[FB] initFB error',msg);
-    var base2=getFBUrl()||'';
-    var testLink=base2.replace(/\/$/,'')+'/bk.json';
-    if(msg.indexOf('Failed to fetch')>=0||msg.indexOf('NetworkError')>=0||msg.indexOf('network')>=0){
-      alert2('❌ Firebase: เชื่อมต่อไม่ได้ — กรุณาตรวจสอบ Database Rules ใน Firebase Console → ต้องเปิดเป็น Test Mode (read/write: true)','er',10000);
+    var testLink=(getFBUrl()||'').replace(/\/$/,'')+'/bk.json';
+    var hint='';
+    if(msg.indexOf('Failed to fetch')>=0||msg.indexOf('NetworkError')>=0){
+      hint='❌ เชื่อมต่อไม่ได้ — ตรวจสอบ Database Rules ต้องเป็น Test Mode (.read: true, .write: true)';
+      alert2(hint,'er',10000);
     }else if(msg.indexOf('401')>=0||msg.indexOf('403')>=0||msg.indexOf('Permission')>=0){
-      alert2('❌ Firebase: ไม่มีสิทธิ์ — ไปที่ Realtime Database → Rules → เปลี่ยนเป็น ".read":true, ".write":true','er',10000);
+      hint='❌ ไม่มีสิทธิ์ — ไปแก้ Rules ใน Firebase Console → Realtime Database → Rules';
+      alert2(hint,'er',10000);
     }else{
-      alert2('❌ Firebase error: '+msg,'er',6000);
+      hint='❌ Firebase error: '+msg;
+      alert2(hint,'er',6000);
     }
     var fmsg=el('fbmsg');
-    if(fmsg)fmsg.innerHTML='<span style="color:#d94f4f">❌ '+msg+'</span><br><a href="'+testLink+'" target="_blank" style="color:#e65100;font-size:.72rem">🔍 คลิกเพื่อทดสอบ URL ในเบราว์เซอร์</a>';
+    if(fmsg)fmsg.innerHTML='<span style="color:#d94f4f">'+hint+'</span><br><a href="'+testLink+'" target="_blank" style="color:#e65100;font-size:.72rem">🔍 ทดสอบ URL ตรงนี้</a>';
   }
 }
 
