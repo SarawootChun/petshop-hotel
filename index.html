@@ -613,6 +613,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
       <button style="background:#f5f5f5;color:#555;border:none;padding:7px 14px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem" id="bclrfb">🗑️ ลบ Config</button>
     </div>
     <div id="fbmsg" style="font-size:.73rem;margin-top:4px"></div>
+    <div id="fbcfgwarn" style="display:none;background:#fdecea;border-radius:8px;padding:8px 11px;font-size:.72rem;color:#d94f4f;margin-top:6px"></div>
     <div style="margin-top:10px;background:#fff8e1;border-radius:8px;padding:9px;font-size:.7rem;color:#795548;line-height:1.6">
       <b>📋 วิธีตั้งค่า Firebase:</b><br>
       1. ไปที่ <a href="https://console.firebase.google.com" target="_blank" style="color:#e65100">console.firebase.google.com</a><br>
@@ -1148,13 +1149,24 @@ function doLogout(){lsS('sess',null);CU=null;el('app').style.display='none';el('
 function renderFBCard(){
   var cfg=getFBCfg();
   var urlEl=el('fb_url'),keyEl=el('fb_key'),pidEl=el('fb_pid'),aidEl=el('fb_aid'),midEl=el('fb_mid');
+  // ตรวจ saved config ว่า databaseURL ถูกต้องไหม
+  var warn=el('fbcfgwarn');
   if(cfg){
-    if(urlEl)urlEl.value=cfg.databaseURL||'';
-    if(keyEl)keyEl.value=cfg.apiKey||'';
-    if(pidEl)pidEl.value=cfg.projectId||'';
-    if(aidEl)aidEl.value=cfg.appId||'';
-    if(midEl)midEl.value=cfg.messagingSenderId||'';
-  }
+    var savedUrl=cfg.databaseURL||'';
+    var urlOk=savedUrl.startsWith('https://')&&savedUrl.indexOf('firebasedatabase')>=0;
+    if(!urlOk&&savedUrl){
+      // config บันทึกไว้ผิด — ลบทิ้งและใช้ default แทน
+      lsS('fb_cfg',null);cfg=null;
+      if(warn){warn.style.display='block';warn.innerHTML='⚠️ พบ Config ที่บันทึกไว้ผิดรูปแบบ (Database URL ไม่ถูกต้อง) — ลบและกลับไปใช้ Config ในตัวแล้ว<br><b>กด 🔥 เชื่อมต่อ Firebase เพื่อลองใหม่</b>';}
+    }else if(warn){warn.style.display='none';}
+    if(cfg){
+      if(urlEl)urlEl.value=cfg.databaseURL||'';
+      if(keyEl)keyEl.value=cfg.apiKey||'';
+      if(pidEl)pidEl.value=cfg.projectId||'';
+      if(aidEl)aidEl.value=cfg.appId||'';
+      if(midEl)midEl.value=cfg.messagingSenderId||'';
+    }
+  }else if(warn){warn.style.display='none';}
   var st=el('fbstatus');if(st){
     if(_fbReady){st.style.cssText='background:#fff3e0;color:#e65100;font-weight:700;display:block;padding:5px 9px;border-radius:8px;margin-bottom:9px';st.textContent='🔥 Firebase เชื่อมต่ออยู่ — sync ทำงาน';}
     else if(cfg&&cfg.databaseURL){st.style.cssText='background:#fdecea;color:#d94f4f;font-weight:700;display:block;padding:5px 9px;border-radius:8px;margin-bottom:9px';st.textContent='⚠️ มี Config แต่ยังไม่ได้เชื่อมต่อ — กด 🔥 เชื่อมต่อ Firebase';}
@@ -1426,7 +1438,16 @@ function initRealtime(){
 // ══════════════════════════════════════════════
 function getFBCfg(){return lsG('fb_cfg',null);}
 function saveFBCfg(cfg){lsS('fb_cfg',cfg);}
-function getFBUrl(){var cfg=getFBCfg()||FB_CFG_DEFAULT;return cfg?cfg.databaseURL:null;}
+function getFBUrl(){
+  // ลอง saved config ก่อน ถ้า databaseURL ไม่ถูกรูปแบบ ให้ใช้ default
+  var cfg=getFBCfg();
+  var url=cfg?cfg.databaseURL:null;
+  if(url&&url.startsWith('https://')&&url.indexOf('firebasedatabase')>=0){return url;}
+  // ตรวจ default config
+  var defUrl=FB_CFG_DEFAULT.databaseURL;
+  if(defUrl&&defUrl.startsWith('https://')){return defUrl;}
+  return null;
+}
 
 function mapBkFB(r){
   if(!r||!r.id)return null;
@@ -1452,7 +1473,8 @@ function fbKey(id){return String(id).replace(/[.#$/\[\]]/g,'_');}
 
 // REST API helper
 async function fbRest(path,method,body){
-  var base=getFBUrl();if(!base)throw new Error('No Firebase URL');
+  var base=getFBUrl();
+  if(!base||!base.startsWith('https://'))throw new Error('No Firebase URL');
   var url=base.replace(/\/$/,'')+'/'+path+'.json';
   var opts={method:method||'GET',headers:{'Content-Type':'application/json'}};
   if(body!==undefined)opts.body=JSON.stringify(body);
