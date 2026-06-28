@@ -733,16 +733,24 @@ function renderLangButtons(){
 
 // ════════════ OFFLINE/LOCAL DB ════════════
 var _offline=false;
-var _ldb={bookings:lsGet('ldb_bk',[]),members:lsGet('ldb_mb',[]),staff:lsGet('ldb_st',[])};
-function saveLDB(t2){lsSet('ldb_'+{bookings:'bk',members:'mb',staff:'st'}[t2],_ldb[t2]);}
-var _colCache={};
+var _probed=false;
+// pre-set optional columns to false — safe default until probeOptionalCols runs
+var _colCache={
+  'bookings_email':false,
+  'bookings_line_user_id':false,
+  'bookings_checked_out':false,
+  'members_email':false
+};
 function hasColSync(tbl,col){return _colCache[tbl+'_'+col]===true;}
-// probe optional columns — mark all false by default (safe for existing DB)
+// probe optional columns ONCE — mark false by default so no extra GET fired during booking
+var _probed=false;
 async function probeOptionalCols(){
-  if(_offline)return;
+  if(_offline||_probed)return;
+  _probed=true;
   var cols=[['bookings','email'],['bookings','line_user_id'],['bookings','checked_out'],['members','email']];
   await Promise.all(cols.map(async function(pair){
     var k=pair[0]+'_'+pair[1];
+    if(k in _colCache)return; // already known
     try{
       var r=await fetch(SB_URL+'/rest/v1/'+pair[0]+'?select='+pair[1]+'&limit=0',
         {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
@@ -1503,8 +1511,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('dep-cb').addEventListener('change',function(){document.getElementById('btn-dep-ok').disabled=!this.checked;});
   document.getElementById('btn-dep-ok').addEventListener('click',submitBooking);
   document.getElementById('btn-dep-cancel').addEventListener('click',function(){document.getElementById('dep-modal').classList.remove('open');pendingData=null;});
-  document.getElementById('btn-pay-ok').addEventListener('click',confirmComm); // unused placeholder
-  document.getElementById('btn-pay-cancel').addEventListener('click',closeCommModal); // unused placeholder
+  // ── pay/comm modal (comm only now) ──
+  var btnPayOk=document.getElementById('btn-pay-ok');
+  var btnPayCancel=document.getElementById('btn-pay-cancel');
+  if(btnPayOk)btnPayOk.addEventListener('click',confirmComm);
+  if(btnPayCancel)btnPayCancel.addEventListener('click',closeCommModal);
   document.getElementById('btn-comm-ok').addEventListener('click',confirmComm);
   document.getElementById('btn-comm-cancel').addEventListener('click',closeCommModal);
   // Pay+CO combined modal
@@ -1512,6 +1523,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('btn-pay-co-payonly').addEventListener('click',function(){doPayCO(true,false);});
   document.getElementById('btn-pay-co-coonly').addEventListener('click',function(){doPayCO(false,true);});
   document.getElementById('btn-pay-co-cancel').addEventListener('click',closePayCOModal);
+  // checkout modal back-compat
+  var btnCoBack=document.getElementById('btn-co-back');
+  var btnDoCo=document.getElementById('btn-do-co');
+  if(btnCoBack)btnCoBack.addEventListener('click',function(){document.getElementById('checkout-modal').classList.remove('open');});
+  if(btnDoCo)btnDoCo.addEventListener('click',function(){if(coTarget)doPayCO(false,true);});
   document.getElementById('btn-pdf').addEventListener('click',function(){if(billData)exportBillPDF(billData);});
   document.getElementById('btn-jpg').addEventListener('click',function(){if(billData)exportBillJPG(billData);});
   document.getElementById('btn-copy-bill').addEventListener('click',copyBill);
