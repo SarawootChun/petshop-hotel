@@ -278,11 +278,11 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   <div class="lc">
     <div style="font-size:2.2rem;margin-bottom:5px">🐾</div>
     <div style="font-size:1.2rem;font-weight:800;margin-bottom:3px" id="ltit">Abcd <span style="color:var(--p)">Petshop Hotel</span></div>
-    <div style="font-size:.76rem;color:#999;margin-bottom:16px">กรุณาเข้าสู่ระบบก่อนใช้งาน</div>
+    <div style="font-size:.76rem;color:#999;margin-bottom:16px" data-i18n="login.sub">กรุณาเข้าสู่ระบบก่อนใช้งาน</div>
     <div class="lang-row" id="lang-row"></div>
     <input type="text" id="lu" placeholder="Username" autocomplete="username">
     <input type="password" id="lp" placeholder="Password" autocomplete="current-password">
-    <button class="btn-main" id="blg">เข้าสู่ระบบ</button>
+    <button class="btn-main" id="blg" data-i18n="login.btn">เข้าสู่ระบบ</button>
     <div class="lerr" id="lerr"></div>
   </div>
 </div>
@@ -419,38 +419,38 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
   <div class="cwrap"><h4>📊 รายได้ 7 วันล่าสุด</h4><div class="bchart" id="bchart"></div></div>
   <div class="sumhero">
-    <div><div class="shl">รายได้รวม</div><div class="sha" id="sumtot">฿0</div><div class="shs" id="sumsub">จาก 0 การจอง</div></div>
+    <div><div class="shl" data-i18n="sum.total">รายได้รวม</div><div class="sha" id="sumtot">฿0</div><div class="shs" id="sumsub">จาก 0 การจอง</div></div>
     <div class="shbs">
-      <div class="shb"><div class="shbn" id="sumni">0</div><div class="shbl">คืนรวม</div></div>
-      <div class="shb"><div class="shbn" id="sumdp">฿0</div><div class="shbl">มัดจำรวม</div></div>
-      <div class="shb"><div class="shbn" id="sumrm">฿0</div><div class="shbl">ยอดค้าง</div></div>
+      <div class="shb"><div class="shbn" id="sumni">0</div><div class="shbl" data-i18n="sum.nights">คืนรวม</div></div>
+      <div class="shb"><div class="shbn" id="sumdp">฿0</div><div class="shbl" data-i18n="sum.dep">มัดจำรวม</div></div>
+      <div class="shb"><div class="shbn" id="sumrm">฿0</div><div class="shbl" data-i18n="sum.remain">ยอดค้าง</div></div>
       <div class="shb"><div class="shbn" id="sumocc">0%</div><div class="shbl">Occupancy</div></div>
     </div>
   </div>
   <div class="sgrid">
     <div class="card"><h4>🛏️ Standard</h4>
-      <div class="srow"><span>การจอง</span><span class="val" id="sscnt">0</span></div>
-      <div class="srow"><span>คืนรวม</span><span class="val" id="ssni">0</span></div>
-      <div class="srow"><span>ค่าห้อง</span><span class="val" id="ssrm">฿0</span></div>
-      <div class="srow"><span>ค่าแมวเพิ่ม</span><span class="val" id="sscat">฿0</span></div>
-      <div class="srow"><span>รวม</span><span class="val" id="sstot">฿0</span></div>
+      <div class="srow"><span data-i18n="sum.bookings">การจอง</span><span class="val" id="sscnt">0</span></div>
+      <div class="srow"><span data-i18n="sum.nights">คืนรวม</span><span class="val" id="ssni">0</span></div>
+      <div class="srow"><span data-i18n="sum.room">ค่าห้อง</span><span class="val" id="ssrm">฿0</span></div>
+      <div class="srow"><span data-i18n="sum.catex">ค่าแมวเพิ่ม</span><span class="val" id="sscat">฿0</span></div>
+      <div class="srow"><span data-i18n="sum.subtotal">รวม</span><span class="val" id="sstot">฿0</span></div>
     </div>
     <div class="card"><h4>🔗 Connect</h4>
-      <div class="srow"><span>การจอง</span><span class="val" id="sccnt">0</span></div>
-      <div class="srow"><span>คืนรวม</span><span class="val" id="scni">0</span></div>
-      <div class="srow"><span>ค่าห้อง</span><span class="val" id="scrm">฿0</span></div>
-      <div class="srow"><span>ค่าแมวเพิ่ม</span><span class="val" id="sccat">฿0</span></div>
-      <div class="srow"><span>รวม</span><span class="val" id="sctot">฿0</span></div>
+      <div class="srow"><span data-i18n="sum.bookings">การจอง</span><span class="val" id="sccnt">0</span></div>
+      <div class="srow"><span data-i18n="sum.nights">คืนรวม</span><span class="val" id="scni">0</span></div>
+      <div class="srow"><span data-i18n="sum.room">ค่าห้อง</span><span class="val" id="scrm">฿0</span></div>
+      <div class="srow"><span data-i18n="sum.catex">ค่าแมวเพิ่ม</span><span class="val" id="sccat">฿0</span></div>
+      <div class="srow"><span data-i18n="sum.subtotal">รวม</span><span class="val" id="sctot">฿0</span></div>
     </div>
   </div>
   <div class="card" style="margin-bottom:9px"><h4>💰 สรุปยอดเงิน</h4>
-    <div class="srow"><span>รายได้รวม</span><span class="val" id="fgrand">฿0</span></div>
-    <div class="srow"><span>✅ มัดจำที่รับแล้ว</span><span class="val gn" id="fdep2">฿0</span></div>
-    <div class="srow"><span>✅ รับชำระแล้ว</span><span class="val gn" id="fpaid">฿0</span></div>
-    <div class="srow"><span>🔴 ยอดค้างชำระ</span><span class="val rd" id="frem">฿0</span></div>
-    <div class="srow"><span>🟣 ค่าคอมรวม</span><span class="val pu" id="fcom">฿0</span></div>
-    <div class="srow"><span>🟣 ค่าคอมจ่ายแล้ว</span><span class="val pu" id="fcpd">฿0</span></div>
-    <div class="srow"><span>🔴 ค่าคอมค้าง</span><span class="val rd" id="fcrm">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.total">รายได้รวม</span><span class="val" id="fgrand">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.dep_rcv">✅ มัดจำที่รับแล้ว</span><span class="val gn" id="fdep2">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.paid">✅ รับชำระแล้ว</span><span class="val gn" id="fpaid">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.owed">🔴 ยอดค้างชำระ</span><span class="val rd" id="frem">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.comm">🟣 ค่าคอมรวม</span><span class="val pu" id="fcom">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.comm_pd">🟣 ค่าคอมจ่ายแล้ว</span><span class="val pu" id="fcpd">฿0</span></div>
+    <div class="srow"><span data-i18n="sum.comm_ow">🔴 ค่าคอมค้าง</span><span class="val rd" id="fcrm">฿0</span></div>
   </div>
   <div class="card"><h4>📋 รายละเอียด</h4><div id="sumdet"></div></div>
 </section>
@@ -458,13 +458,13 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 <section id="s-commission">
   <h2 data-i18n="sec.comm.title">ค่าคอมพนักงาน</h2><p class="sub" data-i18n="sec.comm.sub">สรุปค่าคอม</p>
   <div class="comhero">
-    <div style="color:#fff"><div style="font-size:.74rem;opacity:.7;margin-bottom:2px">ค่าคอมรวม</div>
+    <div style="color:#fff"><div style="font-size:.74rem;opacity:.7;margin-bottom:2px" data-i18n="com.total">ค่าคอมรวม</div>
       <div style="font-size:1.7rem;font-weight:800;color:#d4b8ff" id="comgrand">฿0</div>
       <div style="font-size:.67rem;opacity:.6;margin-top:1px" id="comsub">จาก 0 การจอง</div>
     </div>
     <div class="shbs">
-      <div class="shb"><div class="shbn" id="compd">฿0</div><div class="shbl">จ่ายแล้ว</div></div>
-      <div class="shb"><div class="shbn" id="comunpd">฿0</div><div class="shbl">ค้างจ่าย</div></div>
+      <div class="shb"><div class="shbn" id="compd">฿0</div><div class="shbl" data-i18n="com.paid">จ่ายแล้ว</div></div>
+      <div class="shb"><div class="shbn" id="comunpd">฿0</div><div class="shbl" data-i18n="com.owed">ค้างจ่าย</div></div>
     </div>
   </div>
   <div id="comlist"></div>
@@ -600,9 +600,9 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
     </div>
     <div class="calsub" id="calsub"></div>
     <div class="calleg">
-      <div class="leg"><div class="legdot" style="background:#edfaf4;border:1px solid #2da56e"></div><span>ว่าง</span></div>
-      <div class="leg"><div class="legdot" style="background:#fdecea;border:1px solid #d94f4f"></div><span>ไม่ว่าง</span></div>
-      <div class="leg"><div class="legdot" style="background:var(--p)"></div><span>เลือก</span></div>
+      <div class="leg"><div class="legdot" style="background:#edfaf4;border:1px solid #2da56e"></div><span data-i18n="st.free">ว่าง</span></div>
+      <div class="leg"><div class="legdot" style="background:#fdecea;border:1px solid #d94f4f"></div><span data-i18n="st.busy">ไม่ว่าง</span></div>
+      <div class="leg"><div class="legdot" style="background:var(--p)"></div><span data-i18n="st.selected">เลือก</span></div>
     </div>
     <div class="calgrid" id="calgrid"></div>
     <div class="calbtns">
@@ -854,7 +854,7 @@ function renderLangBtns(){
       var btn=document.createElement('button');
       btn.className=(id==='nlr'?'nlbtn':'lbtn')+(lang===code?' on':'');
       btn.textContent=LMETA[code].l;
-      btn.addEventListener('click',function(){lang=code;lsS('lang',code);renderLangBtns();applyLang();updateOrgUI();});
+      btn.addEventListener('click',function(){lang=code;lsS('lang',code);renderLangBtns();applyLang();updateOrgUI();pushSettings();});
       w.appendChild(btn);
     });
   });
@@ -886,7 +886,13 @@ var TRANS={
     'lbl.mname':'ชื่อ','lbl.mphone':'เบอร์โทร',
     'lbl.email':'📧 อีเมล','lbl.idcard':'🪪 บัตรประชาชน (ไม่บังคับ)',
     'cal.select.in':'👆 กดวันเช็คอิน','nosel':'← เลือกห้องในแท็บ "ห้องพัก" ก่อนนะคะ',
-    'empty.book':'🐱 ยังไม่มีการจองค่ะ','empty.mem':'🐱 ยังไม่มีสมาชิกค่ะ'
+    'empty.book':'🐱 ยังไม่มีการจองค่ะ','empty.mem':'🐱 ยังไม่มีสมาชิกค่ะ',
+    'login.sub':'กรุณาเข้าสู่ระบบก่อนใช้งาน','login.btn':'เข้าสู่ระบบ',
+    'sum.total':'รายได้รวม','sum.nights':'คืนรวม','sum.dep':'มัดจำรวม','sum.remain':'ยอดค้าง',
+    'sum.bookings':'การจอง','sum.room':'ค่าห้อง','sum.catex':'ค่าแมวเพิ่ม','sum.subtotal':'รวม',
+    'sum.dep_rcv':'✅ มัดจำที่รับแล้ว','sum.paid':'✅ รับชำระแล้ว','sum.owed':'🔴 ยอดค้างชำระ',
+    'sum.comm':'🟣 ค่าคอมรวม','sum.comm_pd':'🟣 ค่าคอมจ่ายแล้ว','sum.comm_ow':'🔴 ค่าคอมค้าง',
+    'com.total':'ค่าคอมรวม','com.paid':'จ่ายแล้ว','com.owed':'ค้างจ่าย'
   },
   en:{
     'nav.rooms':'Rooms','nav.book':'Book','nav.bookings':'Bookings',
@@ -910,7 +916,13 @@ var TRANS={
     'lbl.mname':'Name','lbl.mphone':'Phone',
     'lbl.email':'📧 Email','lbl.idcard':'🪪 ID Card (optional)',
     'cal.select.in':'👆 Select check-in date','nosel':'← Select a room in "Rooms" tab first',
-    'empty.book':'🐱 No bookings yet','empty.mem':'🐱 No members yet'
+    'empty.book':'🐱 No bookings yet','empty.mem':'🐱 No members yet',
+    'login.sub':'Please log in to continue','login.btn':'Login',
+    'sum.total':'Total Revenue','sum.nights':'Total Nights','sum.dep':'Total Deposit','sum.remain':'Outstanding',
+    'sum.bookings':'Bookings','sum.room':'Room Charge','sum.catex':'Extra Cats','sum.subtotal':'Subtotal',
+    'sum.dep_rcv':'✅ Deposit Received','sum.paid':'✅ Amount Paid','sum.owed':'🔴 Amount Owed',
+    'sum.comm':'🟣 Total Commission','sum.comm_pd':'🟣 Commission Paid','sum.comm_ow':'🔴 Commission Owed',
+    'com.total':'Total Commission','com.paid':'Paid','com.owed':'Owed'
   },
   zh:{
     'nav.rooms':'客房','nav.book':'预订','nav.bookings':'预订列表',
@@ -934,7 +946,13 @@ var TRANS={
     'lbl.mname':'姓名','lbl.mphone':'电话',
     'lbl.email':'📧 邮箱','lbl.idcard':'🪪 身份证 (可选)',
     'cal.select.in':'👆 选择入住日期','nosel':'← 请先在"客房"中选择房间',
-    'empty.book':'🐱 暂无预订记录','empty.mem':'🐱 暂无会员记录'
+    'empty.book':'🐱 暂无预订记录','empty.mem':'🐱 暂无会员记录',
+    'login.sub':'请登录后使用','login.btn':'登录',
+    'sum.total':'总收入','sum.nights':'总晚数','sum.dep':'总押金','sum.remain':'未付余额',
+    'sum.bookings':'预订数','sum.room':'房费','sum.catex':'额外猫费','sum.subtotal':'小计',
+    'sum.dep_rcv':'✅ 已收押金','sum.paid':'✅ 已付金额','sum.owed':'🔴 未付金额',
+    'sum.comm':'🟣 总佣金','sum.comm_pd':'🟣 已付佣金','sum.comm_ow':'🔴 未付佣金',
+    'com.total':'总佣金','com.paid':'已付','com.owed':'未付'
   },
   ja:{
     'nav.rooms':'客室','nav.book':'予約','nav.bookings':'予約一覧',
@@ -958,7 +976,13 @@ var TRANS={
     'lbl.mname':'名前','lbl.mphone':'電話番号',
     'lbl.email':'📧 メール','lbl.idcard':'🪪 身分証明書 (任意)',
     'cal.select.in':'👆 チェックイン日を選択','nosel':'← 「客室」タブで部屋を選んでください',
-    'empty.book':'🐱 予約はまだありません','empty.mem':'🐱 会員はまだいません'
+    'empty.book':'🐱 予約はまだありません','empty.mem':'🐱 会員はまだいません',
+    'login.sub':'ログインしてください','login.btn':'ログイン',
+    'sum.total':'総収入','sum.nights':'総泊数','sum.dep':'総デポジット','sum.remain':'未払い残高',
+    'sum.bookings':'予約数','sum.room':'客室料金','sum.catex':'追加猫料金','sum.subtotal':'小計',
+    'sum.dep_rcv':'✅ 受取済デポジット','sum.paid':'✅ 支払済金額','sum.owed':'🔴 未払い金額',
+    'sum.comm':'🟣 総コミッション','sum.comm_pd':'🟣 支払済コミッション','sum.comm_ow':'🔴 未払いコミッション',
+    'com.total':'総コミッション','com.paid':'支払済','com.owed':'未払い'
   }
 };
 function t(key){var tr=TRANS[lang]||TRANS['th'];return(tr&&tr[key])||((TRANS['th']&&TRANS['th'][key])||key);}
@@ -1046,7 +1070,7 @@ function showApp(){
   // แสดง 👑 ปุ่มแอดมินลับ เมื่อปิด Login และยังเป็น guest
   var bga=el('bguestadmin');if(bga)bga.style.display=(loginOff&&CU.role==='guest')?'':'none';
   renderLangBtns();applyLang();updateOrgUI();loadTheme();loadBkSettings();
-  testConn().then(function(ok){connBanner(ok);if(!_off)probeOptCols();});
+  testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});
   fillStaff();showSec('rooms');
 }
 
@@ -1116,7 +1140,45 @@ function connBanner(ok){
   if(ok){b.style.cssText='background:#edfaf4;color:#2da56e;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.textContent='🟢 Supabase Connected';setTimeout(function(){b.style.display='none';},4000);}
   else{b.style.cssText='background:#fef3e2;color:#f0a500;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.innerHTML='🟡 Offline Mode | <span style="cursor:pointer;text-decoration:underline" onclick="retryC()">Retry</span>';}
 }
-async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){await syncPending();alert2('🟢 Connected!','ok');}}
+async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){await syncPending();await pullSettings();renderBookings();renderRooms();alert2('🟢 Connected!','ok');}}
+
+// ══════════════════════════════════════════════
+// SETTINGS SYNC via Supabase (table: settings)
+// ── สร้าง table ใน Supabase SQL Editor:
+//    create table if not exists settings (
+//      key text primary key, value text,
+//      updated_at timestamptz default now());
+//    alter table settings enable row level security;
+//    create policy "anon_all" on settings for all to anon using (true) with check (true);
+// ══════════════════════════════════════════════
+var SYNC_KEYS=['org','rooms','bkset','th','accs','lang','loginEnabled'];
+function pushSettings(){
+  if(_off)return;
+  var data={};SYNC_KEYS.forEach(function(k){data[k]=lsG(k,null);});
+  fetch(SB+'/rest/v1/settings',{
+    method:'POST',
+    headers:{'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify({key:'app_settings',value:JSON.stringify(data),updated_at:new Date().toISOString()})
+  }).catch(function(){});
+}
+async function pullSettings(){
+  if(_off)return false;
+  try{
+    var rows=await sbF('settings',{filter:'key=eq.app_settings'});
+    if(rows&&rows[0]&&rows[0].value){
+      var data=JSON.parse(rows[0].value);
+      var changed=false;
+      SYNC_KEYS.forEach(function(k){if(data[k]!==undefined&&data[k]!==null){lsS(k,data[k]);changed=true;}});
+      if(changed){
+        lang=lsG('lang','th');renderLangBtns();applyLang();
+        updateOrgUI();loadTheme();loadBkSettings();
+        alert2('☁️ โหลดตั้งค่าจาก Cloud แล้ว','ok',3000);
+      }
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
 
 // ลอง sync รายการ pending (local) ขึ้น Supabase
 async function syncPending(){
@@ -1270,7 +1332,7 @@ function getRooms(){
     return{id:String(101+i),name:'ห้อง '+(101+i),price:250,type:'standard'};
   }));
 }
-function saveRooms(r){lsS('rooms',r);}
+function saveRooms(r){lsS('rooms',r);pushSettings();}
 
 // FIX #2 — ราคาห้อง: อ่านจาก room object โดยตรง ไม่ใช้ global org price
 function getRoomPrice(roomId){
@@ -2191,7 +2253,7 @@ function renderBkUI(){
   if(el('bkano'))el('bkano').value=bkSet.accountNo||'';
   if(bkSet.qrBase64){var p=el('qrprev');if(p){p.src=bkSet.qrBase64;p.style.display='block';}}
 }
-function saveBkSet(){bkSet.bankName=(el('bkname').value||'').trim();bkSet.accountName=(el('bkacn').value||'').trim();bkSet.accountNo=(el('bkano').value||'').trim();lsS('bkset',bkSet);var m=el('bkmsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);}
+function saveBkSet(){bkSet.bankName=(el('bkname').value||'').trim();bkSet.accountName=(el('bkacn').value||'').trim();bkSet.accountNo=(el('bkano').value||'').trim();lsS('bkset',bkSet);pushSettings();var m=el('bkmsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);}
 
 function renderAccList(){
   if(!isOwner())return;var accs=initAccs(),w=el('acclist');
@@ -2208,9 +2270,9 @@ function renderAccList(){
     btn.addEventListener('click',function(){
       var u=btn.dataset.u,act=btn.dataset.act,a2=initAccs();
       if(act==='showp'){var pe=el('ap-'+u);if(pe)pe.style.display=pe.style.display==='block'?'none':'block';}
-      else if(act==='togadmin'){var ix=a2.findIndex(function(x){return x.u===u;});if(ix>=0){a2[ix].canAdmin=!a2[ix].canAdmin;lsS('accs',a2);}renderAccList();}
-      else if(act==='chgp'){var np=prompt('รหัสผ่านใหม่สำหรับ "'+u+'" (อย่างน้อย 4 ตัว)');if(!np||np.length<4){alert('ต้องอย่างน้อย 4 ตัว');return;}var ix2=a2.findIndex(function(x){return x.u===u;});if(ix2>=0){a2[ix2].p=np;lsS('accs',a2);}renderAccList();}
-      else if(act==='del'){if(!confirm('ลบบัญชี "'+u+'"?'))return;lsS('accs',a2.filter(function(x){return x.u!==u;}));renderAccList();fillStaff();}
+      else if(act==='togadmin'){var ix=a2.findIndex(function(x){return x.u===u;});if(ix>=0){a2[ix].canAdmin=!a2[ix].canAdmin;lsS('accs',a2);pushSettings();}renderAccList();}
+      else if(act==='chgp'){var np=prompt('รหัสผ่านใหม่สำหรับ "'+u+'" (อย่างน้อย 4 ตัว)');if(!np||np.length<4){alert('ต้องอย่างน้อย 4 ตัว');return;}var ix2=a2.findIndex(function(x){return x.u===u;});if(ix2>=0){a2[ix2].p=np;lsS('accs',a2);pushSettings();}renderAccList();}
+      else if(act==='del'){if(!confirm('ลบบัญชี "'+u+'"?'))return;lsS('accs',a2.filter(function(x){return x.u!==u;}));pushSettings();renderAccList();fillStaff();}
     });
   });
 }
@@ -2221,7 +2283,7 @@ function addAcc(){
   if(!u||!p){msg.style.color='#d94f4f';msg.textContent='กรุณากรอก Username และ Password';return;}
   if(p.length<4){msg.style.color='#d94f4f';msg.textContent='Password ต้องอย่างน้อย 4 ตัว';return;}
   var a=initAccs();if(a.find(function(x){return x.u===u;})){msg.style.color='#d94f4f';msg.textContent='Username นี้มีอยู่แล้ว';return;}
-  a.push({u:u,p:p,role:r,name:n,canAdmin:false});lsS('accs',a);
+  a.push({u:u,p:p,role:r,name:n,canAdmin:false});lsS('accs',a);pushSettings();
   el('nauser').value='';el('napass').value='';el('naname').value='';
   msg.style.color='#2da56e';msg.textContent='✅ เพิ่มบัญชี "'+u+'" แล้ว';setTimeout(function(){msg.textContent='';},2500);
   renderAccList();fillStaff();
@@ -2422,7 +2484,7 @@ function setLoginTrack(on){
 function toggleLogin(){
   var cur=lsG('loginEnabled',true);
   var next=!cur;
-  lsS('loginEnabled',next);
+  lsS('loginEnabled',next);pushSettings();
   setLoginTrack(next);
   var m=el('togmsg');
   if(m){m.style.color=next?'#2da56e':'#f0a500';m.textContent=next?'✅ เปิดระบบ Login แล้ว':'⚠️ ปิดระบบ Login แล้ว — มีผลหลังโหลดหน้าใหม่';}
@@ -2537,11 +2599,11 @@ document.addEventListener('DOMContentLoaded',function(){
   // ADMIN
   el('bsaveorg').addEventListener('click',function(){
     var org={name:(el('oname').value||'').trim()||'Abcd Petshop Hotel',icon:(el('oico').value||'').trim()||'🐾',priceStd:parseInt(el('opstd').value)||250,priceConn:parseInt(el('opcon').value)||450};
-    lsS('org',org);updateOrgUI();
+    lsS('org',org);updateOrgUI();pushSettings();
     var m=el('orgmsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);
   });
-  el('bapplytheme').addEventListener('click',function(){var p=el('cpri').value,bg=el('cbg').value;applyTheme(p,bg);lsS('th',{p:p,bg:bg});alert2('✅ ใช้สีนี้แล้ว!','ok');});
-  el('brsttheme').addEventListener('click',function(){applyTheme('#b5926b','#faf9f7');lsS('th',{p:'#b5926b',bg:'#faf9f7'});renderPresets();alert2('✅ รีเซ็ตสีแล้ว','ok');});
+  el('bapplytheme').addEventListener('click',function(){var p=el('cpri').value,bg=el('cbg').value;applyTheme(p,bg);lsS('th',{p:p,bg:bg});pushSettings();alert2('✅ ใช้สีนี้แล้ว!','ok');});
+  el('brsttheme').addEventListener('click',function(){applyTheme('#b5926b','#faf9f7');lsS('th',{p:'#b5926b',bg:'#faf9f7'});renderPresets();pushSettings();alert2('✅ รีเซ็ตสีแล้ว','ok');});
   el('baddacc').addEventListener('click',addAcc);
   el('baddroom').addEventListener('click',addRoom);
   el('bsavebk').addEventListener('click',saveBkSet);
