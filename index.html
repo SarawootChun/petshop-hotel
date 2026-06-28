@@ -8,7 +8,6 @@
 :root{--p:#b5926b;--pl:rgba(181,146,107,.12);--pb:rgba(181,146,107,.3);--pd:#8a6d4e;--bg:#faf9f7;--card:#fff;--bd:#eee;--tx:#2d2d2d;--sub:#999;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
-/* LOGIN */
 .ls{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#2d2d2d,#4a3728)}
 .lc{background:#fff;border-radius:20px;padding:32px 26px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .lc input{width:100%;padding:10px 12px;border:1.5px solid #eee;border-radius:10px;font-size:.86rem;margin-bottom:9px;outline:none;background:#fafafa;transition:border .2s}
@@ -20,7 +19,6 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-
 .btn-main:hover{background:var(--p)}
 .lerr{color:#d94f4f;font-size:.75rem;margin-top:6px;min-height:16px}
 .rlink{margin-top:8px;background:none;border:none;color:#bbb;font-size:.68rem;cursor:pointer;text-decoration:underline}
-/* NAV */
 nav{background:#fff;border-bottom:1px solid #eee;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:4px}
 .logo{font-size:.92rem;font-weight:700}.logo span{color:var(--p)}
 .nc{display:flex;gap:2px;flex-wrap:wrap;flex:1;justify-content:center}
@@ -35,12 +33,10 @@ nav{background:#fff;border-bottom:1px solid #eee;padding:8px 12px;display:flex;a
 .boutl{background:none;border:1.5px solid #eee;color:#888;padding:3px 9px;border-radius:20px;font-size:.7rem;cursor:pointer}
 .boutl:hover{border-color:#d94f4f;color:#d94f4f}
 #cbanner{text-align:center;font-size:.68rem;font-weight:600;padding:4px;position:sticky;top:48px;z-index:99}
-/* SECTIONS */
 section{display:none;padding:16px 13px;max-width:980px;margin:0 auto}
-section.on{display:block}
+section.on{display:block !important}
 h2{font-size:1.1rem;font-weight:700;margin-bottom:3px}
 .sub{color:#999;font-size:.76rem;margin-bottom:14px}
-/* ROOMS */
 .mtog{display:flex;gap:7px;margin-bottom:12px}
 .mbtn{flex:1;padding:9px;border-radius:12px;border:2px solid #eee;background:#fff;cursor:pointer;text-align:center;transition:all .2s}
 .mbtn.on{border-color:var(--p);background:var(--pl)}
@@ -59,7 +55,6 @@ h2{font-size:1.1rem;font-weight:700;margin-bottom:3px}
 .sbg{position:absolute;top:3px;right:3px;font-size:.58rem;font-weight:800;background:var(--p);color:#fff;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center}
 .sbg.b2{background:#7aaa8a}
 .chint{display:none;background:var(--pl);border:1.5px dashed var(--p);border-radius:10px;padding:7px 11px;font-size:.74rem;color:var(--p);margin-bottom:9px}
-/* FORM */
 .card{background:#fff;border:1px solid #eee;border-radius:12px;padding:15px;margin-bottom:10px}
 .card h4{font-size:.8rem;font-weight:700;margin-bottom:9px;color:#555}
 .nosel{color:#bbb;font-size:.8rem;padding:7px 0}
@@ -96,14 +91,12 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .bbook:hover{background:var(--p)}
 .msg{margin-top:8px;padding:7px 11px;border-radius:9px;font-size:.76rem;font-weight:600;text-align:center}
 .msg.ok{background:#edfaf4;color:#2da56e}.msg.er{background:#fdecea;color:#d94f4f}
-/* STATS */
 .stats{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
 .sbox{background:#fff;border:1px solid #eee;border-radius:11px;padding:10px 12px;flex:1;min-width:70px;text-align:center}
 .snum{font-size:1.3rem;font-weight:800}.snum.gd{color:var(--p)}.snum.pu{color:#7c5cbf}
 .slbl{font-size:.62rem;color:#999;margin-top:1px}
-/* BOOKING ITEMS */
 .bi{background:#fff;border:1px solid #eee;border-radius:11px;padding:10px 12px;margin-bottom:5px;display:flex;align-items:flex-start;justify-content:space-between;gap:7px;flex-wrap:wrap}
-.bil{display:flex;align-items:flex-start;gap:7px}.bico{font-size:1rem}
+.bil{display:flex;align-items:flex-start;gap:7px}.bico2{font-size:1rem}
 .biin strong{font-size:.8rem}.biin span{font-size:.65rem;color:#999;display:block;margin-top:1px}
 .bir{text-align:right}.bdt{font-size:.65rem;color:#888;background:#f5f5f5;padding:2px 6px;border-radius:20px}
 .brv{font-size:.76rem;font-weight:700;color:var(--p);margin-top:2px}
@@ -116,8 +109,8 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .bs.bp{background:#edfaf4;border:1.5px solid #2da56e !important;color:#2da56e}
 .bs.bc{background:#f0ebff;border:1.5px solid #7c5cbf !important;color:#7c5cbf}
 .bs.bx{background:none;border:1.5px solid #f0c0c0 !important;color:#d94f4f}
+.bs.bo{background:#fff3e0;border:1.5px solid #f0a500 !important;color:#f0a500}
 .empty{text-align:center;color:#ccc;padding:28px 0;font-size:.84rem}
-/* SUMMARY */
 .dfilter{display:flex;gap:6px;margin-bottom:11px;flex-wrap:wrap}
 .dfb{padding:5px 12px;border-radius:20px;border:1.5px solid #eee;background:#fff;cursor:pointer;font-size:.73rem;font-weight:600;color:#888;transition:all .2s}
 .dfb.on{background:var(--p);color:#fff;border-color:var(--p)}
@@ -139,7 +132,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .bfill{width:80%;border-radius:4px 4px 0 0;position:absolute;bottom:18px;transition:height .4s}
 .blbl{font-size:.57rem;color:#999;position:absolute;bottom:0;white-space:nowrap}
 .bval{font-size:.55rem;color:var(--p);font-weight:700;position:absolute;white-space:nowrap}
-/* COMMISSION */
 .comhero{background:linear-gradient(135deg,#4a3580,#7c5cbf);color:#fff;border-radius:12px;padding:16px;margin-bottom:11px}
 .comcard{background:#fff;border:1px solid #eee;border-radius:11px;padding:12px;margin-bottom:6px}
 .comname{font-size:.88rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
@@ -147,7 +139,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .combadge.pd{background:#edfaf4;color:#2da56e}
 .comitem{display:flex;justify-content:space-between;font-size:.73rem;padding:3px 0;border-bottom:1px solid #f5f5f5}
 .comtot{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;margin-top:6px;padding-top:6px;border-top:2px solid #eee}
-/* MEMBERS */
 .memcard{background:#fff;border:1px solid #eee;border-radius:11px;padding:10px 12px;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}
 .meml{display:flex;align-items:center;gap:8px}
 .memav{width:32px;height:32px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
@@ -157,7 +148,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .addmem{background:#fff;border:1px solid #eee;border-radius:11px;padding:14px;margin-bottom:11px}
 .addmem h4{font-size:.8rem;font-weight:700;margin-bottom:9px;color:#555}
 .bacat{background:var(--pl);border:none;color:var(--p);padding:4px 10px;border-radius:8px;font-size:.73rem;font-weight:600;cursor:pointer;margin-top:4px}
-/* ADMIN */
 .acrow{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid #eee;border-radius:9px;margin-bottom:5px;background:#fafafa;flex-wrap:wrap}
 .acif{flex:1;font-size:.77rem}
 .acpass{font-size:.67rem;color:var(--p);background:var(--pl);border-radius:6px;padding:2px 7px;margin-top:2px;font-family:monospace;display:none}
@@ -170,10 +160,37 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .crow2{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .crow2 label{font-size:.72rem;font-weight:600;color:#555;margin-bottom:0;white-space:nowrap}
 .crow2 input[type=color]{width:46px;height:34px;border-radius:8px}
-/* OVERLAYS */
+/* slip upload styles */
+.slip-wrap{margin-bottom:10px}
+.slip-label{font-size:.72rem;font-weight:600;color:#555;margin-bottom:4px;display:block}
+.slip-box{border:1.5px dashed #ddd;border-radius:9px;padding:8px;background:#fafafa;cursor:pointer;text-align:center;font-size:.72rem;color:#aaa;transition:all .2s}
+.slip-box:hover{border-color:var(--p);color:var(--p)}
+.slip-box input[type=file]{display:none}
+.slip-prev{max-width:100%;max-height:90px;border-radius:7px;margin-top:5px;display:none;cursor:pointer}
+.slip-tag{display:inline-flex;align-items:center;gap:3px;background:#edfaf4;border:1px solid #2da56e;border-radius:20px;padding:2px 7px;font-size:.63rem;color:#2da56e;font-weight:600;cursor:pointer;margin-top:2px}
+.slip-tag.id-card{background:#fff3e0;border-color:#f0a500;color:#f0a500}
+/* batch delete toolbar */
+.btoolbar{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;padding:4px 0;min-height:28px}
+.chkall-lbl{display:flex;align-items:center;gap:4px;font-size:.7rem;color:#888;cursor:pointer;user-select:none;white-space:nowrap}
+.bchk{width:14px;height:14px;cursor:pointer;accent-color:var(--p);flex-shrink:0}
+.bdsel{background:#fdecea;border:1px solid #f0c0c0;color:#d94f4f;padding:3px 10px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:pointer;display:none}
+.bdall{background:#fff;border:1px solid #ddd;color:#999;padding:3px 10px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:pointer}
+.bdsel:hover,.bdall:hover{background:#d94f4f!important;color:#fff!important;border-color:#d94f4f!important}
+.bsel-cnt{font-size:.68rem;color:var(--p);font-weight:700;display:none}
+.bi.bk-sel{border-color:var(--p)!important;background:var(--pl)!important}
+.memcard.mem-sel{border-color:var(--p)!important;background:var(--pl)!important}
+.bi-chk-wrap{display:flex;align-items:flex-start;gap:7px;width:100%}
+.mem-chk-wrap{display:flex;align-items:center;gap:7px;width:100%}
+/* member id card mini thumb */
+.mem-idcard-mini{width:22px;height:16px;border-radius:3px;object-fit:cover;border:1px solid #f0a500;cursor:pointer;vertical-align:middle}
+.warn-box{background:#fff3e0;border:1.5px solid #f0a500;border-radius:9px;padding:8px 10px;margin-bottom:9px;font-size:.71rem;color:#b07800;line-height:1.5}
+/* image viewer overlay */
+.imgview{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;align-items:center;justify-content:center;padding:16px}
+.imgview.on{display:flex}
+.imgview img{max-width:100%;max-height:90vh;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.imgview-close{position:absolute;top:14px;right:16px;background:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;padding:13px}
 .ov.on{display:flex}
-/* CALENDAR */
 .calbox{background:#fff;border-radius:16px;padding:18px;max-width:340px;width:100%}
 .calhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
 .calhd h3{font-size:.88rem;font-weight:700}
@@ -193,8 +210,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .bcal{flex:1;padding:8px;background:var(--p);color:#fff;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem}
 .bcal:disabled{background:#ccc;cursor:not-allowed}
 .bclcal{flex:1;padding:8px;background:#f0f0f0;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem}
-/* MODALS */
-.mbox{background:#fff;border-radius:16px;padding:20px;max-width:380px;width:100%}
+.mbox{background:#fff;border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:92vh;overflow-y:auto}
 .mico{font-size:1.8rem;text-align:center;margin-bottom:5px}
 .mbox h3{font-size:.9rem;font-weight:700;text-align:center;margin-bottom:4px}
 .msub{font-size:.75rem;color:#999;text-align:center;margin-bottom:13px}
@@ -208,8 +224,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .bconf{flex:1;padding:9px;background:#2da56e;color:#fff;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-size:.83rem}
 .bconf:disabled{background:#ccc;cursor:not-allowed}
 .bcanm{flex:1;padding:9px;background:#f0f0f0;border:none;border-radius:9px;font-weight:600;cursor:pointer;font-size:.83rem}
-/* PAY-CO MODAL */
-.pmbox{background:#fff;border-radius:16px;padding:20px;max-width:370px;width:100%}
+.pmbox{background:#fff;border-radius:16px;padding:20px;max-width:380px;width:100%;max-height:92vh;overflow-y:auto}
 .pbox{border-radius:11px;padding:12px;margin-bottom:12px;text-align:center}
 .pbox.gn{background:#edfaf4;border:2px solid #2da56e}.pbox.pu{background:#f0ebff;border:2px solid #7c5cbf}
 .plbl{font-size:.69rem;font-weight:600;margin-bottom:3px}
@@ -220,7 +235,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .pbtns{display:flex;flex-direction:column;gap:7px}
 .pbtn{padding:10px;border:none;border-radius:9px;font-weight:700;cursor:pointer;font-size:.85rem;color:#fff}
 .pbtn.gn{background:#2da56e}.pbtn.bl{background:#3498db}.pbtn.og{background:#f0a500}.pbtn.gr{background:#888}
-/* BILL */
 .billbox{background:#fff;border-radius:16px;padding:18px;max-width:420px;width:100%;max-height:92vh;overflow-y:auto}
 .billhd{text-align:center;margin-bottom:10px}.billhd h3{font-size:.98rem;font-weight:800}
 .billhd p{font-size:.69rem;color:#999;margin-top:1px}
@@ -240,14 +254,11 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .bbtit{font-size:.7rem;font-weight:700;color:#3498db;margin-bottom:4px}
 .bbrow{display:flex;justify-content:space-between;font-size:.77rem;padding:2px 0}
 .bbqr{text-align:center;margin-top:5px}.bbqr img{max-width:90px;border-radius:7px}
-/* SMALL MODAL */
 .smbox{background:#fff;border-radius:12px;padding:18px;max-width:300px;width:100%;text-align:center}
 .smbox h3{font-size:.9rem;margin-bottom:5px}.smbox p{font-size:.75rem;color:#777;margin-bottom:12px}
 .smbtns{display:flex;gap:6px;justify-content:center}
 .bdc{background:#d94f4f;color:#fff;border:none;padding:7px 15px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.81rem}
-.bdk{background:#2da56e;color:#fff;border:none;padding:7px 15px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.81rem}
 .bno{background:#f0f0f0;border:none;padding:7px 15px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.81rem}
-/* ALERTS */
 .abanner{position:fixed;top:12px;right:12px;z-index:999;max-width:280px}
 .ait{background:#2d2d2d;color:#fff;border-radius:11px;padding:10px 14px;margin-bottom:7px;font-size:.75rem;animation:sli .3s ease;box-shadow:0 4px 18px rgba(0,0,0,.2)}
 .ait.ok{background:#2da56e}.ait.er{background:#d94f4f}.ait.wn{background:#f0a500}
@@ -257,12 +268,11 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="ls" id="ls">
   <div class="lc">
-    <div style="font-size:2.2rem;margin-bottom:5px" id="llogo">🐾</div>
+    <div style="font-size:2.2rem;margin-bottom:5px">🐾</div>
     <div style="font-size:1.2rem;font-weight:800;margin-bottom:3px" id="ltit">Abcd <span style="color:var(--p)">Petshop Hotel</span></div>
-    <div style="font-size:.76rem;color:#999;margin-bottom:16px" id="lsub">กรุณาเข้าสู่ระบบก่อนใช้งาน</div>
+    <div style="font-size:.76rem;color:#999;margin-bottom:16px">กรุณาเข้าสู่ระบบก่อนใช้งาน</div>
     <div class="lang-row" id="lang-row"></div>
     <input type="text" id="lu" placeholder="Username" autocomplete="username">
     <input type="password" id="lp" placeholder="Password" autocomplete="current-password">
@@ -274,16 +284,22 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 
 <div class="abanner" id="abanner"></div>
 
+<!-- image viewer -->
+<div class="imgview" id="imgview">
+  <button class="imgview-close" id="imgview-close">✕</button>
+  <img id="imgview-img" src="" alt="slip">
+</div>
+
 <div id="app" style="display:none">
 <nav>
   <div class="logo" id="navlogo">Abcd <span>Petshop</span> 🐾</div>
   <div class="nc">
-    <button class="nt on" data-s="rooms" id="tr">ห้องพัก</button>
-    <button class="nt" data-s="book" id="tb">จองห้อง</button>
-    <button class="nt" data-s="bookings" id="tbk">รายการจอง</button>
+    <button class="nt on" data-s="rooms">ห้องพัก</button>
+    <button class="nt" data-s="book">จองห้อง</button>
+    <button class="nt" data-s="bookings">รายการจอง</button>
     <button class="nt" data-s="summary" id="tsu">สรุปยอด</button>
-    <button class="nt" data-s="commission" id="tco">ค่าคอม</button>
-    <button class="nt" data-s="members" id="tme">สมาชิก</button>
+    <button class="nt" data-s="commission">ค่าคอม</button>
+    <button class="nt" data-s="members">สมาชิก</button>
     <button class="nt" data-s="admin" id="tad">แอดมิน</button>
   </div>
   <div class="nr">
@@ -319,6 +335,16 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
       </div>
       <div class="fg"><label>📧 อีเมล (ไม่บังคับ)</label><input type="email" id="feml"></div>
       <div class="fg"><label>📱 LINE User ID</label><input type="text" id="flid"></div>
+      <!-- ID card upload -->
+      <div class="fg">
+        <label>🪪 บัตรประชาชน (ไม่บังคับ)</label>
+        <div class="warn-box">⚠️ รูปจะเก็บไว้ในเครื่องนี้เท่านั้น ไม่ได้ส่งขึ้น Server</div>
+        <div class="slip-box" id="idcard-box" onclick="document.getElementById('idcard-file').click()">
+          <input type="file" id="idcard-file" accept="image/*">
+          📎 กดเพื่อแนบรูปบัตรประชาชน
+          <img class="slip-prev" id="idcard-prev">
+        </div>
+      </div>
       <div class="frow">
         <div class="fg"><label>วันเช็คอิน</label>
           <div style="display:flex;gap:4px;align-items:center">
@@ -414,7 +440,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
   <div class="card" style="margin-bottom:9px"><h4>💰 สรุปยอดเงิน</h4>
     <div class="srow"><span>รายได้รวม</span><span class="val" id="fgrand">฿0</span></div>
-    <div class="srow"><span>✅ มัดจำที่รับแล้ว</span><span class="val gn" id="fdep">฿0</span></div>
+    <div class="srow"><span>✅ มัดจำที่รับแล้ว</span><span class="val gn" id="fdep2">฿0</span></div>
     <div class="srow"><span>✅ รับชำระแล้ว</span><span class="val gn" id="fpaid">฿0</span></div>
     <div class="srow"><span>🔴 ยอดค้างชำระ</span><span class="val rd" id="frem">฿0</span></div>
     <div class="srow"><span>🟣 ค่าคอมรวม</span><span class="val pu" id="fcom">฿0</span></div>
@@ -447,7 +473,15 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
       <div class="fg"><label>ชื่อ</label><input type="text" id="mfname"></div>
       <div class="fg"><label>เบอร์โทร</label><input type="tel" id="mfph"></div>
     </div>
-    <div class="fg"><label>📧 อีเมล (ไม่บังคับ)</label><input type="email" id="mfeml"></div>
+    <div class="fg"><label>📧 อีเมล</label><input type="email" id="mfeml"></div>
+    <div class="fg"><label>📱 LINE User ID</label><input type="text" id="mflid"></div>
+    <div class="fg"><label>🪪 บัตรประชาชน (เก็บไว้ครั้งต่อไป)</label>
+      <div class="slip-box" id="mf-idcard-box" onclick="document.getElementById('mf-idcard-file').click()">
+        <input type="file" id="mf-idcard-file" accept="image/*">
+        📎 กดเพื่อแนบรูปบัตรประชาชน
+        <img class="slip-prev" id="mf-idcard-prev">
+      </div>
+    </div>
     <label style="margin-bottom:4px">🐱 รายชื่อแมว</label>
     <div id="mfcats"></div>
     <button class="bacat" id="baddcat">+ เพิ่มแมว</button><br>
@@ -538,7 +572,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 </section>
 </div>
 
-<!-- OVERLAYS — all use class "ov", toggled with class "on" -->
+<!-- OVERLAYS -->
 <div class="ov" id="ov-cal">
   <div class="calbox">
     <div class="calhd"><h3 id="caltit">ห้อง 101</h3>
@@ -566,6 +600,15 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
       <div class="deplbl">ยอดมัดจำ</div><div class="depamt" id="depamt">฿0</div>
       <div class="depnt" id="depnt"></div><div class="depfl" id="depfl"></div>
     </div>
+    <!-- slip deposit upload -->
+    <div class="slip-wrap">
+      <span class="slip-label">📎 แนบสลิปโอนมัดจำ (ไม่บังคับ)</span>
+      <div class="slip-box" onclick="document.getElementById('slip-dep-file').click()">
+        <input type="file" id="slip-dep-file" accept="image/*">
+        กดเพื่อแนบสลิป
+        <img class="slip-prev" id="slip-dep-prev">
+      </div>
+    </div>
     <label class="ckbox"><input type="checkbox" id="depcb"><span>ข้าพเจ้าได้โอนมัดจำ <strong id="depinl">฿0</strong> เรียบร้อยแล้ว</span></label>
     <div class="mbtns">
       <button class="bcanm" id="bdepcan">ยกเลิก</button>
@@ -585,9 +628,18 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
         <div class="pamt" id="pcoamt">฿0</div>
         <div class="pnt" id="pcont"></div>
       </div>
-      <div class="fg" style="margin-bottom:10px">
+      <div class="fg" style="margin-bottom:8px">
         <label>หมายเหตุการชำระ</label>
         <input type="text" id="pconote" placeholder="เช่น รับเงินสด">
+      </div>
+      <!-- slip pay upload -->
+      <div class="slip-wrap">
+        <span class="slip-label">📎 แนบสลิปชำระเงิน (ไม่บังคับ)</span>
+        <div class="slip-box" onclick="document.getElementById('slip-pay-file').click()">
+          <input type="file" id="slip-pay-file" accept="image/*">
+          กดเพื่อแนบสลิป
+          <img class="slip-prev" id="slip-pay-prev">
+        </div>
       </div>
     </div>
     <div id="pcopwrap" style="display:none">
@@ -640,6 +692,14 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
 </div>
 
+<div class="ov" id="ov-delall">
+  <div class="smbox">
+    <h3 id="delall-tit">ยืนยันลบทั้งหมด?</h3>
+    <p id="delall-txt" style="font-size:.8rem;color:#888"></p>
+    <div class="smbtns"><button class="bno" id="bda-no">ยกเลิก</button><button class="bdc" id="bda-yes">🗑 ลบ</button></div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════
 // CORE SETUP
@@ -657,31 +717,72 @@ var PRESETS=[
 var LMETA={th:{l:'🇹🇭 ไทย'},en:{l:'🇬🇧 EN'},zh:{l:'🇨🇳 中文'},ja:{l:'🇯🇵 日本語'}};
 
 function lsG(k,d){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch(e){return d;}}
-function lsS(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function lsS(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){alert2('❌ พื้นที่เก็บข้อมูลเต็ม กรุณาลบสลิปเก่า','er',5000);return false;}}
 function fmt(n){return'฿'+Number(n).toLocaleString('th-TH');}
 function today(){return new Date().toISOString().split('T')[0];}
 function nts(a,b){return Math.max(0,Math.round((new Date(b)-new Date(a))/86400000));}
-function genMID(){return'M'+String(Date.now()).slice(-5);}
+
+// FIX #4 — 409 Conflict: ใช้ alphanumeric string ที่ไม่ซ้ำกัน
+function genId(){
+  return Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,7).toUpperCase();
+}
+// Member ID: M + yyMMdd + random 3 หลัก
+function genMID(){
+  var d=new Date();
+  return'M'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*900)+100);
+}
+
 function el(id){return document.getElementById(id);}
-function show(id){var e=el(id);if(e)e.style.display='';}
-function hide(id){var e=el(id);if(e)e.style.display='none';}
 function txt(id,v){var e=el(id);if(e)e.textContent=v;}
 
 // ══════════════════════════════════════════════
-// OVERLAY MANAGER — single source of truth
+// IMAGE COMPRESS — ลดขนาดก่อนเก็บ (max 800px, quality 0.7)
 // ══════════════════════════════════════════════
-function openOv(id){
-  // close all first
-  document.querySelectorAll('.ov').forEach(function(e){e.classList.remove('on');});
-  var e=el(id);if(e)e.classList.add('on');
+function compressImage(file,maxPx,quality,cb){
+  var maxPx=maxPx||800,quality=quality||0.7;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var w=img.width,h=img.height,scale=Math.min(1,maxPx/Math.max(w,h));
+      var cv=document.createElement('canvas');cv.width=Math.round(w*scale);cv.height=Math.round(h*scale);
+      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+      cb(cv.toDataURL('image/jpeg',quality));
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
-function closeOv(id){var e=el(id);if(e)e.classList.remove('on');}
-function closeAllOv(){document.querySelectorAll('.ov').forEach(function(e){e.classList.remove('on');});}
 
-// click backdrop to close
-document.addEventListener('click',function(e){
-  if(e.target.classList.contains('ov'))closeAllOv();
-});
+// bind slip/image upload to a box+preview+hidden var
+function bindImageUpload(fileInputId,prevId,maxMB,onDone){
+  var fileInput=el(fileInputId),prev=el(prevId);
+  if(!fileInput)return;
+  fileInput.addEventListener('change',function(e){
+    var file=e.target.files[0];if(!file)return;
+    if(file.size>maxMB*1024*1024){alert2('❌ รูปต้องไม่เกิน '+maxMB+'MB','er');fileInput.value='';return;}
+    compressImage(file,800,0.72,function(b64){
+      onDone(b64);
+      if(prev){prev.src=b64;prev.style.display='block';}
+    });
+    fileInput.value='';
+  });
+  // click on preview → view full
+  if(prev){
+    prev.addEventListener('click',function(){
+      if(prev.src&&prev.src!==window.location.href)viewImg(prev.src);
+    });
+  }
+}
+
+function viewImg(src){el('imgview-img').src=src;el('imgview').classList.add('on');}
+
+// ══════════════════════════════════════════════
+// OVERLAY MANAGER
+// ══════════════════════════════════════════════
+function openOv(id){document.querySelectorAll('.ov').forEach(function(e){e.classList.remove('on');});var e=el(id);if(e)e.classList.add('on');}
+function closeAllOv(){document.querySelectorAll('.ov').forEach(function(e){e.classList.remove('on');});}
+document.addEventListener('click',function(e){if(e.target.classList.contains('ov'))closeAllOv();});
 
 // ══════════════════════════════════════════════
 // THEME
@@ -693,7 +794,7 @@ function loadTheme(){var t=lsG('th',{p:'#b5926b',bg:'#faf9f7'});applyTheme(t.p,t
 function renderPresets(){
   var w=el('tpwrap');if(!w)return;w.innerHTML='';
   var cur=lsG('th',{p:'#b5926b'});
-  PRESETS.forEach(function(pr,i){
+  PRESETS.forEach(function(pr){
     var e=document.createElement('div');e.className='tp'+(cur.p===pr.p?' on':'');
     e.style.background=pr.p;e.title=pr.n;
     e.addEventListener('click',function(){
@@ -730,7 +831,7 @@ function renderLangBtns(){
 function getOrg(){return lsG('org',{name:'Abcd Petshop Hotel',icon:'🐾',priceStd:250,priceConn:450});}
 function updateOrgUI(){
   var o=getOrg();
-  txt('navlogo','');el('navlogo').innerHTML=o.name+' <span style="color:var(--p)">'+o.icon+'</span>';
+  var nl=el('navlogo');if(nl)nl.innerHTML=o.name+' <span style="color:var(--p)">'+o.icon+'</span>';
   var ll=el('ltit');if(ll)ll.innerHTML=o.name+' <span style="color:var(--p)">'+o.icon+'</span>';
   txt('billname',o.icon+' '+o.name);
 }
@@ -745,8 +846,7 @@ function renderOrgSettings(){
 // ══════════════════════════════════════════════
 // AUTH
 // ══════════════════════════════════════════════
-var CU=null; // current user
-
+var CU=null;
 function initAccs(){
   var a=lsG('accs',null);
   if(!a){a=[{u:OWN,p:OWNP,role:'owner',name:'เจ้าของร้าน',canAdmin:true}];lsS('accs',a);}
@@ -790,25 +890,30 @@ function showApp(){
   el('tad').style.display=canAdmin()?'':'none';
   renderLangBtns();updateOrgUI();loadTheme();loadBkSettings();
   testConn().then(function(ok){connBanner(ok);if(!_off)probeOptCols();});
-  fillStaff();
-  showSec('rooms');
+  fillStaff();showSec('rooms');
 }
 
 // ══════════════════════════════════════════════
 // SUPABASE / OFFLINE
 // ══════════════════════════════════════════════
 var _off=false,_probed=false;
-var _cc={bookings_email:false,bookings_line_user_id:false,bookings_checked_out:false,members_email:false};
-var _ldb={bk:lsG('ldb_bk',[]),mb:lsG('ldb_mb',[]),st:lsG('ldb_st',[])};
+var _cc={bookings_email:false,bookings_line_user_id:false,bookings_checked_out:false,members_email:false,members_line_id:false};
+var _ldb={bk:lsG('ldb_bk',[]),mb:lsG('ldb_mb',[])};
 function saveLDB(k){lsS('ldb_'+k,_ldb[k]);}
+
+var _bkCache={data:[],ts:0};
+var BK_TTL=5000;
+function invalidateBkCache(){_bkCache={data:[],ts:0};}
 
 async function probeOptCols(){
   if(_off||_probed)return;_probed=true;
-  var cols=[['bookings','email'],['bookings','line_user_id'],['bookings','checked_out'],['members','email']];
+  var cols=[['bookings','email'],['bookings','line_user_id'],['bookings','checked_out'],['members','email'],['members','line_id']];
   await Promise.all(cols.map(async function(c){
     var k=c[0]+'_'+c[1];
-    try{var r=await fetch(SB+'/rest/v1/'+c[0]+'?select='+c[1]+'&limit=0',{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});_cc[k]=r.ok;}
-    catch(e){_cc[k]=false;}
+    try{
+      var r=await fetch(SB+'/rest/v1/'+c[0]+'?select='+c[1]+'&limit=0',{headers:{'apikey':SK,'Authorization':'Bearer '+SK}});
+      _cc[k]=r.ok; // 200=exists, 400=not exist — both are expected, no throw
+    }catch(e){_cc[k]=false;} // network error only
   }));
 }
 
@@ -830,7 +935,7 @@ async function sbF(tbl,opts){
 
 async function testConn(){
   try{var c=new AbortController();setTimeout(function(){c.abort();},4000);
-    var r=await fetch(SB+'/rest/v1/staff?limit=1',{headers:{'apikey':SK,'Authorization':'Bearer '+SK},signal:c.signal});
+    var r=await fetch(SB+'/rest/v1/bookings?limit=1',{headers:{'apikey':SK,'Authorization':'Bearer '+SK},signal:c.signal});
     _off=!r.ok;return r.ok;}
   catch(e){_off=true;return false;}
 }
@@ -839,15 +944,37 @@ function connBanner(ok){
   if(ok){b.style.cssText='background:#edfaf4;color:#2da56e;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.textContent='🟢 Supabase Connected';setTimeout(function(){b.style.display='none';},4000);}
   else{b.style.cssText='background:#fef3e2;color:#f0a500;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.innerHTML='🟡 Offline Mode | <span style="cursor:pointer;text-decoration:underline" onclick="retryC()">Retry</span>';}
 }
-async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_line_user_id:false,bookings_checked_out:false,members_email:false};var ok=await testConn();connBanner(ok);if(ok)alert2('🟢 Connected!','ok');}
+async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_line_user_id:false,bookings_checked_out:false,members_email:false,members_line_id:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){await syncPending();alert2('🟢 Connected!','ok');}}
+
+// ลอง sync รายการ pending (local) ขึ้น Supabase
+async function syncPending(){
+  var pending=_ldb.bk.filter(function(r){return r._pending;});
+  if(!pending.length)return;
+  var synced=[];
+  for(var i=0;i<pending.length;i++){
+    var p=Object.assign({},pending[i]);delete p._pending;
+    try{
+      var r=await fetch(SB+'/rest/v1/bookings',{method:'POST',
+        headers:{'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates,return=minimal'},
+        body:JSON.stringify(p)});
+      if(r.ok||r.status===409)synced.push(String(p.id));
+    }catch(e){}
+  }
+  if(synced.length){
+    _ldb.bk=_ldb.bk.filter(function(r){return!synced.includes(String(r.id))||!r._pending;});
+    saveLDB('bk');invalidateBkCache();
+    alert2('☁️ Sync '+synced.length+' รายการขึ้น Supabase แล้ว','ok',4000);
+  }
+}
 
 // ══════════════════════════════════════════════
 // DB — BOOKINGS
 // ══════════════════════════════════════════════
 function mapBk(r){
-  var co=lsG('coids',[]);
-  return{id:r.id,roomIds:r.room_ids||r.roomIds||[],type:r.type||'',owner:r.owner||'',
+  var co=lsG('coids',[]);var rid=String(r.id);
+  return{id:rid,roomIds:r.room_ids||r.roomIds||[],type:r.type||'',owner:r.owner||'',
     catNames:r.cat_names||r.catNames||[],catCount:r.cat_count||r.catCount||1,phone:r.phone||'',
+    email:r.email||'',lineUserId:r.line_user_id||r.lineUserId||'',
     checkIn:r.check_in||r.checkIn||'',checkOut:r.check_out||r.checkOut||'',nights:r.nights||0,
     basePrice:r.base_price||r.basePrice||0,catExtra:r.cat_extra||r.catExtra||0,
     discountType:r.discount_type||r.discountType||'pct',discountValue:r.discount_value||r.discountValue||0,
@@ -857,13 +984,25 @@ function mapBk(r){
     commission:r.commission||0,staffId:r.staff_id||r.staffId||null,staffName:r.staff_name||r.staffName||'',
     commPaid:!!(r.comm_paid||r.commPaid),commNote:r.comm_note||r.commNote||'',
     memberId:r.member_id||r.memberId||null,bookedAt:r.booked_at||r.bookedAt||'',
-    checkedOut:!!(r.checked_out)||co.includes(Number(r.id))};}
+    checkedOut:!!(r.checked_out)||co.includes(rid),isPending:!!r._pending};}
+
 
 async function loadBks(){
-  try{if(_off)throw 0;return(await sbF('bookings',{filter:'order=created_at.asc'})).map(mapBk);}
-  catch(e){return _ldb.bk.map(mapBk);}
+  var now=Date.now();
+  if(!_off&&_bkCache.ts&&(now-_bkCache.ts)<BK_TTL)return _bkCache.data;
+  try{
+    if(_off)throw 0;
+    var raw=await sbF('bookings',{filter:'order=created_at.asc'});
+    // รวม local pending ที่ยังไม่ได้ sync ขึ้น Supabase (เช่น INSERT ล้มเหลว)
+    var sbIds=new Set(raw.map(function(r){return String(r.id);}));
+    var localPend=_ldb.bk.filter(function(r){return !sbIds.has(String(r.id));});
+    var merged=localPend.length?raw.concat(localPend):raw;
+    var mapped=merged.map(mapBk);_bkCache={data:mapped,ts:Date.now()};return mapped;
+  }catch(e){return _ldb.bk.map(mapBk);}
 }
+
 async function insertBk(b){
+  invalidateBkCache();
   var p={id:b.id,room_ids:b.roomIds,type:b.type,owner:b.owner,cat_names:b.catNames,cat_count:b.catCount,
     phone:b.phone,check_in:b.checkIn,check_out:b.checkOut,nights:b.nights,base_price:b.basePrice,
     cat_extra:b.catExtra,discount_type:b.discountType,discount_value:b.discountValue,discount_amount:b.discountAmount,
@@ -873,50 +1012,112 @@ async function insertBk(b){
   if(_cc.bookings_email===true&&b.email)p.email=b.email;
   if(_cc.bookings_line_user_id===true&&b.lineUserId)p.line_user_id=b.lineUserId;
   if(_cc.bookings_checked_out===true)p.checked_out=false;
-  try{if(_off)throw 0;return await sbF('bookings',{method:'POST',body:p,prefer:'return=representation'});}
-  catch(e){_ldb.bk.push(p);saveLDB('bk');return[p];}
+  try{
+    if(_off)throw 0;
+    var result=await sbF('bookings',{method:'POST',body:p,prefer:'return=representation'});
+    // ลบ local pending ที่ sync สำเร็จแล้ว
+    _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(p.id);});saveLDB('bk');
+    return result;
+  }catch(e){
+    // บันทึก local พร้อม flag เพื่อรู้ว่า pending
+    p._pending=true;
+    _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(p.id);});
+    _ldb.bk.push(p);saveLDB('bk');
+    return[p];
+  }
 }
+
 async function updateBk(id,patch){
+  invalidateBkCache();var sid=String(id);
   var map={paidRemaining:'paid_remaining',payNote:'pay_note',paidAt:'paid_at',commPaid:'comm_paid',commNote:'comm_note',commPaidAt:'comm_paid_at'};
   var snake={};
   Object.keys(patch).forEach(function(k){
     if(k==='checkedOut'){
-      if(patch.checkedOut){var a=lsG('coids',[]);if(!a.includes(Number(id))){a.push(Number(id));lsS('coids',a);}}
+      if(patch.checkedOut){var a=lsG('coids',[]);if(!a.includes(sid)){a.push(sid);lsS('coids',a);}}
       if(_cc.bookings_checked_out===true)snake.checked_out=patch.checkedOut;
     }else{snake[map[k]||k]=patch[k];}
   });
-  try{if(_off)throw 0;if(Object.keys(snake).length)await sbF('bookings',{method:'PATCH',filter:'id=eq.'+id,body:snake});}
-  catch(e){var i=_ldb.bk.findIndex(function(r){return String(r.id)===String(id);});if(i>=0)Object.assign(_ldb.bk[i],snake);saveLDB('bk');}
+  try{if(_off)throw 0;if(Object.keys(snake).length)await sbF('bookings',{method:'PATCH',filter:'id=eq.'+sid,body:snake});}
+  catch(e){var i=_ldb.bk.findIndex(function(r){return String(r.id)===sid;});if(i>=0)Object.assign(_ldb.bk[i],snake);saveLDB('bk');}
 }
+
 async function deleteBk(id){
-  try{if(_off)throw 0;await sbF('bookings',{method:'DELETE',filter:'id=eq.'+id});}
-  catch(e){_ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(id);});saveLDB('bk');}
+  invalidateBkCache();var sid=String(id);
+  // ลบ local เสมอก่อน ป้องกัน local pending re-merge กลับมา
+  _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==sid;});saveLDB('bk');
+  try{if(!_off)await sbF('bookings',{method:'DELETE',filter:'id=eq.'+sid});}
+  catch(e){}
 }
 
 // DB — MEMBERS
 async function loadMems(){
-  try{if(_off)throw 0;return(await sbF('members',{filter:'order=created_at.asc'})).map(function(r){return{memberId:r.member_id,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};});}
-  catch(e){return _ldb.mb.map(function(r){return{memberId:r.member_id||r.memberId,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};});}
+  try{
+    if(_off)throw 0;
+    var sbList=(await sbF('members',{filter:'order=created_at.asc'})).map(function(r){
+      return{memberId:r.member_id,name:r.name,phone:r.phone,email:r.email||'',lineId:r.line_id||'',cats:r.cats||[]};
+    });
+    // เสริม email/lineId จาก localStorage กรณี Supabase ยังไม่มี column นั้น
+    var lMap={};_ldb.mb.forEach(function(r){var mid=r.member_id||r.memberId;lMap[mid]=r;});
+    return sbList.map(function(m){
+      var l=lMap[m.memberId];
+      if(l){if(!m.email&&l.email)m.email=l.email;if(!m.lineId&&(l.line_id||l.lineId))m.lineId=l.line_id||l.lineId||'';}
+      return m;
+    });
+  }catch(e){
+    return _ldb.mb.map(function(r){
+      return{memberId:r.member_id||r.memberId,name:r.name,phone:r.phone,email:r.email||'',lineId:r.line_id||r.lineId||'',cats:r.cats||[]};
+    });
+  }
 }
 async function upsertMem(m){
-  var body={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
-  if(_cc.members_email===true)body.email=m.email||null;
-  try{if(_off)throw 0;await fetch(SB+'/rest/v1/members',{method:'POST',headers:{'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(body)});}
-  catch(e){var i=_ldb.mb.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});if(i>=0)_ldb.mb[i]=body;else _ldb.mb.push(body);saveLDB('mb');}
+  // บันทึก email/lineId ใน localStorage เสมอก่อน
+  var lBody={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||'',line_id:m.lineId||''};
+  var lIdx=_ldb.mb.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});
+  if(lIdx>=0)_ldb.mb[lIdx]=lBody;else _ldb.mb.push(lBody);saveLDB('mb');
+  if(_off)return;
+  // ลอง POST พร้อม email/lineId ก่อน; ถ้าล้มเหลวให้ retry แค่ข้อมูลพื้นฐาน
+  var bodyFull={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
+  if(m.email)bodyFull.email=m.email;
+  if(m.lineId)bodyFull.line_id=m.lineId;
+  var hdrs={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'};
+  try{
+    var r=await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyFull)});
+    if(!r.ok){
+      // retry ไม่มี email/lineId (กรณี column ยังไม่มีใน Supabase)
+      var bodyBasic={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
+      await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyBasic)});
+    }
+  }catch(e){}
 }
 async function delMem(mid){
-  try{if(_off)throw 0;await sbF('members',{method:'DELETE',filter:'member_id=eq.'+mid});}
-  catch(e){_ldb.mb=_ldb.mb.filter(function(r){return(r.member_id||r.memberId)!==mid;});saveLDB('mb');}
+  _ldb.mb=_ldb.mb.filter(function(r){return(r.member_id||r.memberId)!==mid;});saveLDB('mb');
+  try{localStorage.removeItem('mem_idcard_'+mid);}catch(e){}
+  try{if(!_off)await sbF('members',{method:'DELETE',filter:'member_id=eq.'+mid});}
+  catch(e){}
 }
 
 // ══════════════════════════════════════════════
 // ROOMS CONFIG
 // ══════════════════════════════════════════════
-function getRooms(){return lsG('rooms',Array.from({length:12},function(_,i){return{id:String(101+i),name:'ห้อง '+(101+i),price:250,type:'standard'};}));}
+function getRooms(){
+  return lsG('rooms',Array.from({length:12},function(_,i){
+    return{id:String(101+i),name:'ห้อง '+(101+i),price:250,type:'standard'};
+  }));
+}
 function saveRooms(r){lsS('rooms',r);}
-function getStdP(){var o=getOrg();if(o.priceStd)return o.priceStd;var r=getRooms().find(function(x){return x.type==='standard';});return r?r.price:250;}
-function getConP(){var o=getOrg();if(o.priceConn)return o.priceConn;var r=getRooms().find(function(x){return x.type==='connect';});return r?r.price:450;}
-function getPairs(){var r=getRooms().filter(function(x){return x.type==='connect';});var p=[];for(var i=0;i<r.length;i+=2)if(r[i+1])p.push([Number(r[i].id),Number(r[i+1].id)]);return p;}
+
+// FIX #2 — ราคาห้อง: อ่านจาก room object โดยตรง ไม่ใช้ global org price
+function getRoomPrice(roomId){
+  var rooms=getRooms(),room=rooms.find(function(r){return r.id===roomId;});
+  return room?room.price:250;
+}
+function getStdP(){var o=getOrg();return o.priceStd||250;}
+function getConP(){var o=getOrg();return o.priceConn||450;}
+
+function getPairs(){
+  var r=getRooms().filter(function(x){return x.type==='connect';});
+  var p=[];for(var i=0;i<r.length;i+=2)if(r[i+1])p.push([Number(r[i].id),Number(r[i+1].id)]);return p;
+}
 function validPair(a,b){return getPairs().some(function(p){return(p[0]===Number(a)&&p[1]===Number(b))||(p[1]===Number(a)&&p[0]===Number(b));});}
 function getPartner(id){var p=getPairs().find(function(p){return p.includes(Number(id));});return p?String(p[0]===Number(id)?p[1]:p[0]):null;}
 function isBkOn(bks,rid,d){return bks.some(function(b){return b.roomIds.includes(rid)&&b.checkIn<=d&&b.checkOut>d;});}
@@ -927,34 +1128,64 @@ function rngConf(bks,rid,f,t){return bks.some(function(b){return b.roomIds.inclu
 // ══════════════════════════════════════════════
 var bmode='standard',sel1=null,sel2=null,catCnt=1;
 var cancelTgt=null,commTgt=null,pcTgt=null,pending=null,billData=null;
+var selBids=new Set(),selMids=new Set(),_delAllMode='',_mfIdCard=null;
 var calRid=null,calY=0,calM=0,calIn=null,calOut=null,calStep=1;
 var editMemId=null,filledMemId=null,discType='pct',depRate=30;
 var dPeriod='all',dFrom='',dTo='';
 var bkSet={bankName:'',accountName:'',accountNo:'',qrBase64:''};
+// slip temp storage
+var _slipDep=null,_slipPay=null,_idCard=null;
 
 function getDV(pfx){
   var d=+(el('f'+pfx+'d')||{}).value||0,m=+(el('f'+pfx+'m')||{}).value||0,y=+(el('f'+pfx+'y')||{}).value||0;
-  if(!d||!m||!y||y<2000)return'';return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  if(!d||!m||!y||y<2000)return'';
+  return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
 }
-function setDV(pfx,iso){if(!iso)return;var p=iso.split('-');var de=el('f'+pfx+'d'),me=el('f'+pfx+'m'),ye=el('f'+pfx+'y');if(de)de.value=+p[2];if(me)me.value=+p[1];if(ye)ye.value=+p[0];}
-function clearDV(pfx){['d','m','y'].forEach(function(x){var e=el('f'+pfx+x);if(e)e.value='';});}
-function calcDisc(sub){var v=parseFloat((el('fdisc')||{}).value)||0;return discType==='pct'?Math.round(sub*(v/100)):Math.min(v,sub);}
+function setDV(pfx,iso){
+  if(!iso)return;var p=iso.split('-');
+  var de=el('f'+pfx+'d'),me=el('f'+pfx+'m'),ye=el('f'+pfx+'y');
+  if(de)de.value=+p[2];if(me)me.value=+p[1];if(ye)ye.value=+p[0];
+}
+function clearDV(pfx){['d','m','y'].forEach(function(x){var e=el('f'+pfx+x);if(e)e.value='';}); }
+
+function calcDisc(sub){
+  var v=parseFloat((el('fdisc')||{}).value)||0;
+  return discType==='pct'?Math.round(sub*(v/100)):Math.min(v,sub);
+}
 function calcComm(ic,ex,n){return((ic?CC:CS)+ex*CCA)*n;}
 
-function alert2(msg,type,dur){dur=dur||4000;var b=el('abanner');var e=document.createElement('div');e.className='ait'+(type?' '+type:'');e.textContent=msg;b.appendChild(e);setTimeout(function(){e.style.transition='opacity .4s';e.style.opacity='0';setTimeout(function(){e.remove();},400);},dur);}
-function showMsg2(txt,type){var e=el('bmsg');if(!e)return;e.className='msg '+(type==='ok'?'ok':'er');e.textContent=txt;setTimeout(function(){e.textContent='';e.className='';},4000);}
+function alert2(msg,type,dur){
+  dur=dur||4000;var b=el('abanner');
+  var e=document.createElement('div');e.className='ait'+(type?' '+type:'');e.textContent=msg;
+  b.appendChild(e);
+  setTimeout(function(){e.style.transition='opacity .4s';e.style.opacity='0';setTimeout(function(){e.remove();},400);},dur);
+}
+function showMsg2(t,type){
+  var e=el('bmsg');if(!e)return;
+  e.className='msg '+(type==='ok'?'ok':'er');e.textContent=t;
+  setTimeout(function(){e.textContent='';e.className='';},4000);
+}
 
 // ══════════════════════════════════════════════
 // LINE
 // ══════════════════════════════════════════════
-async function sendLine(msg){var tk=lsG('ltok','');if(!tk)return;try{await fetch('https://notify-api.line.me/api/notify',{method:'POST',headers:{'Authorization':'Bearer '+tk,'Content-Type':'application/x-www-form-urlencoded'},body:'message='+encodeURIComponent(msg)});}catch(e){}}
-function lineMsg(type,b){var o=getOrg();var base='\n'+o.icon+'['+type+']'+o.name+'\n🏨ห้อง'+b.roomIds.join('+')+'\n👤'+b.owner+' 📞'+b.phone+'\n📅'+b.checkIn+'→'+b.checkOut;if(type==='จองใหม่')base+='\n🐱'+b.catNames.join(',')+'  \n💵'+fmt(b.totalPrice);return base;}
+async function sendLine(msg){
+  var tk=lsG('ltok','');if(!tk)return;
+  try{await fetch('https://notify-api.line.me/api/notify',{method:'POST',headers:{'Authorization':'Bearer '+tk,'Content-Type':'application/x-www-form-urlencoded'},body:'message='+encodeURIComponent(msg)});}
+  catch(e){}
+}
+function lineMsg(type,b){
+  var o=getOrg();
+  var base='\n'+o.icon+'['+type+']'+o.name+'\n🏨ห้อง'+b.roomIds.join('+')+'\n👤'+b.owner+' 📞'+b.phone+'\n📅'+b.checkIn+'→'+b.checkOut;
+  if(type==='จองใหม่')base+='\n🐱'+b.catNames.join(',')+'  \n💵'+fmt(b.totalPrice);
+  return base;
+}
 
 // ══════════════════════════════════════════════
 // SECTION NAVIGATION
 // ══════════════════════════════════════════════
 function showSec(name){
-  document.querySelectorAll('section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('section').forEach(function(s){s.classList.remove('on');s.style.display='none';});
   document.querySelectorAll('.nt').forEach(function(t){t.classList.remove('on');});
   var s=el('s-'+name),t=document.querySelector('[data-s="'+name+'"]');
   if(s){s.style.display='block';s.classList.add('on');}if(t)t.classList.add('on');
@@ -966,7 +1197,11 @@ function showSec(name){
   else if(name==='members')renderMems();
   else if(name==='admin'&&canAdmin())renderAdmin();
 }
-function setMode(m){bmode=m;sel1=null;sel2=null;el('mstd').classList.toggle('on',m==='standard');el('mcon').classList.toggle('on',m==='connect');el('chint').style.display=m==='connect'?'block':'none';renderRooms();}
+function setMode(m){
+  bmode=m;sel1=null;sel2=null;
+  el('mstd').classList.toggle('on',m==='standard');el('mcon').classList.toggle('on',m==='connect');
+  el('chint').style.display=m==='connect'?'block':'none';renderRooms();
+}
 
 // ══════════════════════════════════════════════
 // ROOMS
@@ -994,7 +1229,13 @@ async function renderRooms(){
 }
 function handleRoom(id,bt){
   if(bmode==='standard'){sel1=id;renderRooms();openCal(id);}
-  else{if(bt){openCal(id);return;}if(!sel1){sel1=id;renderRooms();}else if(sel1===id){openCal(id);}else if(validPair(sel1,id)){sel2=id;renderRooms();openCal(id);}else{sel1=id;sel2=null;renderRooms();}}
+  else{
+    if(bt){openCal(id);return;}
+    if(!sel1){sel1=id;renderRooms();}
+    else if(sel1===id){openCal(id);}
+    else if(validPair(sel1,id)){sel2=id;renderRooms();openCal(id);}
+    else{sel1=id;sel2=null;renderRooms();}
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -1040,9 +1281,9 @@ function bookFromCal(){
   if(!calIn||!calOut)return;if(!sel1)sel1=calRid;
   var si=calIn,so=calOut;closeAllOv();
   ['fown','fph','feml','fsrch','fdisc','flid'].forEach(function(id){var e=el(id);if(e)e.value='';});
-  el('fstaff').value='';
-  var mb=el('mbadge');if(mb)mb.style.display='none';
-  filledMemId=null;depRate=30;catCnt=1;
+  el('fstaff').value='';var mb=el('mbadge');if(mb)mb.style.display='none';
+  filledMemId=null;depRate=30;catCnt=1;_idCard=null;
+  var ip=el('idcard-prev');if(ip){ip.src='';ip.style.display='none';}
   showSec('book');updateSelInfo();renderCatInputs([]);
   setTimeout(function(){setDV('i',si);setDV('o',so);calcPreview();},50);
 }
@@ -1054,10 +1295,12 @@ function updateSelInfo(){
   var info=el('selinfo'),form=el('bform');
   if(!sel1){info.className='nosel';info.textContent='← เลือกห้องในแท็บ "ห้องพัก" ก่อนนะคะ';form.style.display='none';return;}
   var ic=bmode==='connect'&&sel2;
+  // FIX #2: แสดงราคาจาก room object ตัวที่เลือก
+  var dispPrice=ic?(sel2?getRoomPrice(sel1)+getRoomPrice(sel2):getRoomPrice(sel1)):getRoomPrice(sel1);
   info.className='srb '+(ic?'con':'std');
   info.innerHTML=ic
-    ?'<div class="sico">🔗</div><div class="stxt"><strong>Connect · ห้อง '+sel1+'+'+sel2+'</strong><span>'+fmt(getConP())+'/คืน · ฟรี 3 ตัว</span></div>'
-    :'<div class="sico">🛏️</div><div class="stxt"><strong>Standard · ห้อง '+sel1+'</strong><span>'+fmt(getStdP())+'/คืน · ฟรี 1 ตัว</span></div>';
+    ?'<div class="sico">🔗</div><div class="stxt"><strong>Connect · ห้อง '+sel1+'+'+sel2+'</strong><span>'+fmt(dispPrice)+'/คืน · ฟรี 3 ตัว</span></div>'
+    :'<div class="sico">🛏️</div><div class="stxt"><strong>Standard · ห้อง '+sel1+'</strong><span>'+fmt(dispPrice)+'/คืน · ฟรี 1 ตัว</span></div>';
   form.style.display='block';
 }
 
@@ -1075,18 +1318,31 @@ async function searchMem(){
   if(!q){dd.style.display='none';return;}
   var mems=await loadMems(),res=mems.filter(function(m){return m.name.toLowerCase().includes(q)||m.phone.includes(q);});
   if(!res.length){dd.style.display='none';return;}
-  dd.innerHTML=res.map(function(m){return'<div class="mi" data-mid="'+m.memberId+'"><span style="font-size:.62rem;background:var(--pl);color:var(--p);border-radius:20px;padding:1px 6px">'+m.memberId+'</span> '+m.name+' <span style="font-size:.65rem;background:var(--pl);color:var(--p);border-radius:20px;padding:1px 6px;margin-left:3px">'+m.phone+'</span><span style="font-size:.63rem;color:#999;display:block;margin-top:1px">🐱'+(m.cats.join(',')||'-')+'</span></div>';}).join('');
+  dd.innerHTML=res.map(function(m){
+    return'<div class="mi" data-mid="'+m.memberId+'">'+
+      '<span style="font-size:.62rem;background:var(--pl);color:var(--p);border-radius:20px;padding:1px 6px">'+m.memberId+'</span> '+
+      m.name+' <span style="font-size:.65rem;background:var(--pl);color:var(--p);border-radius:20px;padding:1px 6px;margin-left:3px">'+m.phone+'</span>'+
+      '<span style="font-size:.63rem;color:#999;display:block;margin-top:1px">🐱'+(m.cats.join(',')||'-')+'</span></div>';
+  }).join('');
   dd.querySelectorAll('.mi').forEach(function(e){e.addEventListener('click',function(){fillMem(e.dataset.mid);});});
   dd.style.display='block';
 }
+
 async function fillMem(mid){
   var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});if(!m)return;
   filledMemId=m.memberId;el('fown').value=m.name;el('fph').value=m.phone;
-  if(m.email)el('feml').value=m.email;
+  if(m.email){el('feml').value=m.email;}
+  if(m.lineId){el('flid').value=m.lineId;}
   el('fsrch').value='';el('mdd').style.display='none';
   var b=el('mbadge');b.style.display='block';b.textContent='✅ '+m.memberId+' — '+m.name+' · 🐱'+m.cats.length;
   catCnt=Math.max(1,m.cats.length);renderCatInputs(m.cats);calcPreview();
+  // auto-load บัตรประชาชนของสมาชิก (ถ้ามี)
+  var idc=lsG('mem_idcard_'+mid,null);
+  var idPrev=el('idcard-prev');
+  if(idc&&idPrev){_idCard=idc;idPrev.src=idc;idPrev.style.display='block';}
+  else{_idCard=null;if(idPrev){idPrev.src='';idPrev.style.display='none';}}
 }
+
 function renderCatInputs(vals){
   vals=vals||[];var ic=bmode==='connect'&&sel2,free=ic?FC:FS;
   txt('cdisp',catCnt);var w=el('cinputs');w.innerHTML='';
@@ -1096,7 +1352,11 @@ function renderCatInputs(vals){
       var badge=document.createElement('div');badge.className='cbadge'+(extra?' ex':'');badge.textContent=idx+1;
       var inp=document.createElement('input');inp.type='text';inp.placeholder='🐱 '+(idx+1);inp.value=vals[idx]||'';inp.addEventListener('input',calcPreview);
       var del=document.createElement('button');del.className='bcnt';del.style.cssText='background:#fdecea;border-color:#f0c0c0;color:#d94f4f;flex-shrink:0';del.textContent='✕';
-      del.addEventListener('click',function(){if(catCnt<=1)return;var cur=Array.from(w.querySelectorAll('input[type=text]')).map(function(x){return x.value;});cur.splice(idx,1);catCnt--;renderCatInputs(cur);calcPreview();});
+      del.addEventListener('click',function(){
+        if(catCnt<=1)return;
+        var cur=Array.from(w.querySelectorAll('input[type=text]')).map(function(x){return x.value;});
+        cur.splice(idx,1);catCnt--;renderCatInputs(cur);calcPreview();
+      });
       row.appendChild(badge);row.appendChild(inp);
       if(extra){var n=document.createElement('span');n.className='cenote';n.textContent='+'+fmt(PE)+'/คืน';row.appendChild(n);}
       row.appendChild(del);w.appendChild(row);
@@ -1106,12 +1366,16 @@ function renderCatInputs(vals){
 function changeCat(d){catCnt=Math.max(1,Math.min(20,catCnt+d));var cur=Array.from(el('cinputs').querySelectorAll('input[type=text]')).map(function(i){return i.value;});renderCatInputs(cur);calcPreview();}
 function getCatNames(){return Array.from(el('cinputs').querySelectorAll('input[type=text]')).map(function(inp,i){return inp.value.trim()||'แมวตัวที่'+(i+1);});}
 
+// FIX #2 — calcPreview: ใช้ราคาจาก room ที่เลือกจริง
 function calcPreview(){
   var cin=getDV('i'),cout=getDV('o'),prev=el('pprev');
   if(!sel1||!cin||!cout){prev.style.display='none';return;}
   var n=nts(cin,cout);if(n<=0){prev.style.display='none';return;}
-  var ic=bmode==='connect'&&sel2,baseP=ic?getConP():getStdP(),free=ic?FC:FS;
-  var extra=Math.max(0,catCnt-free),catEx=extra*PE*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc,dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
+  var ic=bmode==='connect'&&sel2,free=ic?FC:FS;
+  // อ่านราคาจาก room object โดยตรง
+  var baseP=ic?(getRoomPrice(sel1)+getRoomPrice(sel2)):getRoomPrice(sel1);
+  var extra=Math.max(0,catCnt-free),catEx=extra*PE*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc;
+  var dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
   var lines='<div class="ppl">🌙'+n+'×'+fmt(baseP)+'='+fmt(baseP*n)+'</div>';
   if(extra>0)lines+='<div class="ppl">🐱+'+extra+'×'+n+'×'+fmt(PE)+'='+fmt(catEx)+'</div>';
   else lines+='<div class="ppl">🐱'+catCnt+' (ฟรี '+free+')</div>';
@@ -1129,22 +1393,36 @@ async function openDepModal(){
   if(!sel1)return showMsg2('กรุณาเลือกห้องก่อน','er');
   if(!own||!ph||!cin||!cout)return showMsg2('กรุณากรอกข้อมูลให้ครบ','er');
   if(cin>=cout)return showMsg2('วันเช็คเอาท์ต้องมากกว่าวันเช็คอิน','er');
-  if(bmode==='connect'&&!sel2)return showMsg2('กรุณาเลือกห้องที่ 2','er');
-  var bks=await loadBks(),rids=bmode==='connect'&&sel2?[sel1,sel2]:[sel1];
-  for(var ri=0;ri<rids.length;ri++){if(rngConf(bks,rids[ri],cin,cout))return showMsg2('ห้อง '+rids[ri]+' มีการจองช่วงนี้แล้ว','er');}
-  var ic=bmode==='connect'&&sel2,baseP=ic?getConP():getStdP(),free=ic?FC:FS;
-  var n=nts(cin,cout),extra=Math.max(0,catCnt-free),catEx=extra*PE*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc,dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
-  var su=(el('fstaff').value||'');
+  var ic=bmode==='connect'&&sel2;
+  if(ic&&!sel2)return showMsg2('กรุณาเลือกห้องที่ 2','er');
+  var roomIds=ic?[String(sel1),String(sel2)]:[String(sel1)];
+  var bks=await loadBks();
+  for(var ri=0;ri<roomIds.length;ri++){
+    if(rngConf(bks,roomIds[ri],cin,cout))return showMsg2('ห้อง '+roomIds[ri]+' มีการจองช่วงนี้แล้ว','er');
+  }
+  // FIX #2: ราคาจาก room object
+  var baseP=ic?(getRoomPrice(sel1)+getRoomPrice(sel2)):getRoomPrice(sel1),free=ic?FC:FS;
+  var n=nts(cin,cout),extra=Math.max(0,catCnt-free),catEx=extra*PE*n;
+  var sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc;
+  var dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
+  var su=(el('fstaff').value||'').trim();
   var lid=(el('flid').value||'').trim();
   var accs=initAccs(),sacc=su?accs.find(function(a){return a.u===su;}):null;
   var dv=parseFloat((el('fdisc').value)||0)||0;
-  pending={id:Date.now(),roomIds:rids,type:ic?'Standard Connect':'Standard',owner:own,
-    catNames:getCatNames(),catCount:catCnt,phone:ph,email:eml||'',
-    checkIn:cin,checkOut:cout,nights:n,basePrice:baseP,catExtra:catEx,
+  pending={
+    id:genId(), // FIX #4: unique string ID
+    roomIds:roomIds,type:ic?'Standard Connect':'Standard',
+    owner:own,catNames:getCatNames(),catCount:catCnt,
+    phone:ph,email:eml||'',checkIn:cin,checkOut:cout,nights:n,
+    basePrice:baseP,catExtra:catEx,
     discountType:discType,discountValue:dv,discountAmount:disc,
     depRate:depRate,totalPrice:total,deposit:dep,commission:comm,
-    staffId:su||null,staffName:sacc?sacc.name:'',lineUserId:lid||null,
-    memberId:filledMemId||null,bookedAt:new Date().toLocaleDateString('th-TH')};
+    staffId:su||null,staffName:sacc?sacc.name:'',
+    lineUserId:lid||null,memberId:filledMemId||null,
+    bookedAt:new Date().toLocaleDateString('th-TH')
+  };
+  // reset slip dep
+  _slipDep=null;var sp=el('slip-dep-prev');if(sp){sp.src='';sp.style.display='none';}
   txt('depamt',fmt(dep));
   txt('depnt','จากยอดรวม '+fmt(total)+' ('+depRate+'%)');
   txt('depfl','ยอดค้าง '+fmt(total-dep)+' ชำระวันเช็คอิน');
@@ -1155,41 +1433,63 @@ async function openDepModal(){
 
 async function submitBooking(){
   if(!pending)return;
-  var saved=Object.assign({},pending);pending=null;
-  closeAllOv();
-  try{
-    await insertBk(saved);
-    await autoSaveMem(saved.owner,saved.phone,saved.email,saved.catNames,saved.memberId);
-    sendLine(lineMsg('จองใหม่',saved));
-    alert2('✅ จองสำเร็จ! ห้อง'+saved.roomIds.join('+'),'ok');
-  }catch(e){alert2('❌ บันทึกไม่สำเร็จ: '+e.message,'er',6000);return;}
+  var saved=Object.assign({},pending);pending=null;closeAllOv();
+  try{await insertBk(saved);}
+  catch(e){alert2('❌ บันทึกไม่สำเร็จ: '+e.message,'er',6000);return;}
+  // save slip dep & id card to localStorage
+  if(_slipDep)lsS('slip_dep_'+saved.id,_slipDep);
+  if(_idCard){
+    lsS('idcard_'+saved.id,_idCard);
+    // บันทึกบัตรประชาชนผูกกับสมาชิกด้วย (ครั้งถัดไปจะ auto-fill)
+    var memKey=saved.memberId||(saved.phone?'phone_'+saved.phone:null);
+    if(saved.memberId&&!lsG('mem_idcard_'+saved.memberId,null)){lsS('mem_idcard_'+saved.memberId,_idCard);}
+  }
+  _slipDep=null;_idCard=null;
+  autoSaveMem(saved.owner,saved.phone,saved.email,saved.lineUserId||'',saved.catNames,saved.memberId).catch(function(){});
+  sendLine(lineMsg('จองใหม่',saved));
+  alert2('✅ จองสำเร็จ! ห้อง'+saved.roomIds.join('+'),'ok');
   ['fown','fph','feml','fsrch','fdisc','flid'].forEach(function(id){var e=el(id);if(e)e.value='';});
   el('fstaff').value='';clearDV('i');clearDV('o');
   var dp=el('fdep');if(dp)dp.value=30;var dr=el('fdepr');if(dr)dr.value=30;txt('fdeplbl','30%');
   var mb=el('mbadge');if(mb)mb.style.display='none';
   var pp=el('pprev');if(pp)pp.style.display='none';
-  filledMemId=null;catCnt=1;sel1=null;sel2=null;depRate=30;
-  renderCatInputs([]);updateSelInfo();
-  billData=saved;showSec('bookings');renderBookings();
-  setTimeout(function(){if(billData)openBill(billData);},400);
+  var ip=el('idcard-prev');if(ip){ip.src='';ip.style.display='none';}
+  filledMemId=null;catCnt=1;sel1=null;sel2=null;depRate=30;discType='pct';
+  renderCatInputs([]);updateSelInfo();billData=saved;
+  showSec('bookings');renderBookings();renderRooms();
+  setTimeout(function(){if(billData)openBill(billData);},500);
 }
-async function autoSaveMem(name,phone,email,cats,eid){
-  if(eid){var mems=await loadMems(),m=mems.find(function(x){return x.memberId===eid;});if(m){var mg=Array.from(new Set((m.cats||[]).concat(cats)));await upsertMem({memberId:eid,name:name,phone:phone,email:email||m.email||'',cats:mg});}return;}
-  var mems=await loadMems();if(!mems.find(function(m){return m.phone===phone;}))await upsertMem({memberId:genMID(),name:name,phone:phone,email:email||'',cats:cats});
+
+// FIX — autoSaveMem: บันทึก email + lineId ไปด้วย
+async function autoSaveMem(name,phone,email,lineId,cats,eid){
+  if(eid){
+    var mems=await loadMems(),m=mems.find(function(x){return x.memberId===eid;});
+    if(m){
+      var mg=Array.from(new Set((m.cats||[]).concat(cats)));
+      await upsertMem({memberId:eid,name:name,phone:phone,email:email||m.email||'',lineId:lineId||m.lineId||'',cats:mg});
+    }
+    return;
+  }
+  var mems2=await loadMems();
+  if(!mems2.find(function(m){return m.phone===phone;})){
+    await upsertMem({memberId:genMID(),name:name,phone:phone,email:email||'',lineId:lineId||'',cats:cats});
+  }
 }
 
 // ══════════════════════════════════════════════
 // PAY + CHECKOUT MODAL
 // ══════════════════════════════════════════════
 function openPayCO(bid){
-  pcTgt=bid;
+  pcTgt=String(bid);
   loadBks().then(function(bks){
-    var b=bks.find(function(x){return x.id===bid;});if(!b)return;
+    var b=bks.find(function(x){return String(x.id)===String(bid);});if(!b)return;
     var rem=b.totalPrice-b.deposit,hasBal=!b.paidRemaining&&rem>0;
     txt('pcotit',hasBal?'ยืนยันชำระและเช็คเอาท์':'ยืนยันเช็คเอาท์');
     txt('pcosub',b.owner+' · ห้อง'+b.roomIds.join('+'));
     txt('pcoamt',fmt(rem));txt('pcont','ห้อง'+b.roomIds.join('+')+'·'+b.nights+'คืน');
     var ni=el('pconote');if(ni)ni.value='';
+    // reset slip pay
+    _slipPay=null;var sp=el('slip-pay-prev');if(sp){sp.src='';sp.style.display='none';}
     el('pcobwrap').style.display=hasBal?'':'none';
     el('pcopwrap').style.display=hasBal?'none':'';
     el('bpcoboth').style.display=hasBal?'':'none';
@@ -1200,30 +1500,26 @@ function openPayCO(bid){
 }
 async function doPayCO(payF,coF){
   if(!pcTgt)return;
-  var bks=await loadBks(),b=bks.find(function(x){return x.id===pcTgt;});
+  var bks=await loadBks(),b=bks.find(function(x){return String(x.id)===String(pcTgt);});
   if(!b){closeAllOv();return;}
   if(payF&&!b.paidRemaining){
     var note=((el('pconote')||{}).value||'').trim();
     await updateBk(pcTgt,{paidRemaining:true,payNote:note,paidAt:new Date().toLocaleDateString('th-TH')});
+    if(_slipPay)lsS('slip_pay_'+pcTgt,_slipPay);
+    _slipPay=null;
     alert2('✅ รับชำระแล้ว','ok');
   }
-  if(coF){
-    await updateBk(pcTgt,{checkedOut:true});
-    sendLine(lineMsg('เช็คเอาท์',b));
-    alert2('✅ เช็คเอาท์ · ห้อง'+b.roomIds.join('+'),'ok');
-  }
-  closeAllOv();pcTgt=null;
-  renderBookings();renderRooms();if(isAdminUp())renderSummary();
+  if(coF){await updateBk(pcTgt,{checkedOut:true});sendLine(lineMsg('เช็คเอาท์',b));alert2('✅ เช็คเอาท์ · ห้อง'+b.roomIds.join('+'),'ok');}
+  closeAllOv();pcTgt=null;renderBookings();renderRooms();if(isAdminUp())renderSummary();
 }
 
 // COMM MODAL
 function openComm(bid){
-  commTgt=bid;
+  commTgt=String(bid);
   loadBks().then(function(bks){
-    var b=bks.find(function(x){return x.id===bid;});if(!b)return;
+    var b=bks.find(function(x){return String(x.id)===String(bid);});if(!b)return;
     txt('commamt',fmt(b.commission));txt('commnt',b.staffName+'·ห้อง'+b.roomIds.join('+'));
-    txt('commsub',b.staffName||'Staff');var cn=el('commnote');if(cn)cn.value='';
-    openOv('ov-comm');
+    txt('commsub',b.staffName||'Staff');var cn=el('commnote');if(cn)cn.value='';openOv('ov-comm');
   });
 }
 async function confirmComm(){
@@ -1235,7 +1531,7 @@ async function confirmComm(){
 // CANCEL
 async function confirmCancel(){
   if(!cancelTgt)return;
-  var bks=await loadBks(),b=bks.find(function(x){return x.id===cancelTgt;});
+  var bks=await loadBks(),b=bks.find(function(x){return String(x.id)===String(cancelTgt);});
   if(b){await deleteBk(cancelTgt);sendLine(lineMsg('ยกเลิก',b));alert2('❌ ยกเลิกการจองแล้ว','er');}
   closeAllOv();cancelTgt=null;renderBookings();renderRooms();
 }
@@ -1243,12 +1539,27 @@ async function confirmCancel(){
 // ══════════════════════════════════════════════
 // BILL
 // ══════════════════════════════════════════════
-function buildBankHTML(){if(!bkSet.bankName&&!bkSet.accountNo)return'';return'<div class="billbank"><div class="bbtit">🏦 '+bkSet.bankName+'</div>'+(bkSet.accountName?'<div class="bbrow"><span>ชื่อบัญชี</span><span>'+bkSet.accountName+'</span></div>':'')+(bkSet.accountNo?'<div class="bbrow"><span>เลขบัญชี</span><span><strong>'+bkSet.accountNo+'</strong></span></div>':'')+(bkSet.qrBase64?'<div class="bbqr"><img src="'+bkSet.qrBase64+'"></div>':'')+'</div>';}
+function buildBankHTML(){
+  if(!bkSet.bankName&&!bkSet.accountNo)return'';
+  return'<div class="billbank"><div class="bbtit">🏦 '+bkSet.bankName+'</div>'+
+    (bkSet.accountName?'<div class="bbrow"><span>ชื่อบัญชี</span><span>'+bkSet.accountName+'</span></div>':'')+
+    (bkSet.accountNo?'<div class="bbrow"><span>เลขบัญชี</span><span><strong>'+bkSet.accountNo+'</strong></span></div>':'')+
+    (bkSet.qrBase64?'<div class="bbqr"><img src="'+bkSet.qrBase64+'"></div>':'')+'</div>';
+}
 function buildBankTxt(){if(!bkSet.accountNo)return'';return'\n🏦'+bkSet.bankName+'\nชื่อ:'+bkSet.accountName+'\nเลข:'+bkSet.accountNo;}
-function buildBillTxt(b){var r=b.totalPrice-b.deposit;var o=getOrg();return o.icon+' '+o.name+'\n#'+String(b.id).slice(-6)+'|'+b.bookedAt+'\n'+b.owner+'|'+b.phone+'\nห้อง'+b.roomIds.join('+')+'\n'+b.checkIn+'→'+b.checkOut+'('+b.nights+'คืน)\n🐱'+b.catNames.join(',')+'  \nรวม:'+fmt(b.totalPrice)+'\nมัดจำ:'+fmt(b.deposit)+'\n'+(b.paidRemaining?'✅ชำระครบ':'🔴ค้าง:'+fmt(r))+buildBankTxt();}
+function buildBillTxt(b){
+  var r=b.totalPrice-b.deposit;var o=getOrg();
+  return o.icon+' '+o.name+'\n#'+String(b.id).slice(-6)+'|'+b.bookedAt+'\n'+b.owner+'|'+b.phone+
+    '\nห้อง'+b.roomIds.join('+')+'\n'+b.checkIn+'→'+b.checkOut+'('+b.nights+'คืน)\n🐱'+b.catNames.join(',')+'  \nรวม:'+fmt(b.totalPrice)+
+    '\nมัดจำ:'+fmt(b.deposit)+'\n'+(b.paidRemaining?'✅ชำระครบ':'🔴ค้าง:'+fmt(r))+buildBankTxt();
+}
+
 function openBill(b){
   billData=b;var r=b.totalPrice-b.deposit;var o=getOrg();
   txt('billname',o.icon+' '+o.name);
+  var slipDepTag=lsG('slip_dep_'+b.id,null)?'<div style="margin-top:4px"><span class="slip-tag" onclick="viewImg(lsG(\'slip_dep_'+b.id+'\',\'\'))">📎 สลิปมัดจำ</span></div>':'';
+  var slipPayTag=lsG('slip_pay_'+b.id,null)?'<div style="margin-top:4px"><span class="slip-tag" onclick="viewImg(lsG(\'slip_pay_'+b.id+'\',\'\'))">📎 สลิปชำระ</span></div>':'';
+  var idCardTag=lsG('idcard_'+b.id,null)?'<div style="margin-top:4px"><span class="slip-tag id-card" onclick="viewImg(lsG(\'idcard_'+b.id+'\',\'\'))">🪪 บัตรประชาชน</span></div>':'';
   el('billcont').innerHTML=
     '<hr class="billdv">'+
     '<div class="billrow"><span>#</span><span>'+String(b.id).slice(-6)+'</span></div>'+
@@ -1271,19 +1582,95 @@ function openBill(b){
     '<hr class="billdv">'+
     '<div class="billrow bd"><span>ยอดรวม</span><span>'+fmt(b.totalPrice)+'</span></div>'+
     '<div class="billrow gn"><span>✅ มัดจำ('+(b.depRate||30)+'%)</span><span>'+fmt(b.deposit)+'</span></div>'+
+    slipDepTag+
     (b.paidRemaining?'<div class="billrow gn"><span>✅ ชำระครบแล้ว</span><span>'+fmt(r)+'</span></div>':'<div class="billrow rd"><span>🔴 ยอดค้างชำระ</span><span>'+fmt(r)+'</span></div>')+
+    slipPayTag+idCardTag+
     (!b.paidRemaining?buildBankHTML():'')+
     (b.checkedOut?'<div style="background:#edfaf4;border-radius:8px;padding:6px;text-align:center;font-size:.76rem;color:#2da56e;margin-top:6px;font-weight:700">✅ เช็คเอาท์แล้ว</div>':'')+
     '<div class="billft">ขอบคุณที่ใช้บริการ '+o.icon+' '+o.name+'</div>';
   openOv('ov-bill');
 }
-function copyBill(){if(!billData)return;navigator.clipboard.writeText(buildBillTxt(billData)).then(function(){alert2('📋 คัดลอกบิลแล้ว!','ok');});}
-function exportPDF(b){var r=b.totalPrice-b.deposit;var o=getOrg();var html='<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>Bill</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Sarabun,sans-serif;padding:28px;max-width:460px;margin:0 auto;font-size:13px}h2{font-size:16px;font-weight:800;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#999;font-size:11px;margin-bottom:11px}.row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:12px}.bold{font-weight:700}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:7px 0}.cats{font-size:11px;color:#888;margin:2px 0 5px}.foot{background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center}@media print{button{display:none!important}}</style></head><body><h2>'+o.icon+' '+o.name+'</h2><div class="sub">ใบสรุปการจอง</div><hr><div class="row"><span>#</span><span>'+String(b.id).slice(-6)+'</span></div><div class="row"><span>วันที่</span><span>'+b.bookedAt+'</span></div><hr><div class="row"><span>ชื่อ</span><span>'+b.owner+'</span></div><div class="row"><span>เบอร์</span><span>'+b.phone+'</span></div><hr><div class="row"><span>ห้อง</span><span>'+b.roomIds.join('+')+'('+b.type+')</span></div><div class="row"><span>เช็คอิน</span><span>'+b.checkIn+'</span></div><div class="row"><span>เช็คเอาท์</span><span>'+b.checkOut+'</span></div><div class="row"><span>คืน</span><span>'+b.nights+'</span></div><hr><div class="cats">🐱'+b.catNames.join('·')+'</div><div class="row"><span>ค่าห้อง</span><span>'+fmt(b.basePrice*b.nights)+'</span></div>'+(b.catExtra>0?'<div class="row"><span>+แมว</span><span>'+fmt(b.catExtra)+'</span></div>':'')+(b.discountAmount>0?'<div class="row" style="color:#f0a500"><span>ส่วนลด</span><span>-'+fmt(b.discountAmount)+'</span></div>':'')+'<hr><div class="row bold"><span>รวม</span><span>'+fmt(b.totalPrice)+'</span></div><div class="row green"><span>✅ มัดจำ('+(b.depRate||30)+'%)</span><span>'+fmt(b.deposit)+'</span></div>'+(b.paidRemaining?'<div class="row green"><span>✅ ชำระครบ</span><span>'+fmt(r)+'</span></div>':'<div class="row red"><span>🔴 ค้าง</span><span>'+fmt(r)+'</span></div>')+'<div class="foot">'+o.icon+' '+o.name+'</div><br><button onclick="window.print()" style="width:100%;padding:10px;background:#2d2d2d;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ พิมพ์/PDF</button></body></html>';var w=window.open('','_blank','width=520,height=720');if(w){w.document.write(html);w.document.close();}}
-function exportJPG(b){var r=b.totalPrice-b.deposit;var o=getOrg();var W=500,pad=22,p=getComputedStyle(document.documentElement).getPropertyValue('--p').trim()||'#b5926b';var lines=[{t:'h',v:o.icon+' '+o.name},{t:'s',v:'ใบสรุปการจอง'},{t:'d'},{t:'r',l:'#',r:String(b.id).slice(-6)},{t:'r',l:'วันที่',r:b.bookedAt},{t:'d'},{t:'r',l:'ชื่อ',r:b.owner},{t:'r',l:'เบอร์',r:b.phone},{t:'d'},{t:'r',l:'ห้อง',r:b.roomIds.join('+')+'('+b.type+')'},{t:'r',l:'เช็คอิน',r:b.checkIn},{t:'r',l:'เช็คเอาท์',r:b.checkOut},{t:'r',l:'คืน',r:String(b.nights)},{t:'d'},{t:'i',v:'🐱'+b.catNames.join('·')},{t:'r',l:'ค่าห้อง',r:fmt(b.basePrice*b.nights)}];if(b.catExtra>0)lines.push({t:'r',l:'+แมว',r:fmt(b.catExtra)});if(b.discountAmount>0)lines.push({t:'r',l:'ส่วนลด',r:'-'+fmt(b.discountAmount),c:'#f0a500'});lines.push({t:'d'},{t:'r',l:'รวม',r:fmt(b.totalPrice),bold:true},{t:'r',l:'✅ มัดจำ('+(b.depRate||30)+'%)',r:fmt(b.deposit),c:'#2da56e'});lines.push(b.paidRemaining?{t:'r',l:'✅ ชำระครบ',r:fmt(r),c:'#2da56e'}:{t:'r',l:'🔴 ค้าง',r:fmt(r),c:'#d94f4f'});lines.push({t:'f',v:o.icon+' '+o.name});var H=pad;lines.forEach(function(l){H+=l.t==='h'?32:l.t==='s'?20:l.t==='d'?13:l.t==='f'?38:l.t==='i'?21:21;});H+=pad;var cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;var ctx=cv.getContext('2d');ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);var y=pad;lines.forEach(function(l){if(l.t==='h'){ctx.font='bold 15px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+12);y+=32;}else if(l.t==='s'){ctx.font='11px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+9);y+=20;}else if(l.t==='d'){ctx.strokeStyle='#ececec';ctx.lineWidth=.8;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+6);ctx.lineTo(W-pad,y+6);ctx.stroke();ctx.setLineDash([]);y+=13;}else if(l.t==='i'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(l.v,pad,y+9);y+=21;}else if(l.t==='f'){ctx.fillStyle='#fdf8f3';ctx.fillRect(pad,y+3,W-pad*2,28);ctx.font='10px Segoe UI';ctx.fillStyle=p;ctx.textAlign='center';ctx.fillText(l.v,W/2,y+20);y+=38;}else{ctx.font=(l.bold?'bold ':'')+'12px Segoe UI';ctx.fillStyle=l.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(l.l,pad,y+10);ctx.textAlign='right';ctx.fillText(l.r,W-pad,y+10);ctx.strokeStyle='#f0f0f0';ctx.lineWidth=.6;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+17);ctx.lineTo(W-pad,y+17);ctx.stroke();y+=21;}});cv.toBlob(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='bill-'+String(b.id).slice(-6)+'.jpg';a.click();setTimeout(function(){URL.revokeObjectURL(url);},3000);},'image/jpeg',0.95);}
+
+function copyBill(){
+  if(!billData)return;var txt2=buildBillTxt(billData);
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(txt2).then(function(){alert2('📋 คัดลอกบิลแล้ว!','ok');}).catch(function(){fallbackCopy(txt2);});
+  }else{fallbackCopy(txt2);}
+}
+function fallbackCopy(text){
+  try{var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;top:-9999px;left:-9999px;opacity:0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);alert2('📋 คัดลอกบิลแล้ว!','ok');}
+  catch(e){alert2('❌ คัดลอกไม่ได้','er');}
+}
+
+function exportPDF(b){
+  var r=b.totalPrice-b.deposit;var o=getOrg();
+  var html='<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>Bill</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Sarabun,sans-serif;padding:28px;max-width:460px;margin:0 auto;font-size:13px}h2{font-size:16px;font-weight:800;text-align:center;margin-bottom:4px}.sub{text-align:center;color:#999;font-size:11px;margin-bottom:11px}.row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0;font-size:12px}.bold{font-weight:700}.green{color:#2da56e;font-weight:700}.red{color:#d94f4f;font-weight:700}hr{border:none;border-top:1px dashed #ddd;margin:7px 0}.cats{font-size:11px;color:#888;margin:2px 0 5px}.foot{background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center}@media print{button{display:none!important}}</style></head><body>'+
+    '<h2>'+o.icon+' '+o.name+'</h2><div class="sub">ใบสรุปการจอง</div><hr>'+
+    '<div class="row"><span>#</span><span>'+String(b.id).slice(-6)+'</span></div>'+
+    '<div class="row"><span>วันที่</span><span>'+b.bookedAt+'</span></div><hr>'+
+    '<div class="row"><span>ชื่อ</span><span>'+b.owner+'</span></div>'+
+    '<div class="row"><span>เบอร์</span><span>'+b.phone+'</span></div><hr>'+
+    '<div class="row"><span>ห้อง</span><span>'+b.roomIds.join('+')+'('+b.type+')</span></div>'+
+    '<div class="row"><span>เช็คอิน</span><span>'+b.checkIn+'</span></div>'+
+    '<div class="row"><span>เช็คเอาท์</span><span>'+b.checkOut+'</span></div>'+
+    '<div class="row"><span>คืน</span><span>'+b.nights+'</span></div><hr>'+
+    '<div class="cats">🐱'+b.catNames.join('·')+'</div>'+
+    '<div class="row"><span>ค่าห้อง</span><span>'+fmt(b.basePrice*b.nights)+'</span></div>'+
+    (b.catExtra>0?'<div class="row"><span>+แมว</span><span>'+fmt(b.catExtra)+'</span></div>':'')+
+    (b.discountAmount>0?'<div class="row" style="color:#f0a500"><span>ส่วนลด</span><span>-'+fmt(b.discountAmount)+'</span></div>':'')+
+    '<hr><div class="row bold"><span>รวม</span><span>'+fmt(b.totalPrice)+'</span></div>'+
+    '<div class="row green"><span>✅ มัดจำ('+(b.depRate||30)+'%)</span><span>'+fmt(b.deposit)+'</span></div>'+
+    (b.paidRemaining?'<div class="row green"><span>✅ ชำระครบ</span><span>'+fmt(r)+'</span></div>':'<div class="row red"><span>🔴 ค้าง</span><span>'+fmt(r)+'</span></div>')+
+    '<div class="foot">'+o.icon+' '+o.name+'</div><br>'+
+    '<button onclick="window.print()" style="width:100%;padding:10px;background:#2d2d2d;color:#fff;border:none;border-radius:8px;cursor:pointer">🖨️ พิมพ์/PDF</button></body></html>';
+  // ใช้ Blob URL แทน document.write เพื่อหลีกเลี่ยง file:// cross-origin error
+  try{
+    var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    var burl=URL.createObjectURL(blob);
+    var w=window.open(burl,'_blank','width=520,height=720');
+    if(!w){alert2('❌ Browser บล็อก Popup','er',5000);}
+    else{setTimeout(function(){URL.revokeObjectURL(burl);},15000);}
+  }catch(e){alert2('❌ เปิด PDF ไม่ได้: '+e.message,'er',5000);}
+}
+
+function exportJPG(b){
+  var r=b.totalPrice-b.deposit;var o=getOrg();
+  var W=500,pad=22,p2=getComputedStyle(document.documentElement).getPropertyValue('--p').trim()||'#b5926b';
+  var lines=[{t:'h',v:o.icon+' '+o.name},{t:'s',v:'ใบสรุปการจอง'},{t:'d'},{t:'r',l:'#',r:String(b.id).slice(-6)},{t:'r',l:'วันที่',r:b.bookedAt},{t:'d'},{t:'r',l:'ชื่อ',r:b.owner},{t:'r',l:'เบอร์',r:b.phone},{t:'d'},{t:'r',l:'ห้อง',r:b.roomIds.join('+')+'('+b.type+')'},{t:'r',l:'เช็คอิน',r:b.checkIn},{t:'r',l:'เช็คเอาท์',r:b.checkOut},{t:'r',l:'คืน',r:String(b.nights)},{t:'d'},{t:'i',v:'🐱'+b.catNames.join('·')},{t:'r',l:'ค่าห้อง',r:fmt(b.basePrice*b.nights)}];
+  if(b.catExtra>0)lines.push({t:'r',l:'+แมว',r:fmt(b.catExtra)});
+  if(b.discountAmount>0)lines.push({t:'r',l:'ส่วนลด',r:'-'+fmt(b.discountAmount),c:'#f0a500'});
+  lines.push({t:'d'},{t:'r',l:'รวม',r:fmt(b.totalPrice),bold:true},{t:'r',l:'✅ มัดจำ('+(b.depRate||30)+'%)',r:fmt(b.deposit),c:'#2da56e'});
+  lines.push(b.paidRemaining?{t:'r',l:'✅ ชำระครบ',r:fmt(r),c:'#2da56e'}:{t:'r',l:'🔴 ค้าง',r:fmt(r),c:'#d94f4f'});
+  lines.push({t:'f',v:o.icon+' '+o.name});
+  var H=pad;lines.forEach(function(l){H+=l.t==='h'?32:l.t==='s'?20:l.t==='d'?13:l.t==='f'?38:21;});H+=pad;
+  var cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;var ctx=cv.getContext('2d');ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var y=pad;
+  lines.forEach(function(l){
+    if(l.t==='h'){ctx.font='bold 15px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+12);y+=32;}
+    else if(l.t==='s'){ctx.font='11px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+9);y+=20;}
+    else if(l.t==='d'){ctx.strokeStyle='#ececec';ctx.lineWidth=.8;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+6);ctx.lineTo(W-pad,y+6);ctx.stroke();ctx.setLineDash([]);y+=13;}
+    else if(l.t==='i'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(l.v,pad,y+9);y+=21;}
+    else if(l.t==='f'){ctx.fillStyle='#fdf8f3';ctx.fillRect(pad,y+3,W-pad*2,28);ctx.font='10px Segoe UI';ctx.fillStyle=p2;ctx.textAlign='center';ctx.fillText(l.v,W/2,y+20);y+=38;}
+    else{ctx.font=(l.bold?'bold ':'')+'12px Segoe UI';ctx.fillStyle=l.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(l.l,pad,y+10);ctx.textAlign='right';ctx.fillText(l.r,W-pad,y+10);ctx.strokeStyle='#f0f0f0';ctx.lineWidth=.6;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+17);ctx.lineTo(W-pad,y+17);ctx.stroke();y+=21;}
+  });
+  cv.toBlob(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='bill-'+String(b.id).slice(-6)+'.jpg';a.click();setTimeout(function(){URL.revokeObjectURL(url);},3000);},'image/jpeg',0.95);
+}
 
 // ══════════════════════════════════════════════
 // BOOKINGS LIST
 // ══════════════════════════════════════════════
+function updateBkToolbar(){
+  var cnt=selBids.size;
+  var dsel=el('bdsel-bk'),dcnt=el('bsel-cnt-bk');
+  if(dsel){dsel.style.display=cnt>0?'inline-block':'none';}
+  if(dcnt){dcnt.style.display=cnt>0?'inline':'none';dcnt.textContent='เลือก '+cnt+' รายการ';}
+  document.querySelectorAll('.bi').forEach(function(row){
+    var bid=row.dataset.bid;
+    if(bid)row.classList.toggle('bk-sel',selBids.has(bid));
+    var chk=row.querySelector('.bchk');if(chk)chk.checked=selBids.has(bid);
+  });
+  var ca=el('chkall-bk');if(ca){var allBids=Array.from(document.querySelectorAll('.bi[data-bid]')).map(function(r){return r.dataset.bid;});ca.checked=allBids.length>0&&allBids.every(function(b){return selBids.has(b);});}
+}
 async function renderBookings(){
   var bks=await loadBks(),td=today(),rooms=getRooms();
   var used=new Set();bks.filter(function(b){return b.checkIn<=td&&b.checkOut>td;}).forEach(function(b){b.roomIds.forEach(function(r){used.add(r);});});
@@ -1291,34 +1678,92 @@ async function renderBookings(){
   txt('srev',fmt(bks.reduce(function(s,b){return s+b.totalPrice;},0)));
   txt('scom',fmt(bks.reduce(function(s,b){return s+(b.commission||0);},0)));
   var list=el('bklist');
-  if(!bks.length){list.innerHTML='<div class="empty">🐱 ยังไม่มีการจองค่ะ</div>';return;}
-  list.innerHTML=bks.slice().reverse().map(function(b){
+  // Toolbar
+  var toolbar='<div class="btoolbar">'+
+    '<label class="chkall-lbl"><input type="checkbox" class="bchk" id="chkall-bk"> เลือกทั้งหมด</label>'+
+    '<button class="bdsel" id="bdsel-bk" style="display:none">🗑 ลบที่เลือก</button>'+
+    '<span class="bsel-cnt" id="bsel-cnt-bk" style="display:none"></span>'+
+    '<button class="bdall" id="bdall-bk">🗑 ลบทั้งหมด</button>'+
+    '</div>';
+  if(!bks.length){list.innerHTML=toolbar+'<div class="empty">🐱 ยังไม่มีการจองค่ะ</div>';bindBkToolbar();return;}
+  list.innerHTML=toolbar+bks.slice().reverse().map(function(b){
     var rem=b.totalPrice-b.deposit,isAct=b.checkIn<=td&&b.checkOut>td&&!b.checkedOut;
-    return'<div class="bi">'+
-      '<div class="bil"><div class="bico">'+(b.type==='Standard Connect'?'🔗':'🛏️')+'</div>'+
+    var hasSlipDep=!!lsG('slip_dep_'+b.id,null),hasSlipPay=!!lsG('slip_pay_'+b.id,null),hasIdCard=!!lsG('idcard_'+b.id,null)||!!(b.memberId&&lsG('mem_idcard_'+b.memberId,null));
+    var isSel=selBids.has(b.id);
+    return'<div class="bi'+(isSel?' bk-sel':'')+'" data-bid="'+b.id+'">'+
+      '<div class="bi-chk-wrap">'+
+      '<input type="checkbox" class="bchk" data-cbid="'+b.id+'"'+(isSel?' checked':'')+' style="margin-top:3px">'+
+      '<div style="flex:1;display:flex;align-items:flex-start;justify-content:space-between;gap:7px;flex-wrap:wrap">'+
+      '<div class="bil"><div class="bico2">'+(b.type==='Standard Connect'?'🔗':'🛏️')+'</div>'+
       '<div class="biin"><strong>ห้อง'+b.roomIds.join('+')+'·'+b.owner+'</strong>'+
       '<span>🐱'+b.catNames.join(',')+'·📞'+b.phone+'</span>'+
-      '<span style="color:var(--p);font-size:.63rem">'+b.type+(b.memberId?'·'+b.memberId:'')+(b.staffName?'·👤'+b.staffName:'')+(b.checkedOut?'·✅CO':'')+'</span></div></div>'+
+      '<span style="color:var(--p);font-size:.63rem">'+b.type+(b.memberId?'·'+b.memberId:'')+(b.staffName?'·👤'+b.staffName:'')+(b.checkedOut?'·✅CO':'')+(b.isPending?'<span style="color:#f0a500"> ⏳Local</span>':'')+'</span>'+
+      (hasSlipDep||hasSlipPay||hasIdCard?'<span style="display:flex;gap:3px;margin-top:2px;flex-wrap:wrap">'+
+        (hasSlipDep?'<span class="slip-tag" data-view="slip_dep_'+b.id+'">📎มัดจำ</span>':'')+
+        (hasSlipPay?'<span class="slip-tag" data-view="slip_pay_'+b.id+'">📎ชำระ</span>':'')+
+        (hasIdCard?'<span class="slip-tag id-card" data-view="idcard_'+(lsG('idcard_'+b.id,null)?b.id:('mem_'+b.memberId))+'">🪪บัตร</span>':'')+
+      '</span>':'')+
+      '</div></div>'+
       '<div class="bir"><div class="bdt">📅'+b.checkIn+'→'+b.checkOut+'</div>'+
       '<div class="brv">'+b.nights+'คืน·'+fmt(b.totalPrice)+'</div>'+
       '<div class="bdp">💳'+fmt(b.deposit)+'</div>'+
       (b.paidRemaining?'<div class="bpd">✅ ชำระครบ</div>':'<div class="brm">🔴 ค้าง'+fmt(rem)+'</div>')+
-      (b.staffName&&isAdminUp()?'<div class="bcm">🟣'+fmt(b.commission||0)+(b.commPaid?'✅':'⏳')+'</div>':'')+
+      (b.staffId&&isAdminUp()?'<div class="bcm">🟣'+fmt(b.commission||0)+(b.commPaid?'✅':'⏳')+'</div>':'')+
       '<div class="bbtns">'+
       '<button class="bs bl" data-bid="'+b.id+'">🧾บิล</button>'+
       ((!b.paidRemaining||isAct)?'<button class="bs bp" data-bid="'+b.id+'" data-act="payco">💵✅</button>':'')+
-      (b.staffName&&!b.commPaid?'<button class="bs bc" data-bid="'+b.id+'" data-act="comm">🟣คอม</button>':'')+
+      (b.staffId&&!b.commPaid?'<button class="bs bc" data-bid="'+b.id+'" data-act="comm">🟣คอม</button>':'')+
       '<button class="bs bx" data-bid="'+b.id+'" data-act="cancel">✕</button>'+
+      '</div></div>'+
       '</div></div></div>';
   }).join('');
+  // slip tag view
+  list.querySelectorAll('[data-view]').forEach(function(tag){
+    tag.addEventListener('click',function(){
+      var key=tag.dataset.view;
+      var v=key.startsWith('mem_')?lsG('mem_idcard_'+key.slice(4),null):lsG(key,null);
+      if(v)viewImg(v);
+    });
+  });
+  // action buttons
   list.querySelectorAll('.bs').forEach(function(btn){
     btn.addEventListener('click',function(){
-      var bid=Number(btn.dataset.bid),act=btn.dataset.act;
-      if(!act){loadBks().then(function(bks){var b=bks.find(function(x){return x.id===bid;});if(b)openBill(b);});return;}
+      var bid=btn.dataset.bid,act=btn.dataset.act;
+      if(!act){loadBks().then(function(bks2){var b=bks2.find(function(x){return String(x.id)===String(bid);});if(b)openBill(b);});return;}
       if(act==='payco')openPayCO(bid);
       else if(act==='comm')openComm(bid);
       else if(act==='cancel'){cancelTgt=bid;openOv('ov-cancel');}
     });
+  });
+  bindBkToolbar();
+}
+function bindBkToolbar(){
+  var ca=el('chkall-bk');
+  if(ca)ca.addEventListener('change',function(){
+    var allBids=Array.from(document.querySelectorAll('.bi[data-bid]')).map(function(r){return r.dataset.bid;});
+    if(ca.checked)allBids.forEach(function(b){selBids.add(b);});else selBids.clear();
+    updateBkToolbar();
+  });
+  document.querySelectorAll('[data-cbid]').forEach(function(chk){
+    chk.addEventListener('change',function(){
+      if(chk.checked)selBids.add(chk.dataset.cbid);else selBids.delete(chk.dataset.cbid);
+      updateBkToolbar();
+    });
+  });
+  var dsel=el('bdsel-bk');
+  if(dsel)dsel.addEventListener('click',function(){
+    if(!selBids.size)return;
+    _delAllMode='bk-sel';
+    txt('delall-tit','ยืนยันลบที่เลือก?');
+    el('delall-txt').textContent='จะลบ '+selBids.size+' รายการจอง ไม่สามารถกู้คืนได้';
+    openOv('ov-delall');
+  });
+  var dall=el('bdall-bk');
+  if(dall)dall.addEventListener('click',function(){
+    _delAllMode='bk-all';
+    txt('delall-tit','ลบรายการจองทั้งหมด?');
+    el('delall-txt').textContent='จะลบทุกรายการจองออกจากระบบ ไม่สามารถกู้คืนได้';
+    openOv('ov-delall');
   });
 }
 
@@ -1363,11 +1808,14 @@ async function renderSummary(){
   function set(id,v){var e=el(id);if(e)e.textContent=v;}
   set('sscnt',sv.cnt);set('ssni',sv.ni);set('ssrm',fmt(sv.rm));set('sscat',fmt(sv.cat));set('sstot',fmt(sv.tot));
   set('sccnt',cv.cnt);set('scni',cv.ni);set('scrm',fmt(cv.rm));set('sccat',fmt(cv.cat));set('sctot',fmt(cv.tot));
-  set('fgrand',fmt(grand));set('fdep',fmt(dep));set('fpaid',fmt(pR));set('frem',fmt(uR));
+  set('fgrand',fmt(grand));set('fdep2',fmt(dep));set('fpaid',fmt(pR));set('frem',fmt(uR));
   set('fcom',fmt(tc));set('fcpd',fmt(pc));set('fcrm',fmt(tc-pc));
   var det=el('sumdet');
   if(!bks.length){det.innerHTML='<div class="empty" style="padding:8px">🐱 ยังไม่มีการจองค่ะ</div>';return;}
-  det.innerHTML=bks.slice().reverse().map(function(b){return'<div class="srow"><span>'+(b.type==='Standard Connect'?'🔗':'🛏️')+'ห้อง'+b.roomIds.join('+')+'·'+b.owner+'·'+b.nights+'คืน</span><span class="val">'+fmt(b.totalPrice)+'<span style="font-size:.63rem;color:'+(b.paidRemaining?'#2da56e':'#d94f4f')+'">'+(b.paidRemaining?'✅':'🔴')+'</span></span></div>';}).join('')+'<div class="srow"><span>รวม</span><span class="val">'+fmt(grand)+'</span></div>';
+  det.innerHTML=bks.slice().reverse().map(function(b){
+    return'<div class="srow"><span>'+(b.type==='Standard Connect'?'🔗':'🛏️')+'ห้อง'+b.roomIds.join('+')+'·'+b.owner+'·'+b.nights+'คืน</span>'+
+      '<span class="val">'+fmt(b.totalPrice)+'<span style="font-size:.63rem;color:'+(b.paidRemaining?'#2da56e':'#d94f4f')+'">'+(b.paidRemaining?'✅':'🔴')+'</span></span></div>';
+  }).join('')+'<div class="srow"><span>รวม</span><span class="val">'+fmt(grand)+'</span></div>';
 }
 
 // ══════════════════════════════════════════════
@@ -1375,8 +1823,9 @@ async function renderSummary(){
 // ══════════════════════════════════════════════
 async function renderComm(){
   var bks=await loadBks();
+  // FIX #1: เช็ค staffId แทน staffName
   var wc=bks.filter(function(b){return b.staffId&&b.commission>0;});
-  if(!isAdminUp()&&CU)wc=wc.filter(function(b){return b.staffName===CU.name;});
+  if(!isAdminUp()&&CU)wc=wc.filter(function(b){return b.staffId===CU.u;});
   var grand=wc.reduce(function(s,b){return s+(b.commission||0);},0);
   var paid=wc.filter(function(b){return b.commPaid;}).reduce(function(s,b){return s+(b.commission||0);},0);
   txt('comgrand',fmt(grand));txt('comsub','จาก '+wc.length+' การจอง');
@@ -1398,58 +1847,204 @@ async function renderComm(){
     if(!wc.length){list.innerHTML='<div class="empty">ยังไม่มีค่าคอมค่ะ</div>';return;}
     var myT=wc.reduce(function(x,b){return x+(b.commission||0);},0);
     var myP=wc.filter(function(b){return b.commPaid;}).reduce(function(x,b){return x+(b.commission||0);},0);
-    list.innerHTML='<div class="comcard"><div class="comname">'+(CU?CU.name:'')+'<span class="combadge '+(myP===myT?'pd':'')+'">'+( myP===myT?'✅ จ่ายครบ':'🟣 ค้าง '+fmt(myT-myP))+'</span></div>'+
+    list.innerHTML='<div class="comcard"><div class="comname">'+(CU?CU.name:'')+
+      '<span class="combadge '+(myP===myT?'pd':'')+'">'+( myP===myT?'✅ จ่ายครบ':'🟣 ค้าง '+fmt(myT-myP))+'</span></div>'+
       wc.map(function(b){return'<div class="comitem"><span>ห้อง'+b.roomIds.join('+')+'·'+b.owner+'·'+b.checkIn+'</span><span><strong>'+fmt(b.commission)+'</strong> <span style="font-size:.63rem;color:'+(b.commPaid?'#2da56e':'#d94f4f')+'">'+(b.commPaid?'✅':'⏳')+'</span></span></div>';}).join('')+
       '<div class="comtot"><span>รวม</span><span>'+fmt(myT)+' (จ่าย '+fmt(myP)+')</span></div></div>';
   }
-  list.querySelectorAll('.bs.bc[data-bid]').forEach(function(btn){btn.addEventListener('click',function(){openComm(Number(btn.dataset.bid));});});
+  list.querySelectorAll('.bs.bc[data-bid]').forEach(function(btn){btn.addEventListener('click',function(){openComm(btn.dataset.bid);});});
 }
 
 // ══════════════════════════════════════════════
 // MEMBERS
 // ══════════════════════════════════════════════
+function updateMemToolbar(){
+  var cnt=selMids.size;
+  var dsel=el('bdsel-mem'),dcnt=el('bsel-cnt-mem');
+  if(dsel)dsel.style.display=cnt>0?'inline-block':'none';
+  if(dcnt){dcnt.style.display=cnt>0?'inline':'none';dcnt.textContent='เลือก '+cnt+' คน';}
+  document.querySelectorAll('.memcard').forEach(function(row){
+    var mid=row.dataset.mid;
+    if(mid)row.classList.toggle('mem-sel',selMids.has(mid));
+    var chk=row.querySelector('.bchk');if(chk)chk.checked=selMids.has(mid);
+  });
+  var ca=el('chkall-mem');if(ca){var allMids=Array.from(document.querySelectorAll('.memcard[data-mid]')).map(function(r){return r.dataset.mid;});ca.checked=allMids.length>0&&allMids.every(function(m){return selMids.has(m);});}
+}
 async function renderMems(){
   var mems=await loadMems(),list=el('memlist');
-  if(!mems.length){list.innerHTML='<div class="empty">ยังไม่มีสมาชิกค่ะ</div>';return;}
-  list.innerHTML=mems.map(function(m){return'<div class="memcard"><div class="meml"><div class="memav">👤</div><div class="memif"><strong>'+m.name+' <span class="memid">'+m.memberId+'</span></strong><span>📞'+m.phone+(m.email?'·📧'+m.email:'')+'</span><span>🐱'+(m.cats.length?m.cats.join(', '):'—')+'</span></div></div><div class="membtns"><button class="bs bl" data-mid="'+m.memberId+'">✏️</button><button class="bs bx" data-mid="'+m.memberId+'" data-del="1">🗑</button></div></div>';}).join('');
-  list.querySelectorAll('[data-mid]').forEach(function(btn){btn.addEventListener('click',function(){if(btn.dataset.del)delMemUI(btn.dataset.mid);else editMemUI(btn.dataset.mid);});});
+  var toolbar='<div class="btoolbar">'+
+    '<label class="chkall-lbl"><input type="checkbox" class="bchk" id="chkall-mem"> เลือกทั้งหมด</label>'+
+    '<button class="bdsel" id="bdsel-mem" style="display:none">🗑 ลบที่เลือก</button>'+
+    '<span class="bsel-cnt" id="bsel-cnt-mem" style="display:none"></span>'+
+    '<button class="bdall" id="bdall-mem">🗑 ลบทั้งหมด</button>'+
+    '</div>';
+  if(!mems.length){list.innerHTML=toolbar+'<div class="empty">ยังไม่มีสมาชิกค่ะ</div>';bindMemToolbar();return;}
+  list.innerHTML=toolbar+mems.map(function(m){
+    var idc=lsG('mem_idcard_'+m.memberId,null);
+    var isSel=selMids.has(m.memberId);
+    return'<div class="memcard'+(isSel?' mem-sel':'')+'" data-mid="'+m.memberId+'">'+
+      '<div class="mem-chk-wrap">'+
+      '<input type="checkbox" class="bchk" data-cmid="'+m.memberId+'"'+(isSel?' checked':'')+'>'+
+      '<div class="meml" style="flex:1"><div class="memav">'+(idc?'<img src="'+idc+'" class="mem-idcard-mini" onclick="viewImg(lsG(\'mem_idcard_'+m.memberId+'\',\'\'))">':'👤')+'</div>'+
+      '<div class="memif"><strong>'+m.name+' <span class="memid">'+m.memberId+'</span></strong>'+
+      '<span>📞'+m.phone+(m.email?'·📧'+m.email:'')+(m.lineId?'·📱'+m.lineId:'')+'</span>'+
+      '<span>🐱'+(m.cats.length?m.cats.join(', '):'—')+'</span></div></div>'+
+      '<div class="membtns">'+
+      (idc?'<button class="bs" style="background:#fff3e0;border-color:#f0a500;color:#f0a500" data-mid="'+m.memberId+'" data-view-idc="1">🪪</button>':'')+
+      '<button class="bs bl" data-mid="'+m.memberId+'">✏️</button>'+
+      '<button class="bs bx" data-mid="'+m.memberId+'" data-del="1">🗑</button>'+
+      '</div>'+
+      '</div></div>';
+  }).join('');
+  list.querySelectorAll('[data-mid]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      if(btn.dataset.viewIdc){var v=lsG('mem_idcard_'+btn.dataset.mid,null);if(v)viewImg(v);return;}
+      if(btn.dataset.del)delMemUI(btn.dataset.mid);else editMemUI(btn.dataset.mid);
+    });
+  });
+  bindMemToolbar();
 }
-function addMemCat(val){val=val||'';var w=el('mfcats'),row=document.createElement('div');row.className='crow';row.style.marginBottom='5px';row.innerHTML='<div class="cbadge">'+(w.children.length+1)+'</div><input type="text" placeholder="ชื่อแมว" value="'+val+'" style="flex:1"><button class="bcnt" style="background:#fdecea;border-color:#f0c0c0;color:#d94f4f">×</button>';row.querySelector('.bcnt').addEventListener('click',function(){row.remove();Array.from(el('mfcats').children).forEach(function(r,i){r.querySelector('.cbadge').textContent=i+1;});});w.appendChild(row);}
+function bindMemToolbar(){
+  var ca=el('chkall-mem');
+  if(ca)ca.addEventListener('change',function(){
+    var allMids=Array.from(document.querySelectorAll('.memcard[data-mid]')).map(function(r){return r.dataset.mid;});
+    if(ca.checked)allMids.forEach(function(m){selMids.add(m);});else selMids.clear();
+    updateMemToolbar();
+  });
+  document.querySelectorAll('[data-cmid]').forEach(function(chk){
+    chk.addEventListener('change',function(){
+      if(chk.checked)selMids.add(chk.dataset.cmid);else selMids.delete(chk.dataset.cmid);
+      updateMemToolbar();
+    });
+  });
+  var dsel=el('bdsel-mem');
+  if(dsel)dsel.addEventListener('click',function(){
+    if(!selMids.size)return;
+    _delAllMode='mem-sel';
+    txt('delall-tit','ยืนยันลบสมาชิกที่เลือก?');
+    el('delall-txt').textContent='จะลบ '+selMids.size+' สมาชิก พร้อมรูปบัตรประชาชน';
+    openOv('ov-delall');
+  });
+  var dall=el('bdall-mem');
+  if(dall)dall.addEventListener('click',function(){
+    _delAllMode='mem-all';
+    txt('delall-tit','ลบสมาชิกทั้งหมด?');
+    el('delall-txt').textContent='จะลบสมาชิกทุกคนออกจากระบบ พร้อมรูปบัตรประชาชน';
+    openOv('ov-delall');
+  });
+}
+
+function addMemCat(val){
+  val=val||'';var w=el('mfcats'),row=document.createElement('div');row.className='crow';row.style.marginBottom='5px';
+  row.innerHTML='<div class="cbadge">'+(w.children.length+1)+'</div><input type="text" placeholder="ชื่อแมว" value="'+val+'" style="flex:1"><button class="bcnt" style="background:#fdecea;border-color:#f0c0c0;color:#d94f4f">×</button>';
+  row.querySelector('.bcnt').addEventListener('click',function(){row.remove();Array.from(el('mfcats').children).forEach(function(r,i){r.querySelector('.cbadge').textContent=i+1;});});
+  w.appendChild(row);
+}
+
 async function saveMemUI(){
-  var name=(el('mfname').value||'').trim(),phone=(el('mfph').value||'').trim(),email=(el('mfeml').value||'').trim();
+  var name=(el('mfname').value||'').trim(),phone=(el('mfph').value||'').trim(),email=(el('mfeml').value||'').trim(),lineId=(el('mflid').value||'').trim();
   var cats=Array.from(el('mfcats').querySelectorAll('input')).map(function(i){return i.value.trim();}).filter(Boolean);
   var msg=el('mfmsg');
   if(!name||!phone){msg.style.color='#d94f4f';msg.textContent='กรุณากรอกชื่อและเบอร์';return;}
   var mems=await loadMems();
+  var targetId=editMemId||genMID();
   if(editMemId){
     var dup=mems.find(function(m){return m.phone===phone&&m.memberId!==editMemId;});
     if(dup){msg.style.color='#d94f4f';msg.textContent='เบอร์ '+phone+' มีสมาชิกอยู่แล้ว ('+dup.memberId+')';return;}
-    await upsertMem({memberId:editMemId,name:name,phone:phone,email:email,cats:cats});
+    await upsertMem({memberId:editMemId,name:name,phone:phone,email:email,lineId:lineId,cats:cats});
     editMemId=null;txt('mftit','➕ เพิ่มสมาชิกใหม่');
   }else{
     var dup2=mems.find(function(m){return m.phone===phone;});
     if(dup2){msg.style.color='#d94f4f';msg.textContent='เบอร์ '+phone+' มีสมาชิกอยู่แล้ว ('+dup2.memberId+')';return;}
-    await upsertMem({memberId:genMID(),name:name,phone:phone,email:email,cats:cats});
+    await upsertMem({memberId:targetId,name:name,phone:phone,email:email,lineId:lineId,cats:cats});
   }
-  el('mfname').value='';el('mfph').value='';el('mfeml').value='';
-  el('mfcats').innerHTML='';addMemCat();msg.style.color='#2da56e';msg.textContent='✅ บันทึกสำเร็จ!';setTimeout(function(){msg.textContent='';},2500);renderMems();
+  // บันทึกรูปบัตรประชาชนผูกกับสมาชิก
+  if(_mfIdCard){lsS('mem_idcard_'+targetId,_mfIdCard);_mfIdCard=null;}
+  // reset form
+  el('mfname').value='';el('mfph').value='';el('mfeml').value='';el('mflid').value='';
+  el('mfcats').innerHTML='';addMemCat();
+  var mfp=el('mf-idcard-prev');if(mfp){mfp.src='';mfp.style.display='none';}
+  msg.style.color='#2da56e';msg.textContent='✅ บันทึกสำเร็จ!';setTimeout(function(){msg.textContent='';},2500);renderMems();
 }
-async function editMemUI(mid){var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});if(!m)return;editMemId=mid;txt('mftit','✏️ แก้ไขสมาชิก — '+mid);el('mfname').value=m.name;el('mfph').value=m.phone;if(m.email)el('mfeml').value=m.email;el('mfcats').innerHTML='';(m.cats.length?m.cats:['']).forEach(function(c){addMemCat(c);});el('memform').scrollIntoView({behavior:'smooth'});}
-async function delMemUI(mid){var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});if(!m||!confirm('ลบสมาชิก '+mid+' — '+m.name+'?'))return;await delMem(mid);renderMems();}
+
+async function editMemUI(mid){
+  var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});if(!m)return;
+  editMemId=mid;txt('mftit','✏️ แก้ไขสมาชิก — '+mid);
+  el('mfname').value=m.name;el('mfph').value=m.phone;
+  if(m.email)el('mfeml').value=m.email;
+  if(m.lineId)el('mflid').value=m.lineId;
+  el('mfcats').innerHTML='';(m.cats.length?m.cats:['']).forEach(function(c){addMemCat(c);});
+  // โหลดรูปบัตรเดิม (ถ้ามี)
+  var idc=lsG('mem_idcard_'+mid,null);
+  var mfp=el('mf-idcard-prev');
+  if(idc&&mfp){mfp.src=idc;mfp.style.display='block';_mfIdCard=idc;}
+  else{if(mfp){mfp.src='';mfp.style.display='none';}_mfIdCard=null;}
+  el('memform').scrollIntoView({behavior:'smooth'});
+}
+
+async function delMemUI(mid){
+  var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});
+  if(!m)return;
+  _delAllMode='mem-one';
+  txt('delall-tit','ยืนยันลบสมาชิก?');
+  el('delall-txt').textContent=m.name+' ('+mid+') — รวมรูปบัตรประชาชน';
+  el('bda-yes').dataset.delmid=mid;
+  openOv('ov-delall');
+}
+
+// ── Batch / Delete All ─────────────────────────
+async function doDelAll(){
+  closeAllOv();
+  if(_delAllMode==='bk-sel'){
+    var ids=Array.from(selBids);
+    for(var i=0;i<ids.length;i++)await deleteBk(ids[i]);
+    selBids.clear();invalidateBkCache();renderBookings();renderRooms();
+    alert2('🗑 ลบ '+ids.length+' รายการแล้ว','er',3000);
+  }else if(_delAllMode==='bk-all'){
+    var bks=await loadBks();
+    for(var j=0;j<bks.length;j++)await deleteBk(bks[j].id);
+    selBids.clear();invalidateBkCache();renderBookings();renderRooms();
+    alert2('🗑 ลบรายการจองทั้งหมดแล้ว','er',3000);
+  }else if(_delAllMode==='mem-sel'){
+    var mids=Array.from(selMids);
+    for(var k=0;k<mids.length;k++)await delMem(mids[k]);
+    selMids.clear();renderMems();
+    alert2('🗑 ลบ '+mids.length+' สมาชิกแล้ว','er',3000);
+  }else if(_delAllMode==='mem-all'){
+    var mems2=await loadMems();
+    for(var l=0;l<mems2.length;l++)await delMem(mems2[l].memberId);
+    selMids.clear();renderMems();
+    alert2('🗑 ลบสมาชิกทั้งหมดแล้ว','er',3000);
+  }else if(_delAllMode==='mem-one'){
+    var oneMid=el('bda-yes').dataset.delmid;
+    if(oneMid){await delMem(oneMid);selMids.delete(oneMid);renderMems();}
+  }
+  _delAllMode='';
+}
 
 // ══════════════════════════════════════════════
 // ADMIN
 // ══════════════════════════════════════════════
 function loadBkSettings(){bkSet=lsG('bkset',{bankName:'',accountName:'',accountNo:'',qrBase64:''});}
-function renderBkUI(){var e=function(id){return el(id);};if(e('bkname'))e('bkname').value=bkSet.bankName||'';if(e('bkacn'))e('bkacn').value=bkSet.accountName||'';if(e('bkano'))e('bkano').value=bkSet.accountNo||'';if(bkSet.qrBase64){var p=e('qrprev');if(p){p.src=bkSet.qrBase64;p.style.display='block';}}}
+function renderBkUI(){
+  if(el('bkname'))el('bkname').value=bkSet.bankName||'';
+  if(el('bkacn'))el('bkacn').value=bkSet.accountName||'';
+  if(el('bkano'))el('bkano').value=bkSet.accountNo||'';
+  if(bkSet.qrBase64){var p=el('qrprev');if(p){p.src=bkSet.qrBase64;p.style.display='block';}}
+}
 function saveBkSet(){bkSet.bankName=(el('bkname').value||'').trim();bkSet.accountName=(el('bkacn').value||'').trim();bkSet.accountNo=(el('bkano').value||'').trim();lsS('bkset',bkSet);var m=el('bkmsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);}
 
 function renderAccList(){
   if(!isOwner())return;var accs=initAccs(),w=el('acclist');
   var ri={owner:{i:'👑',l:'เจ้าของ',bg:'#fdf3ff',c:'#7c5cbf'},sub_admin:{i:'🔧',l:'แอดมินย่อย',bg:'#e8f4ff',c:'#3498db'},staff:{i:'👤',l:'พนักงาน',bg:'var(--pl)',c:'var(--p)'}};
-  w.innerHTML=accs.map(function(a){var r=ri[a.role]||ri.staff;return'<div class="acrow"><div class="acif"><strong>'+a.u+'</strong> — '+a.name+' <span style="font-size:.62rem;border-radius:20px;padding:1px 7px;font-weight:700;background:'+r.bg+';color:'+r.c+'">'+r.i+r.l+'</span>'+(a.role==='sub_admin'?'<span style="font-size:.6rem;margin-left:4px;background:'+(a.canAdmin?'#edfaf4':'#fdecea')+';color:'+(a.canAdmin?'#2da56e':'#d94f4f')+';border-radius:20px;padding:1px 6px">'+(a.canAdmin?'🔓Admin':'🔒NoAdmin')+'</span>':'')+'<div class="acpass" id="ap-'+a.u+'">🔑 '+a.p+'</div></div><div class="acbtns">'+
-    (a.u!==OWN?'<button class="bs bl" data-u="'+a.u+'" data-act="showp">🔑</button>'+(a.role==='sub_admin'?'<button class="bs '+(a.canAdmin?'bx':'bp')+'" data-u="'+a.u+'" data-act="togadmin">'+(a.canAdmin?'🔒ปิด':'🔓เปิด')+'Admin</button>':'')+'<button class="bs" data-u="'+a.u+'" data-act="chgp" style="background:#f5f5f5;border:1.5px solid #ccc;color:#555">🔑เปลี่ยน</button><button class="bs bx" data-u="'+a.u+'" data-act="del">🗑</button>'
-    :'<span style="font-size:.6rem;color:#ccc">ลบไม่ได้</span>')+'</div></div>';}).join('');
+  w.innerHTML=accs.map(function(a){var r=ri[a.role]||ri.staff;
+    return'<div class="acrow"><div class="acif"><strong>'+a.u+'</strong> — '+a.name+' <span style="font-size:.62rem;border-radius:20px;padding:1px 7px;font-weight:700;background:'+r.bg+';color:'+r.c+'">'+r.i+r.l+'</span>'+
+      (a.role==='sub_admin'?'<span style="font-size:.6rem;margin-left:4px;background:'+(a.canAdmin?'#edfaf4':'#fdecea')+';color:'+(a.canAdmin?'#2da56e':'#d94f4f')+';border-radius:20px;padding:1px 6px">'+(a.canAdmin?'🔓Admin':'🔒NoAdmin')+'</span>':'')+
+      '<div class="acpass" id="ap-'+a.u+'">🔑 '+a.p+'</div></div><div class="acbtns">'+
+      (a.u!==OWN?'<button class="bs bl" data-u="'+a.u+'" data-act="showp">🔑</button>'+(a.role==='sub_admin'?'<button class="bs '+(a.canAdmin?'bx':'bp')+'" data-u="'+a.u+'" data-act="togadmin">'+(a.canAdmin?'🔒ปิด':'🔓เปิด')+'Admin</button>':'')+
+      '<button class="bs" data-u="'+a.u+'" data-act="chgp" style="background:#f5f5f5;border:1.5px solid #ccc;color:#555">🔑เปลี่ยน</button><button class="bs bx" data-u="'+a.u+'" data-act="del">🗑</button>'
+      :'<span style="font-size:.6rem;color:#ccc">ลบไม่ได้</span>')+'</div></div>';
+  }).join('');
   w.querySelectorAll('[data-act]').forEach(function(btn){
     btn.addEventListener('click',function(){
       var u=btn.dataset.u,act=btn.dataset.act,a2=initAccs();
@@ -1472,9 +2067,25 @@ function addAcc(){
   msg.style.color='#2da56e';msg.textContent='✅ เพิ่มบัญชี "'+u+'" แล้ว';setTimeout(function(){msg.textContent='';},2500);
   renderAccList();fillStaff();
 }
-function renderRmList(){if(!isOwner())return;var rooms=getRooms(),w=el('rmlist');w.innerHTML=rooms.map(function(r){return'<div class="rmit"><div style="font-size:1rem">🛏️</div><div class="rmif"><div class="rmnm">'+(r.name||r.id)+'<span style="font-size:.6rem;color:#aaa;margin-left:4px">['+r.id+']</span></div><div class="rmpr">'+fmt(r.price)+'/คืน·'+r.type+'</div></div><button class="bs bx" data-rid="'+r.id+'">🗑</button></div>';}).join('');w.querySelectorAll('[data-rid]').forEach(function(btn){btn.addEventListener('click',function(){delRoom(btn.dataset.rid);});});}
+function renderRmList(){
+  if(!isOwner())return;var rooms=getRooms(),w=el('rmlist');
+  w.innerHTML=rooms.map(function(r){
+    return'<div class="rmit"><div style="font-size:1rem">🛏️</div><div class="rmif"><div class="rmnm">'+(r.name||r.id)+'<span style="font-size:.6rem;color:#aaa;margin-left:4px">['+r.id+']</span></div>'+
+      '<div class="rmpr">'+fmt(r.price)+'/คืน·'+r.type+'</div></div><button class="bs bx" data-rid="'+r.id+'">🗑</button></div>';
+  }).join('');
+  w.querySelectorAll('[data-rid]').forEach(function(btn){btn.addEventListener('click',function(){delRoom(btn.dataset.rid);});});
+}
 async function delRoom(rid){if(!confirm('ลบห้อง '+rid+'?'))return;if(!confirm('ยืนยันลบห้อง '+rid+' ถาวร?'))return;saveRooms(getRooms().filter(function(r){return r.id!==rid;}));renderRmList();renderRooms();}
-function addRoom(){if(!isOwner())return;var id=(el('nrid').value||'').trim(),name=(el('nrname').value||'').trim()||'ห้อง'+id,price=parseInt(el('nrprice').value)||250,type=el('nrtype').value;var msg=el('rmmsg');if(!id){msg.style.color='#d94f4f';msg.textContent='กรุณากรอกเลขห้อง';return;}var rooms=getRooms();if(rooms.find(function(r){return r.id===id;})){msg.style.color='#d94f4f';msg.textContent='ห้อง '+id+' มีอยู่แล้ว';return;}rooms.push({id:id,name:name,price:price,type:type});saveRooms(rooms);el('nrid').value='';el('nrname').value='';el('nrprice').value='';msg.style.color='#2da56e';msg.textContent='✅ เพิ่มห้อง '+id+' แล้ว';setTimeout(function(){msg.textContent='';},2500);renderRmList();renderRooms();}
+function addRoom(){
+  if(!isOwner())return;
+  var id=(el('nrid').value||'').trim(),name=(el('nrname').value||'').trim()||'ห้อง'+id,price=parseInt(el('nrprice').value)||250,type=el('nrtype').value;
+  var msg=el('rmmsg');
+  if(!id){msg.style.color='#d94f4f';msg.textContent='กรุณากรอกเลขห้อง';return;}
+  var rooms=getRooms();if(rooms.find(function(r){return r.id===id;})){msg.style.color='#d94f4f';msg.textContent='ห้อง '+id+' มีอยู่แล้ว';return;}
+  rooms.push({id:id,name:name,price:price,type:type});saveRooms(rooms);
+  el('nrid').value='';el('nrname').value='';el('nrprice').value='';
+  msg.style.color='#2da56e';msg.textContent='✅ เพิ่มห้อง '+id+' แล้ว';setTimeout(function(){msg.textContent='';},2500);renderRmList();renderRooms();
+}
 
 async function renderAdmin(){
   if(!canAdmin())return;
@@ -1487,25 +2098,21 @@ async function renderAdmin(){
   var bks=await loadBks(),list=el('admlist'),td=today();
   list.innerHTML='<h4 style="font-size:.8rem;font-weight:700;color:#555;margin-bottom:8px">📋 รายการจองทั้งหมด</h4>'+
     (bks.length?bks.slice().reverse().map(function(b){
-      var rem=b.totalPrice-b.deposit,isAct=b.checkIn<=td&&b.checkOut>td&&!b.checkedOut;
-      return'<div class="bi"><div class="bil"><div class="bico">'+(b.type==='Standard Connect'?'🔗':'🛏️')+'</div>'+
+      var isAct=b.checkIn<=td&&b.checkOut>td&&!b.checkedOut;
+      return'<div class="bi"><div class="bil"><div class="bico2">'+(b.type==='Standard Connect'?'🔗':'🛏️')+'</div>'+
         '<div class="biin"><strong>ห้อง'+b.roomIds.join('+')+'·'+b.owner+'</strong><span>📞'+b.phone+(b.memberId?'·'+b.memberId:'')+(b.staffName?'·👤'+b.staffName:'')+'</span>'+
         '<span style="color:var(--p);font-size:.63rem">'+b.nights+'คืน·'+fmt(b.totalPrice)+'·'+(b.paidRemaining?'✅':'🔴')+'·🟣'+fmt(b.commission||0)+(b.commPaid?'✅':'⏳')+(b.checkedOut?'·🚪CO':'')+'</span></div></div>'+
         '<div class="bir"><div class="bdt">📅'+b.checkIn+'→'+b.checkOut+'</div>'+
-        '<div class="bbtns">'+
-        '<button class="bs bl" data-bid="'+b.id+'">🧾</button>'+
+        '<div class="bbtns"><button class="bs bl" data-bid="'+b.id+'">🧾</button>'+
         ((!b.paidRemaining||isAct)?'<button class="bs bp" data-bid="'+b.id+'" data-act="payco">💵✅</button>':'')+
-        (b.staffName&&!b.commPaid?'<button class="bs bc" data-bid="'+b.id+'" data-act="comm">🟣</button>':'')+
-        '<button class="bs bx" data-bid="'+b.id+'" data-act="cancel">✕</button>'+
-        '</div></div></div>';
+        (b.staffId&&!b.commPaid?'<button class="bs bc" data-bid="'+b.id+'" data-act="comm">🟣</button>':'')+
+        '<button class="bs bx" data-bid="'+b.id+'" data-act="cancel">✕</button></div></div></div>';
     }).join(''):'<div class="empty">🐱 ยังไม่มีการจองค่ะ</div>');
   list.querySelectorAll('.bs').forEach(function(btn){
     btn.addEventListener('click',function(){
-      var bid=Number(btn.dataset.bid),act=btn.dataset.act;
-      if(!act){loadBks().then(function(bks){var b=bks.find(function(x){return x.id===bid;});if(b)openBill(b);});return;}
-      if(act==='payco')openPayCO(bid);
-      else if(act==='comm')openComm(bid);
-      else if(act==='cancel'){cancelTgt=bid;openOv('ov-cancel');}
+      var bid=btn.dataset.bid,act=btn.dataset.act;
+      if(!act){loadBks().then(function(bks2){var b=bks2.find(function(x){return String(x.id)===String(bid);});if(b)openBill(b);});return;}
+      if(act==='payco')openPayCO(bid);else if(act==='comm')openComm(bid);else if(act==='cancel'){cancelTgt=bid;openOv('ov-cancel');}
     });
   });
 }
@@ -1517,13 +2124,17 @@ document.addEventListener('DOMContentLoaded',function(){
   initAccs();loadTheme();renderLangBtns();
   if(checkSess())showApp();
 
+  // image viewer close
+  el('imgview-close').addEventListener('click',function(){el('imgview').classList.remove('on');});
+  el('imgview').addEventListener('click',function(e){if(e.target===el('imgview'))el('imgview').classList.remove('on');});
+
   // LOGIN
   el('blg').addEventListener('click',doLogin);
   el('lp').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
   el('breset').addEventListener('click',doReset);
   el('bout').addEventListener('click',doLogout);
 
-  // NAV TABS
+  // NAV
   document.querySelectorAll('.nt').forEach(function(btn){btn.addEventListener('click',function(){showSec(btn.dataset.s);});});
 
   // MODE
@@ -1543,11 +2154,28 @@ document.addEventListener('DOMContentLoaded',function(){
   el('cminus').addEventListener('click',function(){changeCat(-1);});
   el('cplus').addEventListener('click',function(){changeCat(1);});
 
-  // DATE INPUTS
+  // DATES + FORM
   ['fid','fim','fiy','fod','fom','foy'].forEach(function(id){var e=el(id);if(e)e.addEventListener('input',calcPreview);});
   el('fdisc').addEventListener('input',calcPreview);
+  el('fstaff').addEventListener('change',calcPreview);
   el('fsrch').addEventListener('input',searchMem);
   el('bbook').addEventListener('click',openDepModal);
+
+  // close member dropdown on outside click
+  document.addEventListener('click',function(e){if(!e.target.closest('.mwrap')){var dd=el('mdd');if(dd)dd.style.display='none';}});
+
+  // SLIP UPLOADS
+  bindImageUpload('slip-dep-file','slip-dep-prev',2,function(b64){_slipDep=b64;});
+  bindImageUpload('slip-pay-file','slip-pay-prev',2,function(b64){_slipPay=b64;});
+  bindImageUpload('idcard-file','idcard-prev',2,function(b64){_idCard=b64;});
+
+  // QR bank upload
+  el('bkqrf').addEventListener('change',function(e){
+    var file=e.target.files[0];if(!file)return;
+    if(file.size>1024*1024){alert('รูปต้องไม่เกิน 1MB');e.target.value='';return;}
+    compressImage(file,400,0.8,function(b64){bkSet.qrBase64=b64;var p=el('qrprev');if(p){p.src=b64;p.style.display='block';}});
+    e.target.value='';
+  });
 
   // DEPOSIT MODAL
   el('depcb').addEventListener('change',function(){el('bdepok').disabled=!this.checked;});
@@ -1568,6 +2196,10 @@ document.addEventListener('DOMContentLoaded',function(){
   el('bdocan').addEventListener('click',confirmCancel);
   el('bcanno').addEventListener('click',closeAllOv);
 
+  // DELETE-ALL MODAL
+  el('bda-no').addEventListener('click',closeAllOv);
+  el('bda-yes').addEventListener('click',doDelAll);
+
   // BILL
   el('bpdf').addEventListener('click',function(){if(billData)exportPDF(billData);});
   el('bjpg').addEventListener('click',function(){if(billData)exportJPG(billData);});
@@ -1583,20 +2215,37 @@ document.addEventListener('DOMContentLoaded',function(){
   // MEMBERS
   el('baddcat').addEventListener('click',function(){addMemCat();});
   el('bsavem').addEventListener('click',saveMemUI);
+  bindImageUpload('mf-idcard-file','mf-idcard-prev',2,function(b64){_mfIdCard=b64;});
 
   // ADMIN
-  el('bsaveorg').addEventListener('click',function(){var org={name:(el('oname').value||'').trim()||'Abcd Petshop Hotel',icon:(el('oico').value||'').trim()||'🐾',priceStd:parseInt(el('opstd').value)||250,priceConn:parseInt(el('opcon').value)||450};lsS('org',org);updateOrgUI();var m=el('orgmsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);});
+  el('bsaveorg').addEventListener('click',function(){
+    var org={name:(el('oname').value||'').trim()||'Abcd Petshop Hotel',icon:(el('oico').value||'').trim()||'🐾',priceStd:parseInt(el('opstd').value)||250,priceConn:parseInt(el('opcon').value)||450};
+    lsS('org',org);updateOrgUI();
+    var m=el('orgmsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);
+  });
   el('bapplytheme').addEventListener('click',function(){var p=el('cpri').value,bg=el('cbg').value;applyTheme(p,bg);lsS('th',{p:p,bg:bg});alert2('✅ ใช้สีนี้แล้ว!','ok');});
   el('brsttheme').addEventListener('click',function(){applyTheme('#b5926b','#faf9f7');lsS('th',{p:'#b5926b',bg:'#faf9f7'});renderPresets();alert2('✅ รีเซ็ตสีแล้ว','ok');});
   el('bsaveline').addEventListener('click',function(){var tk=(el('linetok').value||'').trim();lsS('ltok',tk);var m=el('linemsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);});
-  el('btestline').addEventListener('click',async function(){var tk=(el('linetok').value||'').trim();if(!tk){el('linemsg').style.color='#d94f4f';el('linemsg').textContent='กรุณากรอก Token ก่อน';return;}lsS('ltok',tk);el('linemsg').textContent='⏳ กำลังส่ง...';await sendLine('\n🐾 ทดสอบ Abcd Petshop Hotel\n✅ ระบบปกติ');el('linemsg').style.color='#2da56e';el('linemsg').textContent='✅ ส่งแล้ว ตรวจสอบใน LINE';});
+  el('btestline').addEventListener('click',async function(){
+    var tk=(el('linetok').value||'').trim();
+    if(!tk){el('linemsg').style.color='#d94f4f';el('linemsg').textContent='กรุณากรอก Token ก่อน';return;}
+    lsS('ltok',tk);el('linemsg').textContent='⏳ กำลังส่ง...';
+    await sendLine('\n🐾 ทดสอบ Abcd Petshop Hotel\n✅ ระบบปกติ');
+    el('linemsg').style.color='#2da56e';el('linemsg').textContent='✅ ส่งแล้ว ตรวจสอบใน LINE';
+  });
   el('baddacc').addEventListener('click',addAcc);
   el('baddroom').addEventListener('click',addRoom);
   el('bsavebk').addEventListener('click',saveBkSet);
-  el('bkqrf').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;if(file.size>1024*1024){alert('รูปต้องไม่เกิน 1MB');return;}var r=new FileReader();r.onload=function(ev){bkSet.qrBase64=ev.target.result;var p=el('qrprev');if(p){p.src=ev.target.result;p.style.display='block';}};r.readAsDataURL(file);});
 
   // SUMMARY FILTERS
-  document.querySelectorAll('.dfb[data-p]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.dfb[data-p]').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');dPeriod=btn.dataset.p;el('custrange').style.display=dPeriod==='custom'?'flex':'none';if(dPeriod!=='custom')renderSummary();});});
+  document.querySelectorAll('.dfb[data-p]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.dfb[data-p]').forEach(function(b){b.classList.remove('on');});
+      btn.classList.add('on');dPeriod=btn.dataset.p;
+      el('custrange').style.display=dPeriod==='custom'?'flex':'none';
+      if(dPeriod!=='custom')renderSummary();
+    });
+  });
   el('bapply').addEventListener('click',function(){dFrom=el('dfrom').value;dTo=el('dto').value;renderSummary();});
 
   loadBkSettings();addMemCat();
