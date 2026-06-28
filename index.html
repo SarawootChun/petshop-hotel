@@ -950,7 +950,12 @@ function renderLangBtns(){
       var btn=document.createElement('button');
       btn.className=(id==='nlr'?'nlbtn':'lbtn')+(lang===code?' on':'');
       btn.textContent=LMETA[code].l;
-      btn.addEventListener('click',function(){lang=code;lsS('lang',code);pushSettings();location.reload();});
+      btn.addEventListener('click',function(){
+        lang=code;lsS('lang',code);pushSettings();
+        // อัปเดต UI ตรงๆ ไม่ reload หน้า — กัน Firebase init ยิงซ้ำ
+        renderLangBtns();applyLang();
+        renderRooms();renderBookings();
+      });
       w.appendChild(btn);
     });
   });
