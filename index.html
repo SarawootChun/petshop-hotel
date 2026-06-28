@@ -309,6 +309,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
   <div class="nr">
     <div class="nlr" id="nlr"></div>
+    <button class="boutl" id="bguestadmin" style="display:none;background:var(--pl);color:var(--p);border:1.5px solid var(--p)" title="Admin Login">👑</button>
     <span class="ubadge" id="ubadge">👤</span>
     <button class="boutl" id="bout">ออก</button>
   </div>
@@ -719,6 +720,21 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
 </div>
 
+<!-- GUEST ADMIN LOGIN -->
+<div class="ov" id="ov-gadmin">
+  <div class="smbox">
+    <h3 style="margin-bottom:4px">👑 เข้าสู่ระบบแอดมิน</h3>
+    <p style="font-size:.74rem;color:#888;margin-bottom:12px">กรอกชื่อผู้ใช้และรหัสผ่าน</p>
+    <div class="fg" style="margin-bottom:7px"><input type="text" id="gau" placeholder="Username" autocomplete="username"></div>
+    <div class="fg" style="margin-bottom:10px"><input type="password" id="gap" placeholder="Password" autocomplete="current-password"></div>
+    <div class="lerr" id="gaerr" style="margin-bottom:8px;min-height:14px"></div>
+    <div class="smbtns">
+      <button class="bno" id="bga-no">ยกเลิก</button>
+      <button class="bconf" id="bga-ok">👑 เข้าสู่ระบบ</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════
 // CORE SETUP
@@ -838,10 +854,45 @@ function renderLangBtns(){
       var btn=document.createElement('button');
       btn.className=(id==='nlr'?'nlbtn':'lbtn')+(lang===code?' on':'');
       btn.textContent=LMETA[code].l;
-      btn.addEventListener('click',function(){lang=code;lsS('lang',code);renderLangBtns();updateOrgUI();});
+      btn.addEventListener('click',function(){lang=code;lsS('lang',code);renderLangBtns();applyLang();updateOrgUI();});
       w.appendChild(btn);
     });
   });
+}
+
+// ══════════════════════════════════════════════
+// LANGUAGE TRANSLATION
+// ══════════════════════════════════════════════
+var TRANS={
+  th:{
+    'nav.rooms':'ห้องพัก','nav.book':'จองห้อง','nav.bookings':'รายการจอง',
+    'nav.summary':'สรุปยอด','nav.commission':'ค่าคอม','nav.members':'สมาชิก','nav.admin':'แอดมิน',
+    'btn.logout':'ออก','btn.gadmin':'👑'
+  },
+  en:{
+    'nav.rooms':'Rooms','nav.book':'Book','nav.bookings':'Bookings',
+    'nav.summary':'Summary','nav.commission':'Commission','nav.members':'Members','nav.admin':'Admin',
+    'btn.logout':'Logout','btn.gadmin':'👑'
+  },
+  zh:{
+    'nav.rooms':'客房','nav.book':'预订','nav.bookings':'预订列表',
+    'nav.summary':'收入汇总','nav.commission':'佣金','nav.members':'会员','nav.admin':'管理',
+    'btn.logout':'退出','btn.gadmin':'👑'
+  },
+  ja:{
+    'nav.rooms':'客室','nav.book':'予約','nav.bookings':'予約一覧',
+    'nav.summary':'収支','nav.commission':'手数料','nav.members':'会員','nav.admin':'管理',
+    'btn.logout':'ログアウト','btn.gadmin':'👑'
+  }
+};
+function t(key){var tr=TRANS[lang]||TRANS['th'];return(tr&&tr[key])||((TRANS['th']&&TRANS['th'][key])||key);}
+function applyLang(){
+  var navMap={rooms:'nav.rooms',book:'nav.book',bookings:'nav.bookings',summary:'nav.summary',commission:'nav.commission',members:'nav.members',admin:'nav.admin'};
+  document.querySelectorAll('.nt[data-s]').forEach(function(btn){
+    var k=navMap[btn.dataset.s];
+    if(k)btn.textContent=t(k);
+  });
+  var bout=el('bout');if(bout)bout.textContent=t('btn.logout');
 }
 
 // ══════════════════════════════════════════════
@@ -908,11 +959,29 @@ function showApp(){
   badge.className='ubadge'+(CU.role==='owner'?' ow':CU.role==='sub_admin'?' su':'');
   el('tsu').style.display=isAdminUp()?'':'none';
   el('tad').style.display=canAdmin()?'':'none';
-  // ซ่อนปุ่ม Logout ถ้าปิดระบบ Login
-  var bout=el('bout');if(bout)bout.style.display=lsG('loginEnabled',true)?'':'none';
-  renderLangBtns();updateOrgUI();loadTheme();loadBkSettings();
+  var loginOff=!lsG('loginEnabled',true);
+  // ซ่อน Logout เมื่อปิด Login
+  var bout=el('bout');if(bout)bout.style.display=loginOff?'none':'';
+  // แสดง 👑 ปุ่มแอดมินลับ เมื่อปิด Login และยังเป็น guest
+  var bga=el('bguestadmin');if(bga)bga.style.display=(loginOff&&CU.role==='guest')?'':'none';
+  renderLangBtns();applyLang();updateOrgUI();loadTheme();loadBkSettings();
   testConn().then(function(ok){connBanner(ok);if(!_off)probeOptCols();});
   fillStaff();showSec('rooms');
+}
+
+function doGuestAdminLogin(){
+  var u=(el('gau').value||'').trim(),p=el('gap').value||'';
+  var errEl=el('gaerr');errEl.textContent='';
+  if(!u||!p){errEl.textContent='❌ กรุณากรอก Username และ Password';return;}
+  var a=initAccs(),found=null;
+  for(var i=0;i<a.length;i++){if(a[i].u===u&&a[i].p===p){found=a[i];break;}}
+  if(!found||!(found.role==='owner'||found.role==='sub_admin')){errEl.textContent='❌ ไม่พบบัญชีแอดมิน';return;}
+  CU=Object.assign({},found);
+  closeAllOv();
+  el('gau').value='';el('gap').value='';
+  showApp();
+  alert2('✅ เข้าสู่ระบบแอดมินแล้ว','ok');
+  if(canAdmin())showSec('admin');
 }
 
 // ══════════════════════════════════════════════
@@ -2402,6 +2471,18 @@ document.addEventListener('DOMContentLoaded',function(){
     setLoginTrack(lsG('loginEnabled',true));
     ltr.addEventListener('click',toggleLogin);
   }
+  // GUEST ADMIN LOGIN (hidden admin when login is OFF)
+  var bganav=el('bguestadmin');
+  if(bganav)bganav.addEventListener('click',function(){
+    var gu=el('gau');var gp=el('gap');var ge=el('gaerr');
+    if(gu)gu.value='';if(gp)gp.value='';if(ge)ge.textContent='';
+    openOv('ov-gadmin');
+    setTimeout(function(){if(gu)gu.focus();},100);
+  });
+  var bgaok=el('bga-ok');if(bgaok)bgaok.addEventListener('click',doGuestAdminLogin);
+  var bgano=el('bga-no');if(bgano)bgano.addEventListener('click',closeAllOv);
+  var gapEl=el('gap');if(gapEl)gapEl.addEventListener('keydown',function(e){if(e.key==='Enter')doGuestAdminLogin();});
+
   // EXPORT / IMPORT SETTINGS
   var bexp=el('bexport');if(bexp)bexp.addEventListener('click',exportSettings);
   var bimp=el('bimport');if(bimp)bimp.addEventListener('click',function(){var f=el('importfile');if(f)f.click();});
