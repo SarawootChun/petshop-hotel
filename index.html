@@ -1265,7 +1265,7 @@ var _cc={bookings_email:false,bookings_checked_out:false,members_email:false};
 var _ldb={bk:lsG('ldb_bk',[]),mb:lsG('ldb_mb',[])};
 
 // ── Firebase state ──
-var _fbReady=false,_fbdb=null,_fbListening=false;
+var _fbReady=false,_fbdb=null,_fbListening=false,_fbAlertShown=false,_settingsAlertShown=false;
 function saveLDB(k){lsS('ldb_'+k,_ldb[k]);}
 
 var _bkCache={data:[],ts:0};
@@ -1361,7 +1361,7 @@ async function pullSettings(){
         if(changed){
           lang=lsG('lang','th');renderLangBtns();applyLang();
           updateOrgUI();loadTheme();loadBkSettings();
-          alert2('🔥 โหลดตั้งค่าจาก Firebase แล้ว','ok',3000);
+          if(!_settingsAlertShown){_settingsAlertShown=true;alert2('🔥 โหลดตั้งค่าจาก Firebase แล้ว','ok',3000);}
         }
         return true;
       }
@@ -1499,6 +1499,7 @@ async function fbRest(path,method,body){
 async function initFB(){
   var base=getFBUrl();
   if(!base)return;
+  if(_fbReady)return;  // เชื่อมต่ออยู่แล้ว ไม่ต้องทำซ้ำ
   _fbReady=false;
   // ถ้าเปิดจาก file:// → บล็อก fetch ทุกตัว ไม่ต้องลอง
   if(location.protocol==='file:'){
@@ -1521,7 +1522,7 @@ async function initFB(){
     // 200 หรือ null (404) = เข้าถึงได้
     _fbReady=true;
     connBannerFB(true);
-    alert2('🔥 Firebase เชื่อมต่อแล้ว — sync อัตโนมัติ','ok',3000);
+    if(!_fbAlertShown){_fbAlertShown=true;alert2('🔥 Firebase เชื่อมต่อแล้ว — sync อัตโนมัติ','ok',3000);}
     if(!_fbListening){
       _fbListening=true;
       setInterval(function(){if(_fbReady){invalidateBkCache();renderBookings();renderRooms();}},5000);
@@ -1792,9 +1793,11 @@ function calcComm(ic,ex,n){return((ic?CC:CS)+ex*CCA)*n;}
 
 function alert2(msg,type,dur){
   dur=dur||4000;var b=el('abanner');
+  // จำกัดสูงสุด 2 อัน — ลบเก่าออกถ้าล้น
+  while(b.children.length>=2){b.removeChild(b.firstChild);}
   var e=document.createElement('div');e.className='ait'+(type?' '+type:'');e.textContent=msg;
   b.appendChild(e);
-  setTimeout(function(){e.style.transition='opacity .4s';e.style.opacity='0';setTimeout(function(){e.remove();},400);},dur);
+  setTimeout(function(){e.style.transition='opacity .4s';e.style.opacity='0';setTimeout(function(){if(e.parentNode)e.remove();},400);},dur);
 }
 function showMsg2(t,type){
   var e=el('bmsg');if(!e)return;
@@ -2317,6 +2320,13 @@ function exportPDF(b){
     (b.paidRemaining
       ?'<div style="'+s0+';color:#2da56e;font-weight:700"><span>✅ ชำระครบแล้ว</span><span>'+fmt(r)+'</span></div>'
       :'<div style="'+s0+';color:#d94f4f;font-weight:700"><span>🔴 ยอดค้างชำระ</span><span>'+fmt(r)+'</span></div>')+
+    ((!b.paidRemaining||isPending)&&(bkSet.bankName||bkSet.accountNo)?
+      '<div style="background:#f0f8ff;border:1.5px solid #3498db;border-radius:9px;padding:10px 12px;margin:9px 0">'+
+      '<div style="font-size:.7rem;font-weight:700;color:#3498db;margin-bottom:5px">🏦 '+bkSet.bankName+'</div>'+
+      (bkSet.accountName?'<div style="display:flex;justify-content:space-between;font-size:.77rem;padding:2px 0;border-bottom:1px solid #d8edf8"><span>ชื่อบัญชี</span><span>'+bkSet.accountName+'</span></div>':'')+
+      (bkSet.accountNo?'<div style="display:flex;justify-content:space-between;font-size:.77rem;padding:2px 0"><span>เลขบัญชี</span><span><strong>'+bkSet.accountNo+'</strong></span></div>':'')+
+      (bkSet.qrBase64?'<div style="text-align:center;margin-top:8px"><img src="'+bkSet.qrBase64+'" style="max-width:140px;border-radius:7px;display:block;margin:0 auto"></div>':'')+
+      '</div>':'')+
     '<div style="background:#fdf8f3;border-radius:7px;padding:8px;margin-top:10px;font-size:10px;text-align:center;color:#999">ขอบคุณที่ใช้บริการ '+o.icon+' '+o.name+'</div>';
   // ลบ overlay เก่าถ้ามี
   var old=document.getElementById('_pdfov');if(old)document.body.removeChild(old);
@@ -2346,6 +2356,7 @@ function exportPDF(b){
 function exportJPG(b){
   var r=b.totalPrice-b.deposit;var o=getOrg();
   var isPending=!b._saved;
+  var showBank=(!b.paidRemaining||isPending)&&(bkSet.bankName||bkSet.accountNo);
   var W=500,pad=22,p2=getComputedStyle(document.documentElement).getPropertyValue('--p').trim()||'#b5926b';
   var lines=[{t:'h',v:o.icon+' '+o.name},{t:'s',v:isPending?'ใบยืนยันการจอง (รอมัดจำ)':'ใบสรุปการจอง'}];
   if(isPending)lines.push({t:'pn',v:'📋 ยังไม่ได้ยืนยันในระบบ — ส่งให้ลูกค้าโอนมัดจำ'});
@@ -2354,32 +2365,53 @@ function exportJPG(b){
   if(b.discountAmount>0)lines.push({t:'r',l:'ส่วนลด',r:'-'+fmt(b.discountAmount),c:'#f0a500'});
   lines.push({t:'d'},{t:'r',l:'รวม',r:fmt(b.totalPrice),bold:true},{t:'r',l:'✅ มัดจำ('+(b.depRate||30)+'%)',r:fmt(b.deposit),c:'#2da56e'});
   lines.push(b.paidRemaining?{t:'r',l:'✅ ชำระครบ',r:fmt(r),c:'#2da56e'}:{t:'r',l:'🔴 ค้างชำระ',r:fmt(r),c:'#d94f4f'});
+  // เพิ่มข้อมูลธนาคาร
+  var qrH=0;
+  if(showBank){
+    lines.push({t:'d'});
+    if(bkSet.bankName)lines.push({t:'bk',v:'🏦 '+bkSet.bankName});
+    if(bkSet.accountName)lines.push({t:'r',l:'ชื่อบัญชี',r:bkSet.accountName,c:'#3498db'});
+    if(bkSet.accountNo)lines.push({t:'r',l:'เลขบัญชี',r:bkSet.accountNo,bold:true,c:'#1a78c2'});
+    if(bkSet.qrBase64){qrH=110;lines.push({t:'qr'});}
+  }
   lines.push({t:'f',v:o.icon+' '+o.name});
-  var H=pad;lines.forEach(function(l){H+=l.t==='h'?32:l.t==='s'?20:l.t==='d'?13:l.t==='f'?38:l.t==='pn'?26:21;});H+=pad;
-  var cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;var ctx=cv.getContext('2d');ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  var y=pad;
-  lines.forEach(function(l){
-    if(l.t==='h'){ctx.font='bold 15px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+12);y+=32;}
-    else if(l.t==='s'){ctx.font='11px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+9);y+=20;}
-    else if(l.t==='pn'){ctx.fillStyle='#fff8e1';ctx.fillRect(pad,y+2,W-pad*2,20);ctx.font='10px Segoe UI';ctx.fillStyle='#c77700';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+14);y+=26;}
-    else if(l.t==='d'){ctx.strokeStyle='#ececec';ctx.lineWidth=.8;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+6);ctx.lineTo(W-pad,y+6);ctx.stroke();ctx.setLineDash([]);y+=13;}
-    else if(l.t==='i'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(l.v,pad,y+9);y+=21;}
-    else if(l.t==='f'){ctx.fillStyle='#fdf8f3';ctx.fillRect(pad,y+3,W-pad*2,28);ctx.font='10px Segoe UI';ctx.fillStyle=p2;ctx.textAlign='center';ctx.fillText(l.v,W/2,y+20);y+=38;}
-    else{ctx.font=(l.bold?'bold ':'')+'12px Segoe UI';ctx.fillStyle=l.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(l.l,pad,y+10);ctx.textAlign='right';ctx.fillText(l.r,W-pad,y+10);ctx.strokeStyle='#f0f0f0';ctx.lineWidth=.6;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+17);ctx.lineTo(W-pad,y+17);ctx.stroke();y+=21;}
-  });
-  var dataUrl=cv.toDataURL('image/jpeg',0.95);
-  var isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if(isMobile){
-    // มือถือ: แสดงรูปในหน้าต่าง — กดค้างเพื่อบันทึก
-    var mo=document.createElement('div');
-    mo.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:10px';
-    mo.innerHTML='<div style="color:#fff;font-size:.82rem;text-align:center;font-weight:700">📱 กดค้างที่รูปเพื่อบันทึกลงเครื่อง</div>'+
-      '<img src="'+dataUrl+'" style="max-width:100%;max-height:70vh;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.4)">'+
-      '<button style="background:#fff;border:none;padding:9px 28px;border-radius:20px;font-size:.84rem;font-weight:700;cursor:pointer" id="_jpgclose">✕ ปิด</button>';
-    document.body.appendChild(mo);
-    mo.querySelector('#_jpgclose').addEventListener('click',function(){document.body.removeChild(mo);});
+  var H=pad;lines.forEach(function(l){H+=l.t==='h'?32:l.t==='s'?20:l.t==='d'?13:l.t==='f'?38:l.t==='pn'?26:l.t==='bk'?22:l.t==='qr'?qrH:21;});H+=pad;
+  function drawCanvas(qrImg){
+    var cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;var ctx=cv.getContext('2d');ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    var y=pad;
+    lines.forEach(function(l){
+      if(l.t==='h'){ctx.font='bold 15px Segoe UI';ctx.fillStyle='#2d2d2d';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+12);y+=32;}
+      else if(l.t==='s'){ctx.font='11px Segoe UI';ctx.fillStyle='#999';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+9);y+=20;}
+      else if(l.t==='pn'){ctx.fillStyle='#fff8e1';ctx.fillRect(pad,y+2,W-pad*2,20);ctx.font='10px Segoe UI';ctx.fillStyle='#c77700';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+14);y+=26;}
+      else if(l.t==='d'){ctx.strokeStyle='#ececec';ctx.lineWidth=.8;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(pad,y+6);ctx.lineTo(W-pad,y+6);ctx.stroke();ctx.setLineDash([]);y+=13;}
+      else if(l.t==='i'){ctx.font='11px Segoe UI';ctx.fillStyle='#888';ctx.textAlign='left';ctx.fillText(l.v,pad,y+9);y+=21;}
+      else if(l.t==='bk'){ctx.fillStyle='#e8f4fd';ctx.fillRect(pad,y+1,W-pad*2,19);ctx.font='bold 11px Segoe UI';ctx.fillStyle='#3498db';ctx.textAlign='center';ctx.fillText(l.v,W/2,y+14);y+=22;}
+      else if(l.t==='qr'){if(qrImg){var qs=86;ctx.fillStyle='#e8f4fd';ctx.fillRect(pad,y+2,W-pad*2,qrH-6);ctx.drawImage(qrImg,(W-qs)/2,y+8,qs,qs);}y+=qrH;}
+      else if(l.t==='f'){ctx.fillStyle='#fdf8f3';ctx.fillRect(pad,y+3,W-pad*2,28);ctx.font='10px Segoe UI';ctx.fillStyle=p2;ctx.textAlign='center';ctx.fillText(l.v,W/2,y+20);y+=38;}
+      else{ctx.font=(l.bold?'bold ':'')+'12px Segoe UI';ctx.fillStyle=l.c||'#2d2d2d';ctx.textAlign='left';ctx.fillText(l.l,pad,y+10);ctx.textAlign='right';ctx.fillText(l.r,W-pad,y+10);ctx.strokeStyle='#f0f0f0';ctx.lineWidth=.6;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(pad,y+17);ctx.lineTo(W-pad,y+17);ctx.stroke();y+=21;}
+    });
+    var dataUrl=cv.toDataURL('image/jpeg',0.95);
+    var isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if(isMobile){
+      var mo=document.createElement('div');
+      mo.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:10px';
+      mo.innerHTML='<div style="color:#fff;font-size:.82rem;text-align:center;font-weight:700">📱 กดค้างที่รูปเพื่อบันทึกลงเครื่อง</div>'+
+        '<img src="'+dataUrl+'" style="max-width:100%;max-height:70vh;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.4)">'+
+        '<button style="background:#fff;border:none;padding:9px 28px;border-radius:20px;font-size:.84rem;font-weight:700;cursor:pointer" id="_jpgclose">✕ ปิด</button>';
+      document.body.appendChild(mo);
+      mo.querySelector('#_jpgclose').addEventListener('click',function(){document.body.removeChild(mo);});
+    }else{
+      var a=document.createElement('a');a.href=dataUrl;a.download='bill-'+String(b.id).slice(-6)+'.jpg';a.click();
+    }
+  }
+  // ถ้ามี QR โหลด image ก่อนวาด canvas
+  if(bkSet.qrBase64&&showBank){
+    var qimg=new Image();
+    qimg.onload=function(){drawCanvas(qimg);};
+    qimg.onerror=function(){drawCanvas(null);};
+    qimg.src=bkSet.qrBase64;
   }else{
-    var a=document.createElement('a');a.href=dataUrl;a.download='bill-'+String(b.id).slice(-6)+'.jpg';a.click();
+    drawCanvas(null);
   }
 }
 
