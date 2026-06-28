@@ -272,6 +272,8 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 @media(max-width:600px){.rooms{grid-template-columns:repeat(2,1fr)}.sgrid{grid-template-columns:1fr}nav{padding:7px 9px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -575,9 +577,37 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
     </div>
     <div id="togmsg" style="font-size:.73rem;margin-top:5px"></div>
   </div>
+  <!-- Firebase Config -->
+  <div class="card" id="fbcard">
+    <h4>🔥 Firebase Realtime Database (Sync ข้ามเครื่อง)</h4>
+    <div id="fbstatus" style="font-size:.72rem;padding:5px 9px;border-radius:8px;margin-bottom:9px;display:none"></div>
+    <p style="font-size:.73rem;color:#888;margin-bottom:9px">ใส่ Config จาก Firebase Console → Project Settings → Your apps → Web app<br>เปิด Realtime Database ใน Test Mode ก่อน แล้วค่อย Copy config มาใส่</p>
+    <div class="fg"><label>Database URL <span style="color:#d94f4f">*</span></label><input type="text" id="fb_url" placeholder="https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app"></div>
+    <div class="fg"><label>API Key <span style="color:#d94f4f">*</span></label><input type="text" id="fb_key" placeholder="AIzaSy..."></div>
+    <div class="fg"><label>Project ID <span style="color:#d94f4f">*</span></label><input type="text" id="fb_pid" placeholder="your-project-id"></div>
+    <details style="margin-bottom:9px"><summary style="font-size:.72rem;color:#888;cursor:pointer">▸ ตัวเลือกเพิ่มเติม (ไม่จำเป็น)</summary>
+      <div style="margin-top:7px">
+        <div class="fg"><label>App ID</label><input type="text" id="fb_aid" placeholder="1:123456789:web:abc..."></div>
+        <div class="fg"><label>Messaging Sender ID</label><input type="text" id="fb_mid" placeholder="123456789012"></div>
+      </div>
+    </details>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px">
+      <button style="background:#ff6f00;color:#fff;border:none;padding:7px 14px;border-radius:9px;font-weight:700;cursor:pointer;font-size:.8rem" id="bsavefb">🔥 เชื่อมต่อ Firebase</button>
+      <button style="background:#f5f5f5;color:#555;border:none;padding:7px 14px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem" id="bclrfb">🗑️ ลบ Config</button>
+    </div>
+    <div id="fbmsg" style="font-size:.73rem;margin-top:4px"></div>
+    <div style="margin-top:10px;background:#fff8e1;border-radius:8px;padding:9px;font-size:.7rem;color:#795548;line-height:1.6">
+      <b>📋 วิธีตั้งค่า Firebase:</b><br>
+      1. ไปที่ <a href="https://console.firebase.google.com" target="_blank" style="color:#e65100">console.firebase.google.com</a><br>
+      2. สร้างโปรเจกต์ใหม่ (หรือใช้ของเดิม)<br>
+      3. Build → Realtime Database → Create database → เลือก <b>Test mode</b><br>
+      4. Project Settings (⚙️) → Your apps → เพิ่ม Web app → Copy config<br>
+      5. ใส่ Database URL, API Key, Project ID ด้านบน แล้วกด เชื่อมต่อ
+    </div>
+  </div>
   <!-- Export/Import Settings -->
   <div class="card"><h4>📤 ย้ายข้อมูลตั้งค่าข้ามเครื่อง</h4>
-    <p style="font-size:.73rem;color:#888;margin-bottom:9px">⚠️ การตั้งค่า (ชื่อร้าน, ห้อง, ธนาคาร, บัญชีผู้ใช้) เก็บในเครื่องนี้เท่านั้น<br>ข้อมูลจองและสมาชิกซิงค์ผ่าน Supabase อัตโนมัติ</p>
+    <p style="font-size:.73rem;color:#888;margin-bottom:9px">⚠️ การตั้งค่า (ชื่อร้าน, ห้อง, ธนาคาร, บัญชีผู้ใช้) เก็บในเครื่องนี้เท่านั้น<br>ข้อมูลจองและสมาชิกซิงค์ผ่าน Firebase / Supabase อัตโนมัติ</p>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
       <button style="background:#2d2d2d;color:#fff;border:none;padding:7px 14px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem" id="bexport">📤 Export Settings</button>
       <button style="background:#f0ebff;color:#7c5cbf;border:none;padding:7px 14px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem" id="bimport">📥 Import Settings</button>
@@ -1056,6 +1086,59 @@ function checkSess(){
 }
 function doLogout(){lsS('sess',null);CU=null;el('app').style.display='none';el('ls').style.display='flex';el('lu').value='';el('lp').value='';el('lerr').textContent='';}
 
+function renderFBCard(){
+  var cfg=getFBCfg();
+  var urlEl=el('fb_url'),keyEl=el('fb_key'),pidEl=el('fb_pid'),aidEl=el('fb_aid'),midEl=el('fb_mid');
+  if(cfg){
+    if(urlEl)urlEl.value=cfg.databaseURL||'';
+    if(keyEl)keyEl.value=cfg.apiKey||'';
+    if(pidEl)pidEl.value=cfg.projectId||'';
+    if(aidEl)aidEl.value=cfg.appId||'';
+    if(midEl)midEl.value=cfg.messagingSenderId||'';
+  }
+  var st=el('fbstatus');if(st){
+    if(_fbReady){st.style.cssText='background:#fff3e0;color:#e65100;font-weight:700;display:block';st.textContent='🔥 Firebase เชื่อมต่ออยู่ — sync ทำงาน';}
+    else if(cfg&&cfg.databaseURL){st.style.cssText='background:#fdecea;color:#d94f4f;font-weight:700;display:block';st.textContent='⚠️ มี Config แต่ยังไม่ได้เชื่อมต่อ กด "เชื่อมต่อ Firebase"';}
+    else{st.style.display='none';}
+  }
+}
+
+async function saveFBConfig(){
+  var url=(el('fb_url').value||'').trim();
+  var key=(el('fb_key').value||'').trim();
+  var pid=(el('fb_pid').value||'').trim();
+  var aid=(el('fb_aid')?el('fb_aid').value||'':'').trim();
+  var mid=(el('fb_mid')?el('fb_mid').value||'':'').trim();
+  var msg=el('fbmsg');
+  if(!url||!key||!pid){if(msg)msg.innerHTML='<span style="color:#d94f4f">❌ กรุณากรอก Database URL, API Key และ Project ID</span>';return;}
+  var cfg={databaseURL:url,apiKey:key,projectId:pid,appId:aid,messagingSenderId:mid};
+  saveFBCfg(cfg);
+  if(msg)msg.innerHTML='<span style="color:#f0a500">⏳ กำลังเชื่อมต่อ Firebase...</span>';
+  _fbReady=false;_fbdb=null;_fbListening=false;
+  // reset firebase apps
+  try{if(firebase.apps&&firebase.apps.length){firebase.apps.forEach(function(a){a.delete();});}}catch(e){}
+  await initFB();
+  if(_fbReady){
+    if(msg)msg.innerHTML='<span style="color:#e65100">🔥 เชื่อมต่อ Firebase สำเร็จ! Sync อัตโนมัติแล้ว</span>';
+    renderFBCard();
+    await pullSettings();renderBookings();renderRooms();
+  }else{
+    if(msg)msg.innerHTML='<span style="color:#d94f4f">❌ เชื่อมต่อไม่ได้ ตรวจสอบ Config และ Database Rules</span>';
+  }
+}
+
+function clearFBConfig(){
+  if(!confirm('ลบ Firebase Config? ระบบจะกลับไปใช้ Supabase'))return;
+  lsS('fb_cfg',null);
+  _fbReady=false;_fbdb=null;_fbListening=false;
+  try{if(firebase.apps&&firebase.apps.length){firebase.apps.forEach(function(a){a.delete();});}}catch(e){}
+  var urlEl=el('fb_url'),keyEl=el('fb_key'),pidEl=el('fb_pid'),aidEl=el('fb_aid'),midEl=el('fb_mid');
+  if(urlEl)urlEl.value='';if(keyEl)keyEl.value='';if(pidEl)pidEl.value='';
+  if(aidEl)aidEl.value='';if(midEl)midEl.value='';
+  var msg=el('fbmsg');if(msg)msg.innerHTML='<span style="color:#2da56e">✅ ลบ Config แล้ว กลับไปใช้ Supabase</span>';
+  renderFBCard();
+}
+
 function showApp(){
   el('ls').style.display='none';el('app').style.display='block';
   if(!CU)CU={u:'guest',role:'guest',name:'ผู้ใช้ทั่วไป',canAdmin:false};
@@ -1071,7 +1154,10 @@ function showApp(){
   // แสดง 👑 ปุ่มแอดมินลับ เมื่อปิด Login และยังเป็น guest
   var bga=el('bguestadmin');if(bga)bga.style.display=(loginOff&&CU.role==='guest')?'':'none';
   renderLangBtns();applyLang();updateOrgUI();loadTheme();loadBkSettings();
-  testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();initRealtime();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});
+  initFB().then(function(){
+    if(_fbReady){pullSettings().then(function(){renderBookings();renderRooms();});}
+    else{testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();initRealtime();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});}
+  });
   fillStaff();showSec('rooms');
   // Auto-refresh ทุก 30 วินาที — ดึงข้อมูลใหม่จาก Supabase
   if(!window._autoRefTimer){
@@ -1102,6 +1188,9 @@ function doGuestAdminLogin(){
 var _off=false,_probed=false;
 var _cc={bookings_email:false,bookings_checked_out:false,members_email:false};
 var _ldb={bk:lsG('ldb_bk',[]),mb:lsG('ldb_mb',[])};
+
+// ── Firebase state ──
+var _fbReady=false,_fbdb=null,_fbListening=false;
 function saveLDB(k){lsS('ldb_'+k,_ldb[k]);}
 
 var _bkCache={data:[],ts:0};
@@ -1155,7 +1244,14 @@ function connBanner(ok){
   if(ok){b.style.cssText='background:#edfaf4;color:#2da56e;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.textContent='🟢 Supabase Connected';setTimeout(function(){b.style.display='none';},4000);}
   else{b.style.cssText='background:#fef3e2;color:#f0a500;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.innerHTML='🟡 Offline Mode | <span style="cursor:pointer;text-decoration:underline" onclick="retryC()">Retry</span>';}
 }
-async function retryC(){_off=false;_probed=false;_rtReady=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){initRealtime();await syncPending();await pullSettings();renderBookings();renderRooms();alert2('🟢 Connected!','ok');}}
+async function retryC(){
+  _off=false;_probed=false;_rtReady=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};
+  invalidateBkCache();
+  await initFB();
+  if(_fbReady){await pullSettings();renderBookings();renderRooms();return;}
+  var ok=await testConn();connBanner(ok);
+  if(ok){initRealtime();await syncPending();await pullSettings();renderBookings();renderRooms();alert2('🟢 Connected!','ok');}
+}
 
 // ══════════════════════════════════════════════
 // SETTINGS SYNC via Supabase (table: settings)
@@ -1168,8 +1264,12 @@ async function retryC(){_off=false;_probed=false;_rtReady=false;_cc={bookings_em
 // ══════════════════════════════════════════════
 var SYNC_KEYS=['org','rooms','bkset','th','accs','lang','loginEnabled'];
 function pushSettings(){
-  if(_off)return;
   var data={};SYNC_KEYS.forEach(function(k){data[k]=lsG(k,null);});
+  if(_fbReady&&_fbdb){
+    _fbdb.ref('cfg/app_settings').set(data).catch(function(){});
+    return;
+  }
+  if(_off)return;
   fetch(SB+'/rest/v1/settings',{
     method:'POST',
     headers:{'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
@@ -1177,18 +1277,29 @@ function pushSettings(){
   }).catch(function(){});
 }
 async function pullSettings(){
+  if(_fbReady&&_fbdb){
+    try{
+      var snap=await _fbdb.ref('cfg/app_settings').once('value');
+      var data=snap.val();
+      if(data){
+        var changed=false;
+        SYNC_KEYS.forEach(function(k){if(data[k]!==undefined&&data[k]!==null){lsS(k,data[k]);changed=true;}});
+        if(changed){
+          lang=lsG('lang','th');renderLangBtns();applyLang();
+          updateOrgUI();loadTheme();loadBkSettings();
+          alert2('🔥 โหลดตั้งค่าจาก Firebase แล้ว','ok',3000);
+        }
+        return true;
+      }
+    }catch(e){console.warn('[FB] pullSettings error',e);}
+  }
   if(_off)return false;
   try{
     var rows=await sbF('settings',{filter:'key=eq.app_settings'});
     if(rows&&rows[0]&&rows[0].value){
-      var data=JSON.parse(rows[0].value);
-      var changed=false;
-      SYNC_KEYS.forEach(function(k){if(data[k]!==undefined&&data[k]!==null){lsS(k,data[k]);changed=true;}});
-      if(changed){
-        lang=lsG('lang','th');renderLangBtns();applyLang();
-        updateOrgUI();loadTheme();loadBkSettings();
-        alert2('☁️ โหลดตั้งค่าจาก Cloud แล้ว','ok',3000);
-      }
+      var data2=JSON.parse(rows[0].value);var changed2=false;
+      SYNC_KEYS.forEach(function(k){if(data2[k]!==undefined&&data2[k]!==null){lsS(k,data2[k]);changed2=true;}});
+      if(changed2){lang=lsG('lang','th');renderLangBtns();applyLang();updateOrgUI();loadTheme();loadBkSettings();alert2('☁️ โหลดตั้งค่าจาก Cloud แล้ว','ok',3000);}
       return true;
     }
   }catch(e){}
@@ -1256,6 +1367,73 @@ function initRealtime(){
 }
 
 // ══════════════════════════════════════════════
+// FIREBASE REALTIME DATABASE
+// ══════════════════════════════════════════════
+function getFBCfg(){return lsG('fb_cfg',null);}
+function saveFBCfg(cfg){lsS('fb_cfg',cfg);}
+
+function mapBkFB(r){
+  if(!r||!r.id)return null;
+  var co=lsG('coids',[]);var rid=String(r.id);
+  return{id:rid,roomIds:r.roomIds||[],type:r.type||'',owner:r.owner||'',
+    catNames:r.catNames||[],catCount:r.catCount||1,phone:r.phone||'',email:r.email||'',
+    checkIn:r.checkIn||'',checkOut:r.checkOut||'',nights:r.nights||0,
+    basePrice:r.basePrice||0,catExtra:r.catExtra||0,
+    discountType:r.discountType||'pct',discountValue:r.discountValue||0,
+    discountAmount:r.discountAmount||0,depRate:r.depRate||30,
+    totalPrice:r.totalPrice||0,deposit:r.deposit||0,
+    paidRemaining:!!r.paidRemaining,payNote:r.payNote||'',
+    commission:r.commission||0,staffId:r.staffId||null,staffName:r.staffName||'',
+    commPaid:!!r.commPaid,commNote:r.commNote||'',
+    memberId:r.memberId||null,bookedAt:r.bookedAt||'',
+    checkedOut:!!(r.checkedOut)||co.includes(rid),isPending:false};
+}
+
+function mapMemFB(r){
+  if(!r)return null;
+  return{memberId:r.memberId||r.member_id||'',name:r.name||'',phone:r.phone||'',email:r.email||'',cats:r.cats||[]};
+}
+
+function fbKey(id){return String(id).replace(/[.#$/\[\]]/g,'_');}
+
+async function initFB(){
+  var cfg=getFBCfg();
+  if(!cfg||!cfg.databaseURL||!cfg.apiKey||!cfg.projectId){return;}
+  if(typeof firebase==='undefined'){console.warn('[FB] Firebase SDK not loaded');return;}
+  try{
+    if(!firebase.apps||!firebase.apps.length){
+      firebase.initializeApp({apiKey:cfg.apiKey,databaseURL:cfg.databaseURL,projectId:cfg.projectId,authDomain:cfg.projectId+'.firebaseapp.com',storageBucket:cfg.projectId+'.appspot.com',messagingSenderId:cfg.messagingSenderId||'',appId:cfg.appId||''});
+    }
+    _fbdb=firebase.database();
+    _fbReady=true;
+    if(!_fbListening){
+      _fbListening=true;
+      _fbdb.ref('bk').on('value',function(snap){
+        var data=snap.val()||{};
+        var arr=Object.values(data).filter(Boolean).map(mapBkFB).filter(Boolean);
+        _bkCache={data:arr,ts:Date.now()};
+        renderBookings();renderRooms();
+      });
+      _fbdb.ref('mb').on('value',function(snap){
+        renderBookings();
+      });
+    }
+    connBannerFB(true);
+    alert2('🔥 Firebase เชื่อมต่อแล้ว — sync อัตโนมัติ','ok',3000);
+  }catch(e){
+    console.warn('[FB] initFB error',e);
+    _fbReady=false;
+    alert2('❌ Firebase เชื่อมต่อไม่ได้: '+e.message,'er',6000);
+  }
+}
+
+function connBannerFB(ok){
+  var b=el('cbanner');if(!b)return;
+  if(ok){b.style.cssText='background:#fff3e0;color:#e65100;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.textContent='🔥 Firebase Connected — sync อัตโนมัติ';setTimeout(function(){b.style.display='none';},5000);}
+  else{b.style.cssText='background:#fef3e2;color:#f0a500;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.innerHTML='🟡 Offline Mode | <span style="cursor:pointer;text-decoration:underline" onclick="retryC()">Retry</span>';}
+}
+
+// ══════════════════════════════════════════════
 // DB — BOOKINGS
 // ══════════════════════════════════════════════
 function mapBk(r){
@@ -1277,11 +1455,20 @@ function mapBk(r){
 
 async function loadBks(){
   var now=Date.now();
-  if(!_off&&_bkCache.ts&&(now-_bkCache.ts)<BK_TTL)return _bkCache.data;
+  if(_bkCache.ts&&(now-_bkCache.ts)<BK_TTL)return _bkCache.data;
+  // Firebase primary
+  if(_fbReady&&_fbdb){
+    try{
+      var snap=await _fbdb.ref('bk').once('value');
+      var data=snap.val()||{};
+      var arr=Object.values(data).filter(Boolean).map(mapBkFB).filter(Boolean);
+      _bkCache={data:arr,ts:Date.now()};return arr;
+    }catch(e){console.warn('[FB] loadBks error',e);}
+  }
+  // Supabase fallback
   try{
     if(_off)throw 0;
     var raw=await sbF('bookings',{filter:'order=created_at.asc'});
-    // รวม local pending ที่ยังไม่ได้ sync ขึ้น Supabase (เช่น INSERT ล้มเหลว)
     var sbIds=new Set(raw.map(function(r){return String(r.id);}));
     var localPend=_ldb.bk.filter(function(r){return !sbIds.has(String(r.id));});
     var merged=localPend.length?raw.concat(localPend):raw;
@@ -1291,6 +1478,21 @@ async function loadBks(){
 
 async function insertBk(b){
   invalidateBkCache();
+  var fbo={id:b.id,roomIds:b.roomIds,type:b.type,owner:b.owner,catNames:b.catNames,catCount:b.catCount,
+    phone:b.phone,email:b.email||'',checkIn:b.checkIn,checkOut:b.checkOut,nights:b.nights,basePrice:b.basePrice,
+    catExtra:b.catExtra,discountType:b.discountType,discountValue:b.discountValue,discountAmount:b.discountAmount,
+    depRate:b.depRate,totalPrice:b.totalPrice,deposit:b.deposit,paidRemaining:false,payNote:'',
+    commission:b.commission,staffId:b.staffId||null,staffName:b.staffName||'',commPaid:false,commNote:'',
+    memberId:b.memberId||null,bookedAt:b.bookedAt};
+  // always save to local
+  _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(fbo.id);});
+  _ldb.bk.push(fbo);saveLDB('bk');
+  // Firebase primary
+  if(_fbReady&&_fbdb){
+    try{await _fbdb.ref('bk/'+fbKey(fbo.id)).set(fbo);return[fbo];}
+    catch(e){console.warn('[FB] insertBk error',e);}
+  }
+  // Supabase fallback
   var p={id:b.id,room_ids:b.roomIds,type:b.type,owner:b.owner,cat_names:b.catNames,cat_count:b.catCount,
     phone:b.phone,check_in:b.checkIn,check_out:b.checkOut,nights:b.nights,base_price:b.basePrice,
     cat_extra:b.catExtra,discount_type:b.discountType,discount_value:b.discountValue,discount_amount:b.discountAmount,
@@ -1302,78 +1504,96 @@ async function insertBk(b){
   try{
     if(_off)throw 0;
     var result=await sbF('bookings',{method:'POST',body:p,prefer:'return=representation'});
-    // ลบ local pending ที่ sync สำเร็จแล้ว
-    _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(p.id);});saveLDB('bk');
     return result;
   }catch(e){
-    // บันทึก local พร้อม flag เพื่อรู้ว่า pending
     p._pending=true;
-    _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(p.id);});
-    _ldb.bk.push(p);saveLDB('bk');
+    _ldb.bk[_ldb.bk.length-1]._pending=true;saveLDB('bk');
     return[p];
   }
 }
 
 async function updateBk(id,patch){
   invalidateBkCache();var sid=String(id);
+  // Update localStorage
+  var li=_ldb.bk.findIndex(function(r){return String(r.id)===sid;});
+  if(li>=0)Object.assign(_ldb.bk[li],patch);saveLDB('bk');
+  // Firebase primary
+  if(_fbReady&&_fbdb){
+    try{
+      var fbPatch={};Object.keys(patch).forEach(function(k){
+        if(k==='checkedOut'){if(patch.checkedOut){var a=lsG('coids',[]);if(!a.includes(sid)){a.push(sid);lsS('coids',a);}}fbPatch.checkedOut=patch.checkedOut;}
+        else{fbPatch[k]=patch[k];}
+      });
+      await _fbdb.ref('bk/'+fbKey(sid)).update(fbPatch);return;
+    }catch(e){console.warn('[FB] updateBk error',e);}
+  }
+  // Supabase fallback
   var map={paidRemaining:'paid_remaining',payNote:'pay_note',paidAt:'paid_at',commPaid:'comm_paid',commNote:'comm_note',commPaidAt:'comm_paid_at'};
   var snake={};
   Object.keys(patch).forEach(function(k){
-    if(k==='checkedOut'){
-      if(patch.checkedOut){var a=lsG('coids',[]);if(!a.includes(sid)){a.push(sid);lsS('coids',a);}}
-      if(_cc.bookings_checked_out===true)snake.checked_out=patch.checkedOut;
-    }else{snake[map[k]||k]=patch[k];}
+    if(k==='checkedOut'){if(patch.checkedOut){var a=lsG('coids',[]);if(!a.includes(sid)){a.push(sid);lsS('coids',a);}}if(_cc.bookings_checked_out===true)snake.checked_out=patch.checkedOut;}
+    else{snake[map[k]||k]=patch[k];}
   });
   try{if(_off)throw 0;if(Object.keys(snake).length)await sbF('bookings',{method:'PATCH',filter:'id=eq.'+sid,body:snake});}
-  catch(e){var i=_ldb.bk.findIndex(function(r){return String(r.id)===sid;});if(i>=0)Object.assign(_ldb.bk[i],snake);saveLDB('bk');}
+  catch(e){}
 }
 
 async function deleteBk(id){
   invalidateBkCache();var sid=String(id);
-  // ลบ local เสมอก่อน ป้องกัน local pending re-merge กลับมา
   _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==sid;});saveLDB('bk');
+  if(_fbReady&&_fbdb){
+    try{await _fbdb.ref('bk/'+fbKey(sid)).remove();return;}
+    catch(e){console.warn('[FB] deleteBk error',e);}
+  }
   try{if(!_off)await sbF('bookings',{method:'DELETE',filter:'id=eq.'+sid});}
   catch(e){}
 }
 
 // DB — MEMBERS
 async function loadMems(){
+  if(_fbReady&&_fbdb){
+    try{
+      var snap=await _fbdb.ref('mb').once('value');
+      var data=snap.val()||{};
+      return Object.values(data).filter(Boolean).map(mapMemFB).filter(Boolean);
+    }catch(e){console.warn('[FB] loadMems error',e);}
+  }
   try{
     if(_off)throw 0;
     var sbList=(await sbF('members',{filter:'order=created_at.asc'})).map(function(r){
       return{memberId:r.member_id,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};
     });
     var lMap={};_ldb.mb.forEach(function(r){var mid=r.member_id||r.memberId;lMap[mid]=r;});
-    return sbList.map(function(m){
-      var l=lMap[m.memberId];
-      if(l){if(!m.email&&l.email)m.email=l.email;}
-      return m;
-    });
+    return sbList.map(function(m){var l=lMap[m.memberId];if(l&&!m.email&&l.email)m.email=l.email;return m;});
   }catch(e){
-    return _ldb.mb.map(function(r){
-      return{memberId:r.member_id||r.memberId,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};
-    });
+    return _ldb.mb.map(function(r){return{memberId:r.member_id||r.memberId,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};});
   }
 }
 async function upsertMem(m){
+  var fbo={memberId:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||''};
   var lBody={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||''};
   var lIdx=_ldb.mb.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});
   if(lIdx>=0)_ldb.mb[lIdx]=lBody;else _ldb.mb.push(lBody);saveLDB('mb');
+  if(_fbReady&&_fbdb){
+    try{await _fbdb.ref('mb/'+fbKey(m.memberId)).set(fbo);return;}
+    catch(e){console.warn('[FB] upsertMem error',e);}
+  }
   if(_off)return;
   var bodyFull={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
   if(m.email)bodyFull.email=m.email;
   var hdrs={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'};
   try{
     var r=await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyFull)});
-    if(!r.ok){
-      var bodyBasic={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
-      await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyBasic)});
-    }
+    if(!r.ok){await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify({member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]})});}
   }catch(e){}
 }
 async function delMem(mid){
   _ldb.mb=_ldb.mb.filter(function(r){return(r.member_id||r.memberId)!==mid;});saveLDB('mb');
   try{localStorage.removeItem('mem_idcard_'+mid);}catch(e){}
+  if(_fbReady&&_fbdb){
+    try{await _fbdb.ref('mb/'+fbKey(mid)).remove();return;}
+    catch(e){console.warn('[FB] delMem error',e);}
+  }
   try{if(!_off)await sbF('members',{method:'DELETE',filter:'member_id=eq.'+mid});}
   catch(e){}
 }
@@ -2386,6 +2606,8 @@ async function renderAdmin(){
   var rs=el('rmsec');if(rs)rs.style.display=isOwner()?'':'none';
   // Login toggle state
   setLoginTrack(lsG('loginEnabled',true));
+  // Firebase card
+  renderFBCard();
   // Error log
   renderErrLog();
   renderBkUI();
@@ -2695,6 +2917,10 @@ document.addEventListener('DOMContentLoaded',function(){
   var bgaok=el('bga-ok');if(bgaok)bgaok.addEventListener('click',doGuestAdminLogin);
   var bgano=el('bga-no');if(bgano)bgano.addEventListener('click',closeAllOv);
   var gapEl=el('gap');if(gapEl)gapEl.addEventListener('keydown',function(e){if(e.key==='Enter')doGuestAdminLogin();});
+
+  // FIREBASE CONFIG
+  var bsfb=el('bsavefb');if(bsfb)bsfb.addEventListener('click',saveFBConfig);
+  var bcfb=el('bclrfb');if(bcfb)bcfb.addEventListener('click',clearFBConfig);
 
   // EXPORT / IMPORT SETTINGS
   var bexp=el('bexport');if(bexp)bexp.addEventListener('click',exportSettings);
