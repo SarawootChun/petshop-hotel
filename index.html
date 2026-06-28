@@ -265,7 +265,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 .smbtns{display:flex;gap:6px;justify-content:center}
 .bdc{background:#d94f4f;color:#fff;border:none;padding:7px 15px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.81rem}
 .bno{background:#f0f0f0;border:none;padding:7px 15px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.81rem}
-.abanner{position:fixed;top:12px;right:12px;z-index:999;max-width:280px}
+.abanner{position:fixed;bottom:16px;right:14px;z-index:999;max-width:300px}
 .ait{background:#2d2d2d;color:#fff;border-radius:11px;padding:10px 14px;margin-bottom:7px;font-size:.75rem;animation:sli .3s ease;box-shadow:0 4px 18px rgba(0,0,0,.2)}
 .ait.ok{background:#2da56e}.ait.er{background:#d94f4f}.ait.wn{background:#f0a500}
 @keyframes sli{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
@@ -312,7 +312,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   <div class="nr">
     <div class="nlr" id="nlr"></div>
     <button class="boutl" id="bguestadmin" style="display:none;background:var(--pl);color:var(--p);border:1.5px solid var(--p)" title="Admin Login">👑</button>
-    <span class="ubadge" id="ubadge">👤</span>
+    <span class="ubadge" id="ubadge" style="display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:.72rem">👑 <span id="ubadge_name" style="font-size:.7rem;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Login</span></span>
     <button class="boutl" id="bout">ออก</button>
   </div>
 </nav>
@@ -1212,7 +1212,9 @@ function showApp(){
   if(!CU)CU={u:'guest',role:'guest',name:'ผู้ใช้ทั่วไป',canAdmin:false};
   var badge=el('ubadge');
   var ico=CU.role==='owner'?'👑':CU.role==='sub_admin'?'🔧':'👤';
-  badge.textContent=ico+' '+CU.name;
+  var nameSpan=el('ubadge_name');
+  if(nameSpan)nameSpan.textContent=CU.name||CU.u||'Login';
+  badge.innerHTML=ico+' <span id="ubadge_name" style="font-size:.7rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(CU.name||CU.u||'Login')+'</span>';
   badge.className='ubadge'+(CU.role==='owner'?' ow':CU.role==='sub_admin'?' su':'');
   el('tsu').style.display=isAdminUp()?'':'none';
   el('tad').style.display=canAdmin()?'':'none';
@@ -1227,11 +1229,11 @@ function showApp(){
     else{testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();initRealtime();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});}
   });
   fillStaff();showSec('rooms');
-  // Auto-refresh ทุก 30 วินาที — ดึงข้อมูลใหม่จาก Supabase
+  // Auto-refresh ทุก 10 วินาที — ดึงข้อมูลใหม่จาก Supabase
   if(!window._autoRefTimer){
     window._autoRefTimer=setInterval(function(){
       if(!_off){invalidateBkCache();syncPending().then(function(){renderBookings();renderRooms();});}
-    },30000);
+    },10000);
   }
 }
 
@@ -1517,7 +1519,7 @@ async function initFB(){
     alert2('🔥 Firebase เชื่อมต่อแล้ว — sync อัตโนมัติ','ok',3000);
     if(!_fbListening){
       _fbListening=true;
-      setInterval(function(){if(_fbReady){invalidateBkCache();renderBookings();renderRooms();}},15000);
+      setInterval(function(){if(_fbReady){invalidateBkCache();renderBookings();renderRooms();}},5000);
     }
   }catch(e){
     _fbReady=false;
@@ -1915,7 +1917,9 @@ function bookFromCal(){
   filledMemId=null;depRate=30;catCnt=1;_idCard=null;
   var ip=el('idcard-prev');if(ip){ip.src='';ip.style.display='none';}
   showSec('book');updateSelInfo();renderCatInputs([]);
-  setTimeout(function(){setDV('i',si);setDV('o',so);calcPreview();},50);
+  // restore last selected member
+  var lastMid=null;try{lastMid=sessionStorage.getItem('_lastMemId');}catch(e){}
+  setTimeout(function(){setDV('i',si);setDV('o',so);calcPreview();if(lastMid)fillMem(lastMid);},80);
 }
 
 // ══════════════════════════════════════════════
@@ -1960,7 +1964,9 @@ async function searchMem(){
 
 async function fillMem(mid){
   var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});if(!m)return;
-  filledMemId=m.memberId;el('fown').value=m.name;el('fph').value=m.phone;
+  filledMemId=m.memberId;
+  try{sessionStorage.setItem('_lastMemId',m.memberId);}catch(e){}
+  el('fown').value=m.name;el('fph').value=m.phone;
   if(m.email){el('feml').value=m.email;}
   el('fsrch').value='';el('mdd').style.display='none';
   var b=el('mbadge');b.style.display='block';b.textContent='✅ '+m.memberId+' — '+m.name+' · 🐱'+m.cats.length;
@@ -2679,7 +2685,9 @@ function renderAccList(){
     return'<div class="acrow"><div class="acif"><strong>'+a.u+'</strong> — '+a.name+' <span style="font-size:.62rem;border-radius:20px;padding:1px 7px;font-weight:700;background:'+r.bg+';color:'+r.c+'">'+r.i+r.l+'</span>'+
       (a.role==='sub_admin'?'<span style="font-size:.6rem;margin-left:4px;background:'+(a.canAdmin?'#edfaf4':'#fdecea')+';color:'+(a.canAdmin?'#2da56e':'#d94f4f')+';border-radius:20px;padding:1px 6px">'+(a.canAdmin?'🔓Admin':'🔒NoAdmin')+'</span>':'')+
       '<div class="acpass" id="ap-'+a.u+'">🔑 '+a.p+'</div></div><div class="acbtns">'+
-      (a.u!==OWN?'<button class="bs bl" data-u="'+a.u+'" data-act="showp">🔑</button>'+(a.role==='sub_admin'?'<button class="bs '+(a.canAdmin?'bx':'bp')+'" data-u="'+a.u+'" data-act="togadmin">'+(a.canAdmin?'🔒ปิด':'🔓เปิด')+'Admin</button>':'')+
+      (a.u!==OWN?'<button class="bs bl" data-u="'+a.u+'" data-act="showp">🔑</button>'+
+      '<button class="bs" style="background:#f0f0f0;border:1.5px solid #ccc;color:#555;font-size:.62rem" data-u="'+a.u+'" data-act="togrole">'+(a.role==='sub_admin'?'⬇ เป็น Staff':'⬆ เป็น Admin')+'</button>'+
+      (a.role==='sub_admin'?'<button class="bs '+(a.canAdmin?'bx':'bp')+'" data-u="'+a.u+'" data-act="togadmin">'+(a.canAdmin?'🔒ปิด':'🔓เปิด')+'Admin</button>':'')+
       '<button class="bs" data-u="'+a.u+'" data-act="chgp" style="background:#f5f5f5;border:1.5px solid #ccc;color:#555">🔑เปลี่ยน</button><button class="bs bx" data-u="'+a.u+'" data-act="del">🗑</button>'
       :'<span style="font-size:.6rem;color:#ccc">ลบไม่ได้</span>')+'</div></div>';
   }).join('');
@@ -2687,6 +2695,7 @@ function renderAccList(){
     btn.addEventListener('click',function(){
       var u=btn.dataset.u,act=btn.dataset.act,a2=initAccs();
       if(act==='showp'){var pe=el('ap-'+u);if(pe)pe.style.display=pe.style.display==='block'?'none':'block';}
+      else if(act==='togrole'){var ix0=a2.findIndex(function(x){return x.u===u;});if(ix0>=0){var curRole=a2[ix0].role;a2[ix0].role=curRole==='sub_admin'?'staff':'sub_admin';if(a2[ix0].role==='staff')a2[ix0].canAdmin=false;lsS('accs',a2);pushSettings();}renderAccList();}
       else if(act==='togadmin'){var ix=a2.findIndex(function(x){return x.u===u;});if(ix>=0){a2[ix].canAdmin=!a2[ix].canAdmin;lsS('accs',a2);pushSettings();}renderAccList();}
       else if(act==='chgp'){var np=prompt('รหัสผ่านใหม่สำหรับ "'+u+'" (อย่างน้อย 4 ตัว)');if(!np||np.length<4){alert('ต้องอย่างน้อย 4 ตัว');return;}var ix2=a2.findIndex(function(x){return x.u===u;});if(ix2>=0){a2[ix2].p=np;lsS('accs',a2);pushSettings();}renderAccList();}
       else if(act==='del'){if(!confirm('ลบบัญชี "'+u+'"?'))return;lsS('accs',a2.filter(function(x){return x.u!==u;}));pushSettings();renderAccList();fillStaff();}
@@ -2834,19 +2843,39 @@ console.error=function(){try{_logErr(Array.prototype.slice.call(arguments).join(
 
 function renderErrLog(){
   var sec=el('errloglist');if(!sec)return;
+  var today=new Date().toISOString().slice(0,10);
   var days=[];
   try{for(var k in localStorage){if(k.startsWith('errlog_'))days.push(k.replace('errlog_',''));}}catch(e){}
   days.sort().reverse();
   if(!days.length){sec.innerHTML='<div style="color:#888;font-size:.75rem;padding:6px 0">✅ ไม่มี Error Log</div>';return;}
-  sec.innerHTML=days.map(function(d){
+  // button to clear all old logs (keep today only)
+  var hasOld=days.some(function(d){return d!==today;});
+  var topBar=hasOld?'<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="bs" style="background:#fdecea;color:#d94f4f;font-size:.68rem" onclick="clrOldErrLogs()">🧹 ลบ Log เก่าทั้งหมด</button></div>':'';
+  sec.innerHTML=topBar+days.map(function(d){
     var logs=lsG('errlog_'+d,[]);
-    return'<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f0f0">'+
-      '<span style="font-size:.78rem">📅 '+d+' <span style="color:#888">('+logs.length+' รายการ)</span></span>'+
+    var isToday=d===today;
+    var label=isToday?'<span style="background:#edfaf4;color:#2da56e;border-radius:10px;padding:1px 6px;font-size:.6rem;margin-left:4px">🆕 วันนี้</span>':'<span style="background:#f5f5f5;color:#999;border-radius:10px;padding:1px 6px;font-size:.6rem;margin-left:4px">เก่า</span>';
+    // show last 3 entries inline for today
+    var preview='';
+    if(isToday&&logs.length){
+      preview='<div style="margin-top:4px;max-height:80px;overflow-y:auto">'+logs.slice(-3).reverse().map(function(e){
+        var hm=e.t?e.t.slice(11,19):'';
+        return'<div style="font-size:.65rem;color:#888;border-left:2px solid #f0a500;padding:1px 5px;margin:2px 0"><span style="color:#555;font-weight:600">'+hm+'</span> '+String(e.m||'').slice(0,80)+'</div>';
+      }).join('')+(logs.length>3?'<div style="font-size:.6rem;color:#bbb;padding:2px 5px">...และอีก '+(logs.length-3)+' รายการ</div>':'')+'</div>';
+    }
+    return'<div style="padding:7px 0;border-bottom:1px solid #f0f0f0">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between">'+
+      '<span style="font-size:.78rem">📅 '+d+label+' <span style="color:#888">('+logs.length+' รายการ)</span></span>'+
       '<div style="display:flex;gap:5px">'+
       '<button class="bs" style="background:#edfaf4;color:#2da56e" onclick="dlErrLog(\''+d+'\')">⬇ DL</button>'+
       '<button class="bs bx" onclick="clrErrLog(\''+d+'\')">🗑</button>'+
-      '</div></div>';
+      '</div></div>'+preview+'</div>';
   }).join('');
+}
+function clrOldErrLogs(){
+  var today=new Date().toISOString().slice(0,10);
+  try{for(var k in localStorage){if(k.startsWith('errlog_')&&k!=='errlog_'+today){localStorage.removeItem(k);}}}catch(e){}
+  renderErrLog();alert2('🧹 ลบ Log เก่าแล้ว','ok',2000);
 }
 function dlErrLog(date){
   var logs=lsG('errlog_'+date,[]);
