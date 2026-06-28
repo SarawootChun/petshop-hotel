@@ -1511,34 +1511,42 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('dep-cb').addEventListener('change',function(){document.getElementById('btn-dep-ok').disabled=!this.checked;});
   document.getElementById('btn-dep-ok').addEventListener('click',submitBooking);
   document.getElementById('btn-dep-cancel').addEventListener('click',function(){document.getElementById('dep-modal').classList.remove('open');pendingData=null;});
-  var btnCommOk=document.getElementById('btn-comm-ok');
+  // ── close buttons (all use closeAllModals for safety) ──
+  ['btn-dep-cancel','btn-close-bill','btn-cancel-back','btn-co-back','btn-pay-co-cancel'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener('click',window.closeAllModals);
+  });
   var btnCommCancel=document.getElementById('btn-comm-cancel');
+  if(btnCommCancel)btnCommCancel.addEventListener('click',window.closeAllModals);
+  var btnCloseCal=document.getElementById('btn-close-cal');
+  if(btnCloseCal)btnCloseCal.addEventListener('click',function(){
+    document.getElementById('cal-overlay').classList.remove('open');
+  });
+
+  // ── confirm actions ──
+  var btnDepOk=document.getElementById('btn-dep-ok');
+  if(btnDepOk)btnDepOk.addEventListener('click',submitBooking);
+  var btnDepCb=document.getElementById('dep-cb');
+  if(btnDepCb)btnDepCb.addEventListener('change',function(){
+    var ok=document.getElementById('btn-dep-ok');
+    if(ok)ok.disabled=!this.checked;
+  });
+  var btnCommOk=document.getElementById('btn-comm-ok');
   if(btnCommOk)btnCommOk.addEventListener('click',confirmComm);
-  if(btnCommCancel)btnCommCancel.addEventListener('click',window.closeCommModal);
+  var btnDoCancel=document.getElementById('btn-do-cancel');
+  if(btnDoCancel)btnDoCancel.addEventListener('click',confirmCancel);
   var elBoth=document.getElementById('btn-pay-co-both');
   var elPayOnly=document.getElementById('btn-pay-co-payonly');
   var elCoOnly=document.getElementById('btn-pay-co-coonly');
-  var elCoCancel=document.getElementById('btn-pay-co-cancel');
   if(elBoth)elBoth.addEventListener('click',function(){window.doPayCO(true,true);});
   if(elPayOnly)elPayOnly.addEventListener('click',function(){window.doPayCO(true,false);});
   if(elCoOnly)elCoOnly.addEventListener('click',function(){window.doPayCO(false,true);});
-  if(elCoCancel)elCoCancel.addEventListener('click',window.closePayCOModal);
-  var btnCancelBack=document.getElementById('btn-cancel-back');
-  var btnDoCancel=document.getElementById('btn-do-cancel');
-  if(btnCancelBack)btnCancelBack.addEventListener('click',window.closeCancelModal);
-  if(btnDoCancel)btnDoCancel.addEventListener('click',confirmCancel);
   document.getElementById('btn-pdf').addEventListener('click',function(){if(billData)exportBillPDF(billData);});
   document.getElementById('btn-jpg').addEventListener('click',function(){if(billData)exportBillJPG(billData);});
   document.getElementById('btn-copy-bill').addEventListener('click',copyBill);
-  document.getElementById('btn-close-bill').addEventListener('click',function(){document.getElementById('bill-modal').classList.remove('open');});
   document.getElementById('cal-prev').addEventListener('click',function(){calNav(-1);});
   document.getElementById('cal-next').addEventListener('click',function(){calNav(1);});
   document.getElementById('btn-book-cal').addEventListener('click',bookFromCal);
-  document.getElementById('btn-close-cal').addEventListener('click',closeCal);
-  document.getElementById('btn-do-cancel').addEventListener('click',confirmCancel);
-  document.getElementById('btn-cancel-back').addEventListener('click',function(){document.getElementById('cancel-modal').classList.remove('open');});
-  document.getElementById('btn-do-co').addEventListener('click',confirmCO);
-  document.getElementById('btn-co-back').addEventListener('click',function(){document.getElementById('checkout-modal').classList.remove('open');});
   document.getElementById('btn-add-cat-m').addEventListener('click',function(){addMemberCatField();});
   document.getElementById('btn-save-m').addEventListener('click',saveMember);
   document.getElementById('btn-save-bank').addEventListener('click',doSaveBank);
