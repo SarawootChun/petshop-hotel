@@ -2912,18 +2912,66 @@ function toggleLogin(){
   setTimeout(function(){if(m)m.textContent='';},3500);
 }
 
+// ดึง settings จาก cloud ก่อนแสดง login (เพื่อรู้ค่า loginEnabled)
+async function preloadSettings(){
+  // ลอง Firebase ก่อน
+  await initFB();
+  if(_fbReady){
+    try{
+      var d=await fbRest('cfg/app_settings','GET');
+      if(d){SYNC_KEYS.forEach(function(k){if(d[k]!=null)lsS(k,d[k]);});return;}
+    }catch(e){}
+  }
+  // ลอง Supabase
+  try{
+    if(location.protocol==='file:')return;
+    var hdrs={'apikey':SK,'Authorization':'Bearer '+SK};
+    var r=await fetch(SB+'/rest/v1/settings?key=eq.app_settings',{headers:hdrs});
+    if(r.ok){
+      var rows=await r.json();
+      if(rows&&rows[0]&&rows[0].value){
+        var d2=JSON.parse(rows[0].value);
+        SYNC_KEYS.forEach(function(k){if(d2[k]!=null)lsS(k,d2[k]);});
+      }
+    }
+  }catch(e){}
+}
+
 // ══════════════════════════════════════════════
 // DOM READY
 // ══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',function(){
   initAccs();loadTheme();renderLangBtns();
-  // Login Toggle check — ถ้าปิดระบบ Login ให้เข้าแอปเป็น guest
-  if(!lsG('loginEnabled',true)){
-    CU={u:'guest',role:'guest',name:'ผู้ใช้ทั่วไป',canAdmin:false};
-    showApp();
-  } else if(checkSess()){
-    showApp();
-  }
+  // ดึง settings จาก cloud ก่อน เพื่อให้รู้ว่า loginEnabled หรือเปล่า
+  // แสดง loading สั้นๆ ระหว่างรอ
+  var lsEl=el('ls');
+  var loadDiv=document.createElement('div');
+  loadDiv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center';
+  loadDiv.innerHTML='<div style="background:#fff;border-radius:16px;padding:24px 32px;text-align:center;font-size:.88rem;color:#555"><div style="font-size:2rem;margin-bottom:8px">🐾</div>กำลังโหลด...</div>';
+  document.body.appendChild(loadDiv);
+  // ดึง settings พร้อม timeout 4 วินาที
+  (async function(){
+    try{
+      var done=false;
+      var timer=new Promise(function(_,rej){setTimeout(function(){if(!done)rej('timeout');},4000);});
+      var fetch=preloadSettings();
+      await Promise.race([fetch,timer]);
+      done=true;
+    }catch(e){}
+    // เอา loading ออก
+    try{loadDiv.parentNode.removeChild(loadDiv);}catch(e){}
+    // ตัดสินใจ login หลัง load settings
+    if(!lsG('loginEnabled',true)){
+      CU={u:'guest',role:'guest',name:'ผู้ใช้ทั่วไป',canAdmin:false};
+      showApp();
+    } else if(checkSess()){
+      showApp();
+    }
+    // bind events หลัง decision
+    bindEvents();
+  })();
+  return; // ออกจาก sync flow — bindEvents จะถูกเรียกใน async block ด้านบน
+  function bindEvents(){
 
   // image viewer close
   el('imgview-close').addEventListener('click',function(){el('imgview').classList.remove('on');});
@@ -3103,6 +3151,7 @@ document.addEventListener('DOMContentLoaded',function(){
   el('bapply').addEventListener('click',function(){dFrom=el('dfrom').value;dTo=el('dto').value;renderSummary();});
 
   loadBkSettings();addMemCat();
+  } // end bindEvents
 });
 </script>
 </body>
