@@ -334,7 +334,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
         <div class="fg"><label>เบอร์โทรศัพท์</label><input type="tel" id="fph"></div>
       </div>
       <div class="fg"><label>📧 อีเมล (ไม่บังคับ)</label><input type="email" id="feml"></div>
-      <div class="fg"><label>📱 LINE User ID</label><input type="text" id="flid"></div>
       <!-- ID card upload -->
       <div class="fg">
         <label>🪪 บัตรประชาชน (ไม่บังคับ)</label>
@@ -474,7 +473,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
       <div class="fg"><label>เบอร์โทร</label><input type="tel" id="mfph"></div>
     </div>
     <div class="fg"><label>📧 อีเมล</label><input type="email" id="mfeml"></div>
-    <div class="fg"><label>📱 LINE User ID</label><input type="text" id="mflid"></div>
     <div class="fg"><label>🪪 บัตรประชาชน (เก็บไว้ครั้งต่อไป)</label>
       <div class="slip-box" id="mf-idcard-box" onclick="document.getElementById('mf-idcard-file').click()">
         <input type="file" id="mf-idcard-file" accept="image/*">
@@ -515,12 +513,6 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
     </div>
   </div>
   <div class="card"><h4>🌐 ภาษา</h4><div id="alr" style="display:flex;gap:8px;flex-wrap:wrap"></div></div>
-  <div class="card"><h4>📲 LINE Notify Token</h4>
-    <div class="fg"><input type="text" id="linetok" placeholder="จาก notify-bot.line.me → Generate token"></div>
-    <button style="background:#2d2d2d;color:#fff;border:none;padding:7px 14px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.79rem" id="bsaveline">💾 บันทึก</button>
-    <button style="background:#06C755;color:#fff;border:none;padding:7px 13px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.78rem;margin-left:7px" id="btestline">🧪 ทดสอบ</button>
-    <div id="linemsg" style="font-size:.74rem;margin-top:5px"></div>
-  </div>
   <div class="card" id="accsec"><h4>🔐 บัญชีผู้ใช้งาน</h4>
     <div id="acclist"></div>
     <div style="margin-top:10px;padding:11px;background:#f8f8f8;border-radius:10px">
@@ -897,7 +889,7 @@ function showApp(){
 // SUPABASE / OFFLINE
 // ══════════════════════════════════════════════
 var _off=false,_probed=false;
-var _cc={bookings_email:false,bookings_line_user_id:false,bookings_checked_out:false,members_email:false,members_line_id:false};
+var _cc={bookings_email:false,bookings_checked_out:false,members_email:false};
 var _ldb={bk:lsG('ldb_bk',[]),mb:lsG('ldb_mb',[])};
 function saveLDB(k){lsS('ldb_'+k,_ldb[k]);}
 
@@ -907,7 +899,7 @@ function invalidateBkCache(){_bkCache={data:[],ts:0};}
 
 async function probeOptCols(){
   if(_off||_probed)return;_probed=true;
-  var cols=[['bookings','email'],['bookings','line_user_id'],['bookings','checked_out'],['members','email'],['members','line_id']];
+  var cols=[['bookings','email'],['bookings','checked_out'],['members','email']];
   await Promise.all(cols.map(async function(c){
     var k=c[0]+'_'+c[1];
     try{
@@ -944,7 +936,7 @@ function connBanner(ok){
   if(ok){b.style.cssText='background:#edfaf4;color:#2da56e;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.textContent='🟢 Supabase Connected';setTimeout(function(){b.style.display='none';},4000);}
   else{b.style.cssText='background:#fef3e2;color:#f0a500;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.innerHTML='🟡 Offline Mode | <span style="cursor:pointer;text-decoration:underline" onclick="retryC()">Retry</span>';}
 }
-async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_line_user_id:false,bookings_checked_out:false,members_email:false,members_line_id:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){await syncPending();alert2('🟢 Connected!','ok');}}
+async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){await syncPending();alert2('🟢 Connected!','ok');}}
 
 // ลอง sync รายการ pending (local) ขึ้น Supabase
 async function syncPending(){
@@ -974,7 +966,7 @@ function mapBk(r){
   var co=lsG('coids',[]);var rid=String(r.id);
   return{id:rid,roomIds:r.room_ids||r.roomIds||[],type:r.type||'',owner:r.owner||'',
     catNames:r.cat_names||r.catNames||[],catCount:r.cat_count||r.catCount||1,phone:r.phone||'',
-    email:r.email||'',lineUserId:r.line_user_id||r.lineUserId||'',
+    email:r.email||'',
     checkIn:r.check_in||r.checkIn||'',checkOut:r.check_out||r.checkOut||'',nights:r.nights||0,
     basePrice:r.base_price||r.basePrice||0,catExtra:r.cat_extra||r.catExtra||0,
     discountType:r.discount_type||r.discountType||'pct',discountValue:r.discount_value||r.discountValue||0,
@@ -1010,7 +1002,6 @@ async function insertBk(b){
     commission:b.commission,staff_id:b.staffId||null,staff_name:b.staffName||'',comm_paid:false,comm_note:'',
     member_id:b.memberId||null,booked_at:b.bookedAt};
   if(_cc.bookings_email===true&&b.email)p.email=b.email;
-  if(_cc.bookings_line_user_id===true&&b.lineUserId)p.line_user_id=b.lineUserId;
   if(_cc.bookings_checked_out===true)p.checked_out=false;
   try{
     if(_off)throw 0;
@@ -1054,36 +1045,31 @@ async function loadMems(){
   try{
     if(_off)throw 0;
     var sbList=(await sbF('members',{filter:'order=created_at.asc'})).map(function(r){
-      return{memberId:r.member_id,name:r.name,phone:r.phone,email:r.email||'',lineId:r.line_id||'',cats:r.cats||[]};
+      return{memberId:r.member_id,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};
     });
-    // เสริม email/lineId จาก localStorage กรณี Supabase ยังไม่มี column นั้น
     var lMap={};_ldb.mb.forEach(function(r){var mid=r.member_id||r.memberId;lMap[mid]=r;});
     return sbList.map(function(m){
       var l=lMap[m.memberId];
-      if(l){if(!m.email&&l.email)m.email=l.email;if(!m.lineId&&(l.line_id||l.lineId))m.lineId=l.line_id||l.lineId||'';}
+      if(l){if(!m.email&&l.email)m.email=l.email;}
       return m;
     });
   }catch(e){
     return _ldb.mb.map(function(r){
-      return{memberId:r.member_id||r.memberId,name:r.name,phone:r.phone,email:r.email||'',lineId:r.line_id||r.lineId||'',cats:r.cats||[]};
+      return{memberId:r.member_id||r.memberId,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};
     });
   }
 }
 async function upsertMem(m){
-  // บันทึก email/lineId ใน localStorage เสมอก่อน
-  var lBody={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||'',line_id:m.lineId||''};
+  var lBody={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||''};
   var lIdx=_ldb.mb.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});
   if(lIdx>=0)_ldb.mb[lIdx]=lBody;else _ldb.mb.push(lBody);saveLDB('mb');
   if(_off)return;
-  // ลอง POST พร้อม email/lineId ก่อน; ถ้าล้มเหลวให้ retry แค่ข้อมูลพื้นฐาน
   var bodyFull={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
   if(m.email)bodyFull.email=m.email;
-  if(m.lineId)bodyFull.line_id=m.lineId;
   var hdrs={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'};
   try{
     var r=await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyFull)});
     if(!r.ok){
-      // retry ไม่มี email/lineId (กรณี column ยังไม่มีใน Supabase)
       var bodyBasic={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
       await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyBasic)});
     }
@@ -1164,21 +1150,6 @@ function showMsg2(t,type){
   var e=el('bmsg');if(!e)return;
   e.className='msg '+(type==='ok'?'ok':'er');e.textContent=t;
   setTimeout(function(){e.textContent='';e.className='';},4000);
-}
-
-// ══════════════════════════════════════════════
-// LINE
-// ══════════════════════════════════════════════
-async function sendLine(msg){
-  var tk=lsG('ltok','');if(!tk)return;
-  try{await fetch('https://notify-api.line.me/api/notify',{method:'POST',headers:{'Authorization':'Bearer '+tk,'Content-Type':'application/x-www-form-urlencoded'},body:'message='+encodeURIComponent(msg)});}
-  catch(e){}
-}
-function lineMsg(type,b){
-  var o=getOrg();
-  var base='\n'+o.icon+'['+type+']'+o.name+'\n🏨ห้อง'+b.roomIds.join('+')+'\n👤'+b.owner+' 📞'+b.phone+'\n📅'+b.checkIn+'→'+b.checkOut;
-  if(type==='จองใหม่')base+='\n🐱'+b.catNames.join(',')+'  \n💵'+fmt(b.totalPrice);
-  return base;
 }
 
 // ══════════════════════════════════════════════
@@ -1280,7 +1251,7 @@ async function calPick(ds,bks){
 function bookFromCal(){
   if(!calIn||!calOut)return;if(!sel1)sel1=calRid;
   var si=calIn,so=calOut;closeAllOv();
-  ['fown','fph','feml','fsrch','fdisc','flid'].forEach(function(id){var e=el(id);if(e)e.value='';});
+  ['fown','fph','feml','fsrch','fdisc'].forEach(function(id){var e=el(id);if(e)e.value='';});
   el('fstaff').value='';var mb=el('mbadge');if(mb)mb.style.display='none';
   filledMemId=null;depRate=30;catCnt=1;_idCard=null;
   var ip=el('idcard-prev');if(ip){ip.src='';ip.style.display='none';}
@@ -1332,7 +1303,6 @@ async function fillMem(mid){
   var mems=await loadMems(),m=mems.find(function(x){return x.memberId===mid;});if(!m)return;
   filledMemId=m.memberId;el('fown').value=m.name;el('fph').value=m.phone;
   if(m.email){el('feml').value=m.email;}
-  if(m.lineId){el('flid').value=m.lineId;}
   el('fsrch').value='';el('mdd').style.display='none';
   var b=el('mbadge');b.style.display='block';b.textContent='✅ '+m.memberId+' — '+m.name+' · 🐱'+m.cats.length;
   catCnt=Math.max(1,m.cats.length);renderCatInputs(m.cats);calcPreview();
@@ -1406,7 +1376,6 @@ async function openDepModal(){
   var sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc;
   var dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
   var su=(el('fstaff').value||'').trim();
-  var lid=(el('flid').value||'').trim();
   var accs=initAccs(),sacc=su?accs.find(function(a){return a.u===su;}):null;
   var dv=parseFloat((el('fdisc').value)||0)||0;
   pending={
@@ -1418,7 +1387,7 @@ async function openDepModal(){
     discountType:discType,discountValue:dv,discountAmount:disc,
     depRate:depRate,totalPrice:total,deposit:dep,commission:comm,
     staffId:su||null,staffName:sacc?sacc.name:'',
-    lineUserId:lid||null,memberId:filledMemId||null,
+    memberId:filledMemId||null,
     bookedAt:new Date().toLocaleDateString('th-TH')
   };
   // reset slip dep
@@ -1445,10 +1414,9 @@ async function submitBooking(){
     if(saved.memberId&&!lsG('mem_idcard_'+saved.memberId,null)){lsS('mem_idcard_'+saved.memberId,_idCard);}
   }
   _slipDep=null;_idCard=null;
-  autoSaveMem(saved.owner,saved.phone,saved.email,saved.lineUserId||'',saved.catNames,saved.memberId).catch(function(){});
-  sendLine(lineMsg('จองใหม่',saved));
+  autoSaveMem(saved.owner,saved.phone,saved.email,saved.catNames,saved.memberId).catch(function(){});
   alert2('✅ จองสำเร็จ! ห้อง'+saved.roomIds.join('+'),'ok');
-  ['fown','fph','feml','fsrch','fdisc','flid'].forEach(function(id){var e=el(id);if(e)e.value='';});
+  ['fown','fph','feml','fsrch','fdisc'].forEach(function(id){var e=el(id);if(e)e.value='';});
   el('fstaff').value='';clearDV('i');clearDV('o');
   var dp=el('fdep');if(dp)dp.value=30;var dr=el('fdepr');if(dr)dr.value=30;txt('fdeplbl','30%');
   var mb=el('mbadge');if(mb)mb.style.display='none';
@@ -1460,19 +1428,18 @@ async function submitBooking(){
   setTimeout(function(){if(billData)openBill(billData);},500);
 }
 
-// FIX — autoSaveMem: บันทึก email + lineId ไปด้วย
-async function autoSaveMem(name,phone,email,lineId,cats,eid){
+async function autoSaveMem(name,phone,email,cats,eid){
   if(eid){
     var mems=await loadMems(),m=mems.find(function(x){return x.memberId===eid;});
     if(m){
       var mg=Array.from(new Set((m.cats||[]).concat(cats)));
-      await upsertMem({memberId:eid,name:name,phone:phone,email:email||m.email||'',lineId:lineId||m.lineId||'',cats:mg});
+      await upsertMem({memberId:eid,name:name,phone:phone,email:email||m.email||'',cats:mg});
     }
     return;
   }
   var mems2=await loadMems();
   if(!mems2.find(function(m){return m.phone===phone;})){
-    await upsertMem({memberId:genMID(),name:name,phone:phone,email:email||'',lineId:lineId||'',cats:cats});
+    await upsertMem({memberId:genMID(),name:name,phone:phone,email:email||'',cats:cats});
   }
 }
 
@@ -1509,7 +1476,7 @@ async function doPayCO(payF,coF){
     _slipPay=null;
     alert2('✅ รับชำระแล้ว','ok');
   }
-  if(coF){await updateBk(pcTgt,{checkedOut:true});sendLine(lineMsg('เช็คเอาท์',b));alert2('✅ เช็คเอาท์ · ห้อง'+b.roomIds.join('+'),'ok');}
+  if(coF){await updateBk(pcTgt,{checkedOut:true});alert2('✅ เช็คเอาท์ · ห้อง'+b.roomIds.join('+'),'ok');}
   closeAllOv();pcTgt=null;renderBookings();renderRooms();if(isAdminUp())renderSummary();
 }
 
@@ -1532,7 +1499,7 @@ async function confirmComm(){
 async function confirmCancel(){
   if(!cancelTgt)return;
   var bks=await loadBks(),b=bks.find(function(x){return String(x.id)===String(cancelTgt);});
-  if(b){await deleteBk(cancelTgt);sendLine(lineMsg('ยกเลิก',b));alert2('❌ ยกเลิกการจองแล้ว','er');}
+  if(b){await deleteBk(cancelTgt);alert2('❌ ยกเลิกการจองแล้ว','er');}
   closeAllOv();cancelTgt=null;renderBookings();renderRooms();
 }
 
@@ -1887,7 +1854,7 @@ async function renderMems(){
       '<input type="checkbox" class="bchk" data-cmid="'+m.memberId+'"'+(isSel?' checked':'')+'>'+
       '<div class="meml" style="flex:1"><div class="memav">'+(idc?'<img src="'+idc+'" class="mem-idcard-mini" onclick="viewImg(lsG(\'mem_idcard_'+m.memberId+'\',\'\'))">':'👤')+'</div>'+
       '<div class="memif"><strong>'+m.name+' <span class="memid">'+m.memberId+'</span></strong>'+
-      '<span>📞'+m.phone+(m.email?'·📧'+m.email:'')+(m.lineId?'·📱'+m.lineId:'')+'</span>'+
+      '<span>📞'+m.phone+(m.email?'·📧'+m.email:'')+'</span>'+
       '<span>🐱'+(m.cats.length?m.cats.join(', '):'—')+'</span></div></div>'+
       '<div class="membtns">'+
       (idc?'<button class="bs" style="background:#fff3e0;border-color:#f0a500;color:#f0a500" data-mid="'+m.memberId+'" data-view-idc="1">🪪</button>':'')+
@@ -1942,7 +1909,7 @@ function addMemCat(val){
 }
 
 async function saveMemUI(){
-  var name=(el('mfname').value||'').trim(),phone=(el('mfph').value||'').trim(),email=(el('mfeml').value||'').trim(),lineId=(el('mflid').value||'').trim();
+  var name=(el('mfname').value||'').trim(),phone=(el('mfph').value||'').trim(),email=(el('mfeml').value||'').trim();
   var cats=Array.from(el('mfcats').querySelectorAll('input')).map(function(i){return i.value.trim();}).filter(Boolean);
   var msg=el('mfmsg');
   if(!name||!phone){msg.style.color='#d94f4f';msg.textContent='กรุณากรอกชื่อและเบอร์';return;}
@@ -1951,17 +1918,17 @@ async function saveMemUI(){
   if(editMemId){
     var dup=mems.find(function(m){return m.phone===phone&&m.memberId!==editMemId;});
     if(dup){msg.style.color='#d94f4f';msg.textContent='เบอร์ '+phone+' มีสมาชิกอยู่แล้ว ('+dup.memberId+')';return;}
-    await upsertMem({memberId:editMemId,name:name,phone:phone,email:email,lineId:lineId,cats:cats});
+    await upsertMem({memberId:editMemId,name:name,phone:phone,email:email,cats:cats});
     editMemId=null;txt('mftit','➕ เพิ่มสมาชิกใหม่');
   }else{
     var dup2=mems.find(function(m){return m.phone===phone;});
     if(dup2){msg.style.color='#d94f4f';msg.textContent='เบอร์ '+phone+' มีสมาชิกอยู่แล้ว ('+dup2.memberId+')';return;}
-    await upsertMem({memberId:targetId,name:name,phone:phone,email:email,lineId:lineId,cats:cats});
+    await upsertMem({memberId:targetId,name:name,phone:phone,email:email,cats:cats});
   }
   // บันทึกรูปบัตรประชาชนผูกกับสมาชิก
   if(_mfIdCard){lsS('mem_idcard_'+targetId,_mfIdCard);_mfIdCard=null;}
   // reset form
-  el('mfname').value='';el('mfph').value='';el('mfeml').value='';el('mflid').value='';
+  el('mfname').value='';el('mfph').value='';el('mfeml').value='';
   el('mfcats').innerHTML='';addMemCat();
   var mfp=el('mf-idcard-prev');if(mfp){mfp.src='';mfp.style.display='none';}
   msg.style.color='#2da56e';msg.textContent='✅ บันทึกสำเร็จ!';setTimeout(function(){msg.textContent='';},2500);renderMems();
@@ -1972,7 +1939,6 @@ async function editMemUI(mid){
   editMemId=mid;txt('mftit','✏️ แก้ไขสมาชิก — '+mid);
   el('mfname').value=m.name;el('mfph').value=m.phone;
   if(m.email)el('mfeml').value=m.email;
-  if(m.lineId)el('mflid').value=m.lineId;
   el('mfcats').innerHTML='';(m.cats.length?m.cats:['']).forEach(function(c){addMemCat(c);});
   // โหลดรูปบัตรเดิม (ถ้ามี)
   var idc=lsG('mem_idcard_'+mid,null);
@@ -2090,7 +2056,6 @@ function addRoom(){
 async function renderAdmin(){
   if(!canAdmin())return;
   renderOrgSettings();renderPresets();renderLangBtns();
-  var lt=el('linetok');if(lt)lt.value=lsG('ltok','')||'';
   if(isOwner()){renderAccList();renderRmList();}
   var as=el('accsec');if(as)as.style.display=isOwner()?'':'none';
   var rs=el('rmsec');if(rs)rs.style.display=isOwner()?'':'none';
@@ -2225,14 +2190,6 @@ document.addEventListener('DOMContentLoaded',function(){
   });
   el('bapplytheme').addEventListener('click',function(){var p=el('cpri').value,bg=el('cbg').value;applyTheme(p,bg);lsS('th',{p:p,bg:bg});alert2('✅ ใช้สีนี้แล้ว!','ok');});
   el('brsttheme').addEventListener('click',function(){applyTheme('#b5926b','#faf9f7');lsS('th',{p:'#b5926b',bg:'#faf9f7'});renderPresets();alert2('✅ รีเซ็ตสีแล้ว','ok');});
-  el('bsaveline').addEventListener('click',function(){var tk=(el('linetok').value||'').trim();lsS('ltok',tk);var m=el('linemsg');m.style.color='#2da56e';m.textContent='✅ บันทึกแล้ว';setTimeout(function(){m.textContent='';},2500);});
-  el('btestline').addEventListener('click',async function(){
-    var tk=(el('linetok').value||'').trim();
-    if(!tk){el('linemsg').style.color='#d94f4f';el('linemsg').textContent='กรุณากรอก Token ก่อน';return;}
-    lsS('ltok',tk);el('linemsg').textContent='⏳ กำลังส่ง...';
-    await sendLine('\n🐾 ทดสอบ Abcd Petshop Hotel\n✅ ระบบปกติ');
-    el('linemsg').style.color='#2da56e';el('linemsg').textContent='✅ ส่งแล้ว ตรวจสอบใน LINE';
-  });
   el('baddacc').addEventListener('click',addAcc);
   el('baddroom').addEventListener('click',addRoom);
   el('bsavebk').addEventListener('click',saveBkSet);
