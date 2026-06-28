@@ -271,6 +271,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 @keyframes sli{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 @media(max-width:600px){.rooms{grid-template-columns:repeat(2,1fr)}.sgrid{grid-template-columns:1fr}nav{padding:7px 9px}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -1070,7 +1071,7 @@ function showApp(){
   // แสดง 👑 ปุ่มแอดมินลับ เมื่อปิด Login และยังเป็น guest
   var bga=el('bguestadmin');if(bga)bga.style.display=(loginOff&&CU.role==='guest')?'':'none';
   renderLangBtns();applyLang();updateOrgUI();loadTheme();loadBkSettings();
-  testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});
+  testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();initRealtime();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});
   fillStaff();showSec('rooms');
   // Auto-refresh ทุก 30 วินาที — ดึงข้อมูลใหม่จาก Supabase
   if(!window._autoRefTimer){
@@ -1129,7 +1130,15 @@ async function sbF(tbl,opts){
   if(pr)hd['Prefer']=pr;
   try{
     var res=await fetch(url,{method:m,headers:hd,body:bo?JSON.stringify(bo):null});
-    if(!res.ok){var tx=await res.text();throw new Error(tx);}
+    if(!res.ok){
+      var tx=await res.text();
+      // แสดง error จาก Supabase (เช่น RLS blocked → 401/403)
+      if((m==='POST'||m==='PATCH'||m==='DELETE')&&(res.status===401||res.status===403)){
+        console.error('[Supabase] RLS blocked '+m+' on '+tbl+' ('+res.status+'): '+tx);
+        alert2('❌ Supabase บล็อก '+m+' ('+res.status+') — ตรวจสอบ RLS Policies ใน Dashboard','er',6000);
+      }
+      throw new Error(tx);
+    }
     if(res.status===204||m==='DELETE')return[];
     var tx2=await res.text();return tx2?JSON.parse(tx2):[];
   }catch(e){if(e.name==='TypeError'||e.message==='Failed to fetch'){_off=true;connBanner(false);}throw e;}
@@ -1146,7 +1155,7 @@ function connBanner(ok){
   if(ok){b.style.cssText='background:#edfaf4;color:#2da56e;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.textContent='🟢 Supabase Connected';setTimeout(function(){b.style.display='none';},4000);}
   else{b.style.cssText='background:#fef3e2;color:#f0a500;text-align:center;font-size:.68rem;font-weight:600;padding:4px;';b.innerHTML='🟡 Offline Mode | <span style="cursor:pointer;text-decoration:underline" onclick="retryC()">Retry</span>';}
 }
-async function retryC(){_off=false;_probed=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){await syncPending();await pullSettings();renderBookings();renderRooms();alert2('🟢 Connected!','ok');}}
+async function retryC(){_off=false;_probed=false;_rtReady=false;_cc={bookings_email:false,bookings_checked_out:false,members_email:false};invalidateBkCache();var ok=await testConn();connBanner(ok);if(ok){initRealtime();await syncPending();await pullSettings();renderBookings();renderRooms();alert2('🟢 Connected!','ok');}}
 
 // ══════════════════════════════════════════════
 // SETTINGS SYNC via Supabase (table: settings)
@@ -1212,6 +1221,38 @@ async function syncPending(){
     saveLDB('bk');invalidateBkCache();
     alert2('☁️ Sync '+synced.length+' รายการขึ้น Supabase แล้ว','ok',4000);
   }
+}
+
+// ══════════════════════════════════════════════
+// SUPABASE REALTIME — sync ทันทีข้ามเครื่อง
+// ══════════════════════════════════════════════
+var _sbRT=null,_rtCh=null,_rtReady=false;
+function initRealtime(){
+  if(_rtReady||_off)return;
+  if(!window.supabase||!window.supabase.createClient){
+    console.warn('[RT] Supabase JS library not loaded');return;
+  }
+  try{
+    _sbRT=window.supabase.createClient(SB,SK,{realtime:{params:{eventsPerSecond:10}}});
+    _rtCh=_sbRT.channel('rt-all')
+      .on('postgres_changes',{event:'*',schema:'public',table:'bookings'},function(pl){
+        console.log('[RT] bookings change:',pl.eventType);
+        invalidateBkCache();
+        renderBookings();renderRooms();
+      })
+      .on('postgres_changes',{event:'*',schema:'public',table:'members'},function(){
+        renderBookings();
+      })
+      .subscribe(function(status,err){
+        if(status==='SUBSCRIBED'){
+          _rtReady=true;
+          alert2('📡 Realtime เชื่อมต่อแล้ว — sync อัตโนมัติ','ok',3000);
+        }else if(status==='CHANNEL_ERROR'){
+          console.warn('[RT] channel error',err);
+          alert2('⚠️ Realtime ไม่สามารถเชื่อมต่อได้ ตรวจสอบ Supabase Realtime settings','er',5000);
+        }
+      });
+  }catch(e){console.warn('[RT] initRealtime error',e);}
 }
 
 // ══════════════════════════════════════════════
@@ -1426,7 +1467,9 @@ function showSec(name){
 function setMode(m){
   bmode=m;sel1=null;sel2=null;
   el('mstd').classList.toggle('on',m==='standard');el('mcon').classList.toggle('on',m==='connect');
-  el('chint').style.display=m==='connect'?'block':'none';renderRooms();
+  var ch=el('chint');ch.style.display=m==='connect'?'block':'none';
+  ch.textContent='🔗 กดเลือกห้องที่ 1 ก่อน แล้วค่อยกดห้องที่ 2';
+  renderRooms();
 }
 
 // ══════════════════════════════════════════════
@@ -1440,7 +1483,7 @@ async function renderRooms(){
   rooms.forEach(function(room){
     var bt=isBkOn(bks,room.id,td),hf=bks.some(function(b){return b.roomIds.includes(room.id)&&b.checkOut>td;});
     var s1=sel1===room.id,s2=sel2===room.id,prt=getPartner(room.id);
-    var ph=bmode==='connect'&&sel1&&!sel2&&prt===sel1&&!bt;
+    var ph=bmode==='connect'&&sel1&&!sel2&&room.id!==sel1&&!bt&&!s2;
     var cls='rc';
     if(s1)cls+=' s1';else if(s2)cls+=' s2';else if(ph)cls+=' ph';else if(bt)cls+=' fb';else if(hf)cls+=' pt';
     var stT=t('st.free'),stC='av';
@@ -1456,11 +1499,25 @@ async function renderRooms(){
 function handleRoom(id,bt){
   if(bmode==='standard'){sel1=id;renderRooms();openCal(id);}
   else{
-    if(bt){openCal(id);return;}
-    if(!sel1){sel1=id;renderRooms();}
-    else if(sel1===id){openCal(id);}
-    else if(validPair(sel1,id)){sel2=id;renderRooms();openCal(id);}
-    else{sel1=id;sel2=null;renderRooms();}
+    // Connect mode: เลือกได้ทุกห้องที่ว่าง, ไม่จำกัด type
+    if(!sel1){
+      sel1=id;sel2=null;renderRooms();
+      el('chint').textContent='🔗 เลือกห้องที่ 1 แล้ว กดห้องที่ 2 ได้เลย';
+    }else if(sel1===id){
+      // คลิกห้องเดิมซ้ำ → เปิดปฏิทินห้องนั้น หรือ ยกเลิกการเลือก
+      if(!sel2){openCal(id);}else{sel2=null;renderRooms();}
+    }else if(sel2===id){
+      // คลิกห้อง 2 ซ้ำ → เปิดปฏิทิน
+      openCal(id);
+    }else if(!sel2){
+      // เลือกห้องที่ 2 (ห้องใดก็ได้ที่ว่าง)
+      if(bt){alert2('ห้องนี้ถูกจองแล้ว','er');return;}
+      sel2=id;renderRooms();openCal(id);
+    }else{
+      // มีทั้ง sel1 และ sel2 แล้ว → เริ่มใหม่
+      sel1=id;sel2=null;renderRooms();
+      el('chint').textContent='🔗 เลือกห้องที่ 1 แล้ว กดห้องที่ 2 ได้เลย';
+    }
   }
 }
 
@@ -1521,8 +1578,8 @@ function updateSelInfo(){
   var info=el('selinfo'),form=el('bform');
   if(!sel1){info.className='nosel';info.textContent='← เลือกห้องในแท็บ "ห้องพัก" ก่อนนะคะ';form.style.display='none';return;}
   var ic=bmode==='connect'&&sel2;
-  // FIX #2: แสดงราคาจาก room object ตัวที่เลือก
-  var dispPrice=ic?(sel2?getRoomPrice(sel1)+getRoomPrice(sel2):getRoomPrice(sel1)):getRoomPrice(sel1);
+  // Connect ใช้ราคา Connect/คืน จากตั้งค่าองค์กร, Standard ใช้ราคาห้องแต่ละห้อง
+  var dispPrice=ic?getConP():getRoomPrice(sel1);
   info.className='srb '+(ic?'con':'std');
   info.innerHTML=ic
     ?'<div class="sico">🔗</div><div class="stxt"><strong>Connect · ห้อง '+sel1+'+'+sel2+'</strong><span>'+fmt(dispPrice)+'/คืน · ฟรี 3 ตัว</span></div>'
@@ -1597,8 +1654,8 @@ function calcPreview(){
   if(!sel1||!cin||!cout){prev.style.display='none';return;}
   var n=nts(cin,cout);if(n<=0){prev.style.display='none';return;}
   var ic=bmode==='connect'&&sel2,free=ic?FC:FS;
-  // อ่านราคาจาก room object โดยตรง
-  var baseP=ic?(getRoomPrice(sel1)+getRoomPrice(sel2)):getRoomPrice(sel1);
+  // Connect ใช้ราคาคู่จาก org settings, Standard ใช้ราคาห้อง
+  var baseP=ic?getConP():getRoomPrice(sel1);
   var extra=Math.max(0,catCnt-free),catEx=extra*PE*n,sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc;
   var dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
   var lines='<div class="ppl">🌙'+n+'×'+fmt(baseP)+'='+fmt(baseP*n)+'</div>';
@@ -1625,8 +1682,8 @@ async function openDepModal(){
   for(var ri=0;ri<roomIds.length;ri++){
     if(rngConf(bks,roomIds[ri],cin,cout))return showMsg2('ห้อง '+roomIds[ri]+' มีการจองช่วงนี้แล้ว','er');
   }
-  // FIX #2: ราคาจาก room object
-  var baseP=ic?(getRoomPrice(sel1)+getRoomPrice(sel2)):getRoomPrice(sel1),free=ic?FC:FS;
+  // Connect ใช้ราคาคู่จาก org settings, Standard ใช้ราคาห้อง
+  var baseP=ic?getConP():getRoomPrice(sel1),free=ic?FC:FS;
   var n=nts(cin,cout),extra=Math.max(0,catCnt-free),catEx=extra*PE*n;
   var sub=baseP*n+catEx,disc=calcDisc(sub),total=sub-disc;
   var dep=Math.ceil(total*(depRate/100)),comm=calcComm(ic,extra,n);
