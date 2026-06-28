@@ -578,13 +578,40 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
   </div>
 </div>
 
-<div class="overlay" id="pay-modal">
+<div class="overlay" id="pay-co-modal">
   <div class="pay-modal">
-    <div class="modal-icon">💵</div><h3>ยืนยันรับชำระยอดที่เหลือ</h3>
-    <p class="modal-sub" id="pay-modal-sub"></p>
-    <div class="pay-box green"><div class="pay-lbl">ยอดค้างชำระ</div><div class="pay-amt" id="pay-amount">฿0</div><div class="pay-note-txt" id="pay-note-disp"></div></div>
-    <div class="form-group" style="margin-bottom:11px"><label>หมายเหตุ</label><input type="text" id="pay-note-input"></div>
-    <div class="pay-btns"><button class="btn-pay-cancel" id="btn-pay-cancel">ยกเลิก</button><button class="btn-pay-green" id="btn-pay-ok">✅ ยืนยันรับชำระ</button></div>
+    <div class="modal-icon">💵✅</div>
+    <h3 id="pay-co-title">ยืนยันชำระและเช็คเอาท์</h3>
+    <p class="modal-sub" id="pay-co-sub"></p>
+
+    <!-- ยอดค้าง (แสดงถ้ายังไม่ได้ชำระ) -->
+    <div id="pay-co-balance-wrap">
+      <div class="pay-box green" style="margin-bottom:8px">
+        <div class="pay-lbl">🔴 ยอดค้างชำระ</div>
+        <div class="pay-amt" id="pay-co-amount">฿0</div>
+        <div class="pay-note-txt" id="pay-co-note-disp"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label>หมายเหตุการชำระ</label>
+        <input type="text" id="pay-co-note-input" placeholder="เช่น รับเงินสด">
+      </div>
+    </div>
+
+    <!-- เช็คเอาท์เลย (ถ้าชำระครบแล้ว) -->
+    <div id="pay-co-paid-wrap" style="display:none">
+      <div style="background:#edfaf4;border:2px solid #2da56e;border-radius:11px;padding:12px;text-align:center;margin-bottom:10px">
+        <div style="font-size:1.3rem">✅</div>
+        <div style="font-size:.85rem;color:#2da56e;font-weight:700;margin-top:4px">ชำระครบแล้ว — พร้อมเช็คเอาท์</div>
+      </div>
+    </div>
+
+    <!-- ตัวเลือก -->
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <button id="btn-pay-co-both" class="btn-pay-green" style="padding:10px;font-size:.85rem">✅ ชำระและเช็คเอาท์</button>
+      <button id="btn-pay-co-payonly" class="btn-pay-green" style="padding:10px;font-size:.85rem;background:#3498db">💵 รับชำระอย่างเดียว</button>
+      <button id="btn-pay-co-coonly" class="btn-pay-green" style="padding:10px;font-size:.85rem;background:#f0a500">✅ เช็คเอาท์อย่างเดียว</button>
+      <button class="btn-pay-cancel" id="btn-pay-co-cancel" style="padding:10px">ยกเลิก</button>
+    </div>
   </div>
 </div>
 
@@ -710,12 +737,19 @@ var _ldb={bookings:lsGet('ldb_bk',[]),members:lsGet('ldb_mb',[]),staff:lsGet('ld
 function saveLDB(t2){lsSet('ldb_'+{bookings:'bk',members:'mb',staff:'st'}[t2],_ldb[t2]);}
 var _colCache={};
 function hasColSync(tbl,col){return _colCache[tbl+'_'+col]===true;}
-async function probeCol(tbl,col){
-  var k=tbl+'_'+col;if(k in _colCache)return _colCache[k];if(_offline){_colCache[k]=false;return false;}
-  try{var r=await fetch(SB_URL+'/rest/v1/'+tbl+'?select='+col+'&limit=0',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});_colCache[k]=r.ok;return r.ok;}
-  catch(e){_colCache[k]=false;return false;}
+// probe optional columns — mark all false by default (safe for existing DB)
+async function probeOptionalCols(){
+  if(_offline)return;
+  var cols=[['bookings','email'],['bookings','line_user_id'],['bookings','checked_out'],['members','email']];
+  await Promise.all(cols.map(async function(pair){
+    var k=pair[0]+'_'+pair[1];
+    try{
+      var r=await fetch(SB_URL+'/rest/v1/'+pair[0]+'?select='+pair[1]+'&limit=0',
+        {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+      _colCache[k]=r.ok;
+    }catch(e){_colCache[k]=false;}
+  }));
 }
-async function probeOptionalCols(){if(_offline)return;await Promise.all([probeCol('bookings','email'),probeCol('bookings','line_user_id'),probeCol('bookings','checked_out'),probeCol('members','email')]);}
 async function sbFetch(tbl,opts){
   if(_offline)throw new Error('OFFLINE');
   opts=opts||{};var method=opts.method||'GET',filter=opts.filter||'',body=opts.body||null,prefer=opts.prefer||'';
@@ -748,17 +782,29 @@ function mapBk(r){
 }
 async function loadBks(){try{if(_offline)throw 0;return(await sbFetch('bookings',{filter:'order=created_at.asc'})).map(mapBk);}catch(e){return _ldb.bookings.map(mapBk);}}
 async function insertBk(b){
-  var p={id:b.id,room_ids:b.roomIds,type:b.type,owner:b.owner,cat_names:b.catNames,cat_count:b.catCount,phone:b.phone,
-    check_in:b.checkIn,check_out:b.checkOut,nights:b.nights,base_price:b.basePrice,cat_extra:b.catExtra,
-    discount_type:b.discountType,discount_value:b.discountValue,discount_amount:b.discountAmount,
-    dep_rate:b.depRate,total_price:b.totalPrice,deposit:b.deposit,paid_remaining:false,pay_note:'',
-    commission:b.commission,staff_id:b.staffId||null,staff_name:b.staffName||'',comm_paid:false,comm_note:'',
-    member_id:b.memberId||null,booked_at:b.bookedAt};
-  if(_colCache['bookings_email']&&b.email)p.email=b.email;
-  if(_colCache['bookings_line_user_id']&&b.lineUserId)p.line_user_id=b.lineUserId;
-  if(_colCache['bookings_checked_out'])p.checked_out=false;
-  try{if(_offline)throw 0;return await sbFetch('bookings',{method:'POST',body:p,prefer:'return=representation'});}
-  catch(e){_ldb.bookings.push(p);saveLDB('bookings');return[p];}
+  // core columns that must exist in bookings table
+  var p={
+    id:b.id, room_ids:b.roomIds, type:b.type, owner:b.owner,
+    cat_names:b.catNames, cat_count:b.catCount, phone:b.phone,
+    check_in:b.checkIn, check_out:b.checkOut, nights:b.nights,
+    base_price:b.basePrice, cat_extra:b.catExtra,
+    discount_type:b.discountType, discount_value:b.discountValue, discount_amount:b.discountAmount,
+    dep_rate:b.depRate, total_price:b.totalPrice, deposit:b.deposit,
+    paid_remaining:false, pay_note:'', commission:b.commission,
+    staff_id:b.staffId||null, staff_name:b.staffName||'',
+    comm_paid:false, comm_note:'',
+    member_id:b.memberId||null, booked_at:b.bookedAt
+  };
+  // only add optional columns if confirmed present in DB
+  if(_colCache['bookings_email']===true && b.email) p.email=b.email;
+  if(_colCache['bookings_line_user_id']===true && b.lineUserId) p.line_user_id=b.lineUserId;
+  if(_colCache['bookings_checked_out']===true) p.checked_out=false;
+  try{
+    if(_offline)throw new Error('OFFLINE');
+    return await sbFetch('bookings',{method:'POST',body:p,prefer:'return=representation'});
+  }catch(e){
+    _ldb.bookings.push(p);saveLDB('bookings');return[p];
+  }
 }
 async function updateBk(id,patch){
   var map={paidRemaining:'paid_remaining',payNote:'pay_note',paidAt:'paid_at',commPaid:'comm_paid',commNote:'comm_note',commPaidAt:'comm_paid_at'};
@@ -781,9 +827,19 @@ async function loadMembers(){
 }
 async function upsertMember(m){
   var body={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
-  if(_colCache['members_email'])body.email=m.email||null;
-  try{if(_offline)throw 0;await fetch(SB_URL+'/rest/v1/members',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(body)});}
-  catch(e){var i=_ldb.members.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});if(i>=0)_ldb.members[i]=body;else _ldb.members.push(body);saveLDB('members');}
+  // only add email if column confirmed present
+  if(_colCache['members_email']===true) body.email=m.email||null;
+  try{
+    if(_offline)throw new Error('OFFLINE');
+    await fetch(SB_URL+'/rest/v1/members',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,
+        'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(body)});
+  }catch(e){
+    var i=_ldb.members.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});
+    if(i>=0)_ldb.members[i]=body;else _ldb.members.push(body);
+    saveLDB('members');
+  }
 }
 async function deleteMemberDB(mid){
   try{if(_offline)throw 0;await sbFetch('members',{method:'DELETE',filter:'member_id=eq.'+mid});}
@@ -1447,10 +1503,15 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('dep-cb').addEventListener('change',function(){document.getElementById('btn-dep-ok').disabled=!this.checked;});
   document.getElementById('btn-dep-ok').addEventListener('click',submitBooking);
   document.getElementById('btn-dep-cancel').addEventListener('click',function(){document.getElementById('dep-modal').classList.remove('open');pendingData=null;});
-  document.getElementById('btn-pay-ok').addEventListener('click',confirmPay);
-  document.getElementById('btn-pay-cancel').addEventListener('click',closePayModal);
+  document.getElementById('btn-pay-ok').addEventListener('click',confirmComm); // unused placeholder
+  document.getElementById('btn-pay-cancel').addEventListener('click',closeCommModal); // unused placeholder
   document.getElementById('btn-comm-ok').addEventListener('click',confirmComm);
   document.getElementById('btn-comm-cancel').addEventListener('click',closeCommModal);
+  // Pay+CO combined modal
+  document.getElementById('btn-pay-co-both').addEventListener('click',function(){doPayCO(true,true);});
+  document.getElementById('btn-pay-co-payonly').addEventListener('click',function(){doPayCO(true,false);});
+  document.getElementById('btn-pay-co-coonly').addEventListener('click',function(){doPayCO(false,true);});
+  document.getElementById('btn-pay-co-cancel').addEventListener('click',closePayCOModal);
   document.getElementById('btn-pdf').addEventListener('click',function(){if(billData)exportBillPDF(billData);});
   document.getElementById('btn-jpg').addEventListener('click',function(){if(billData)exportBillJPG(billData);});
   document.getElementById('btn-copy-bill').addEventListener('click',copyBill);
