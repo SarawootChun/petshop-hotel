@@ -1072,6 +1072,12 @@ function showApp(){
   renderLangBtns();applyLang();updateOrgUI();loadTheme();loadBkSettings();
   testConn().then(function(ok){connBanner(ok);if(!_off){probeOptCols();pullSettings().then(function(){renderBookings();renderRooms();});syncPending().then(function(){renderBookings();renderRooms();});}});
   fillStaff();showSec('rooms');
+  // Auto-refresh ทุก 30 วินาที — ดึงข้อมูลใหม่จาก Supabase
+  if(!window._autoRefTimer){
+    window._autoRefTimer=setInterval(function(){
+      if(!_off){invalidateBkCache();syncPending().then(function(){renderBookings();renderRooms();});}
+    },30000);
+  }
 }
 
 function doGuestAdminLogin(){
@@ -1191,7 +1197,14 @@ async function syncPending(){
       var r=await fetch(SB+'/rest/v1/bookings',{method:'POST',
         headers:{'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=ignore-duplicates,return=minimal'},
         body:JSON.stringify(p)});
-      if(r.ok||r.status===409)synced.push(String(p.id));
+      if(r.ok||r.status===409){synced.push(String(p.id));}
+      else{
+        // ถ้าได้ 4xx (RLS บล็อก) — แจ้งเตือนครั้งเดียว
+        if(r.status===401||r.status===403){
+          console.warn('[SyncPending] Supabase blocked INSERT ('+r.status+'). Check RLS policies on bookings table.');
+          break;
+        }
+      }
     }catch(e){}
   }
   if(synced.length){
