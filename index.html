@@ -1452,6 +1452,9 @@ function getFBUrl(){
 function mapBkFB(r){
   if(!r||!r.id)return null;
   var co=lsG('coids',[]);var rid=String(r.id);
+  // sync idCard to localStorage สำหรับเครื่องอื่น
+  if(r.idCard&&!lsG('idcard_'+rid,null))lsS('idcard_'+rid,r.idCard);
+  if(r.idCard&&r.memberId&&!lsG('mem_idcard_'+r.memberId,null))lsS('mem_idcard_'+r.memberId,r.idCard);
   return{id:rid,roomIds:r.roomIds||[],type:r.type||'',owner:r.owner||'',
     catNames:r.catNames||[],catCount:r.catCount||1,phone:r.phone||'',email:r.email||'',
     checkIn:r.checkIn||'',checkOut:r.checkOut||'',nights:r.nights||0,
@@ -1467,7 +1470,10 @@ function mapBkFB(r){
 }
 function mapMemFB(r){
   if(!r)return null;
-  return{memberId:r.memberId||r.member_id||'',name:r.name||'',phone:r.phone||'',email:r.email||'',cats:r.cats||[]};
+  var mid=r.memberId||r.member_id||'';
+  // sync idCard to localStorage สำหรับเครื่องอื่น
+  if(r.idCard&&mid&&!lsG('mem_idcard_'+mid,null))lsS('mem_idcard_'+mid,r.idCard);
+  return{memberId:mid,name:r.name||'',phone:r.phone||'',email:r.email||'',cats:r.cats||[]};
 }
 function fbKey(id){return String(id).replace(/[.#$/\[\]]/g,'_');}
 
@@ -1575,6 +1581,13 @@ async function loadBks(){
   try{
     if(_off)throw 0;
     var raw=await sbF('bookings',{filter:'order=created_at.asc'});
+    // sync id_card จาก Supabase ลง localStorage
+    raw.forEach(function(r){
+      if(r.id_card){
+        if(!lsG('idcard_'+r.id,null))lsS('idcard_'+r.id,r.id_card);
+        if(r.member_id&&!lsG('mem_idcard_'+r.member_id,null))lsS('mem_idcard_'+r.member_id,r.id_card);
+      }
+    });
     var sbIds=new Set(raw.map(function(r){return String(r.id);}));
     var localPend=_ldb.bk.filter(function(r){return !sbIds.has(String(r.id));});
     var merged=localPend.length?raw.concat(localPend):raw;
@@ -1584,12 +1597,13 @@ async function loadBks(){
 
 async function insertBk(b){
   invalidateBkCache();
+  var idc=b.idCard||null;
   var fbo={id:b.id,roomIds:b.roomIds,type:b.type,owner:b.owner,catNames:b.catNames,catCount:b.catCount,
     phone:b.phone,email:b.email||'',checkIn:b.checkIn,checkOut:b.checkOut,nights:b.nights,basePrice:b.basePrice,
     catExtra:b.catExtra,discountType:b.discountType,discountValue:b.discountValue,discountAmount:b.discountAmount,
     depRate:b.depRate,totalPrice:b.totalPrice,deposit:b.deposit,paidRemaining:false,payNote:'',
     commission:b.commission,staffId:b.staffId||null,staffName:b.staffName||'',commPaid:false,commNote:'',
-    memberId:b.memberId||null,bookedAt:b.bookedAt};
+    memberId:b.memberId||null,bookedAt:b.bookedAt,idCard:idc};
   // always save to local
   _ldb.bk=_ldb.bk.filter(function(r){return String(r.id)!==String(fbo.id);});
   _ldb.bk.push(fbo);saveLDB('bk');
@@ -1607,6 +1621,7 @@ async function insertBk(b){
     member_id:b.memberId||null,booked_at:b.bookedAt};
   if(_cc.bookings_email===true&&b.email)p.email=b.email;
   if(_cc.bookings_checked_out===true)p.checked_out=false;
+  if(idc)p.id_card=idc;
   try{
     if(_off)throw 0;
     var result=await sbF('bookings',{method:'POST',body:p,prefer:'return=representation'});
@@ -1665,7 +1680,12 @@ async function loadMems(){
   }
   try{
     if(_off)throw 0;
-    var sbList=(await sbF('members',{filter:'order=created_at.asc'})).map(function(r){
+    var rawMems=await sbF('members',{filter:'order=created_at.asc'});
+    // sync id_card จาก Supabase ลง localStorage
+    rawMems.forEach(function(r){
+      if(r.id_card&&r.member_id&&!lsG('mem_idcard_'+r.member_id,null))lsS('mem_idcard_'+r.member_id,r.id_card);
+    });
+    var sbList=rawMems.map(function(r){
       return{memberId:r.member_id,name:r.name,phone:r.phone,email:r.email||'',cats:r.cats||[]};
     });
     var lMap={};_ldb.mb.forEach(function(r){var mid=r.member_id||r.memberId;lMap[mid]=r;});
@@ -1675,7 +1695,8 @@ async function loadMems(){
   }
 }
 async function upsertMem(m){
-  var fbo={memberId:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||''};
+  var idc=m.idCard||lsG('mem_idcard_'+m.memberId,null)||null;
+  var fbo={memberId:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||'',idCard:idc};
   var lBody={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[],email:m.email||''};
   var lIdx=_ldb.mb.findIndex(function(r){return(r.member_id||r.memberId)===m.memberId;});
   if(lIdx>=0)_ldb.mb[lIdx]=lBody;else _ldb.mb.push(lBody);saveLDB('mb');
@@ -1686,6 +1707,7 @@ async function upsertMem(m){
   if(_off)return;
   var bodyFull={member_id:m.memberId,name:m.name,phone:m.phone,cats:m.cats||[]};
   if(m.email)bodyFull.email=m.email;
+  if(idc)bodyFull.id_card=idc;
   var hdrs={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'};
   try{
     var r=await fetch(SB+'/rest/v1/members',{method:'POST',headers:hdrs,body:JSON.stringify(bodyFull)});
@@ -2040,14 +2062,14 @@ async function openDepModal(){
 async function submitBooking(){
   if(!pending)return;
   var saved=Object.assign({},pending);pending=null;closeAllOv();
+  // ส่ง idCard ไปกับ booking เพื่อ sync ขึ้น database
+  if(_idCard)saved.idCard=_idCard;
   try{await insertBk(saved);}
   catch(e){alert2('❌ บันทึกไม่สำเร็จ: '+e.message,'er',6000);return;}
   // save slip dep & id card to localStorage
   if(_slipDep)lsS('slip_dep_'+saved.id,_slipDep);
   if(_idCard){
     lsS('idcard_'+saved.id,_idCard);
-    // บันทึกบัตรประชาชนผูกกับสมาชิกด้วย (ครั้งถัดไปจะ auto-fill)
-    var memKey=saved.memberId||(saved.phone?'phone_'+saved.phone:null);
     if(saved.memberId&&!lsG('mem_idcard_'+saved.memberId,null)){lsS('mem_idcard_'+saved.memberId,_idCard);}
   }
   _slipDep=null;_idCard=null;
@@ -2555,12 +2577,12 @@ async function saveMemUI(){
   if(editMemId){
     var dup=mems.find(function(m){return m.phone===phone&&m.memberId!==editMemId;});
     if(dup){msg.style.color='#d94f4f';msg.textContent='เบอร์ '+phone+' มีสมาชิกอยู่แล้ว ('+dup.memberId+')';return;}
-    await upsertMem({memberId:editMemId,name:name,phone:phone,email:email,cats:cats});
+    await upsertMem({memberId:editMemId,name:name,phone:phone,email:email,cats:cats,idCard:_mfIdCard||null});
     editMemId=null;txt('mftit','➕ เพิ่มสมาชิกใหม่');
   }else{
     var dup2=mems.find(function(m){return m.phone===phone;});
     if(dup2){msg.style.color='#d94f4f';msg.textContent='เบอร์ '+phone+' มีสมาชิกอยู่แล้ว ('+dup2.memberId+')';return;}
-    await upsertMem({memberId:targetId,name:name,phone:phone,email:email,cats:cats});
+    await upsertMem({memberId:targetId,name:name,phone:phone,email:email,cats:cats,idCard:_mfIdCard||null});
   }
   // บันทึกรูปบัตรประชาชนผูกกับสมาชิก
   if(_mfIdCard){lsS('mem_idcard_'+targetId,_mfIdCard);_mfIdCard=null;}
