@@ -317,7 +317,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 <div id="cbanner"></div>
 
 <section id="s-rooms" class="on">
-  <h2>ห้องพักทั้งหมด</h2><p class="sub">คลิกห้องเพื่อดูปฏิทิน</p>
+  <h2 data-i18n="sec.rooms.title">ห้องพักทั้งหมด</h2><p class="sub" data-i18n="sec.rooms.sub">คลิกห้องเพื่อดูปฏิทิน</p>
   <div class="mtog">
     <div class="mbtn on" id="mstd"><div class="mico">🛏️</div><div class="mtit">Standard</div><div class="mdsc" id="msd">฿250/คืน</div></div>
     <div class="mbtn" id="mcon"><div class="mico">🔗</div><div class="mtit">Connect</div><div class="mdsc" id="mcd">฿450/คืน</div></div>
@@ -327,22 +327,22 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 </section>
 
 <section id="s-book">
-  <h2>จองห้องพัก</h2><p class="sub">กรอกข้อมูลเพื่อยืนยันการจอง</p>
+  <h2 data-i18n="sec.book.title">จองห้องพัก</h2><p class="sub" data-i18n="sec.book.sub">กรอกข้อมูลเพื่อยืนยันการจอง</p>
   <div class="card" style="max-width:540px">
-    <div id="selinfo" class="nosel">← เลือกห้องในแท็บ "ห้องพัก" ก่อนนะคะ</div>
+    <div id="selinfo" class="nosel" data-i18n="nosel">← เลือกห้องในแท็บ "ห้องพัก" ก่อนนะคะ</div>
     <div id="bform" style="display:none">
-      <div class="fg"><label>🔍 ค้นหาสมาชิก</label>
+      <div class="fg"><label data-i18n="lbl.search">🔍 ค้นหาสมาชิก</label>
         <div class="mwrap"><input type="text" id="fsrch" placeholder="ชื่อหรือเบอร์..."><div class="mdd" id="mdd"></div></div>
       </div>
       <div class="mbadge2" id="mbadge"></div>
       <div class="frow">
-        <div class="fg"><label>ชื่อเจ้าของ</label><input type="text" id="fown"></div>
-        <div class="fg"><label>เบอร์โทรศัพท์</label><input type="tel" id="fph"></div>
+        <div class="fg"><label data-i18n="lbl.owner">ชื่อเจ้าของ</label><input type="text" id="fown"></div>
+        <div class="fg"><label data-i18n="lbl.phone">เบอร์โทรศัพท์</label><input type="tel" id="fph"></div>
       </div>
-      <div class="fg"><label>📧 อีเมล (ไม่บังคับ)</label><input type="email" id="feml"></div>
+      <div class="fg"><label data-i18n="lbl.email">📧 อีเมล (ไม่บังคับ)</label><input type="email" id="feml"></div>
       <!-- ID card upload -->
       <div class="fg">
-        <label>🪪 บัตรประชาชน (ไม่บังคับ)</label>
+        <label data-i18n="lbl.idcard">🪪 บัตรประชาชน (ไม่บังคับ)</label>
         <div class="warn-box">⚠️ รูปจะเก็บไว้ในเครื่องนี้เท่านั้น ไม่ได้ส่งขึ้น Server</div>
         <div class="slip-box" id="idcard-box" onclick="document.getElementById('idcard-file').click()">
           <input type="file" id="idcard-file" accept="image/*">
@@ -351,14 +351,14 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
         </div>
       </div>
       <div class="frow">
-        <div class="fg"><label>วันเช็คอิน</label>
+        <div class="fg"><label data-i18n="lbl.checkin">วันเช็คอิน</label>
           <div style="display:flex;gap:4px;align-items:center">
             <input type="number" id="fid" min="1" max="31" style="width:50px;flex-shrink:0;padding:6px 4px;text-align:center">
             <span style="color:#aaa">/</span><input type="number" id="fim" min="1" max="12" style="width:50px;flex-shrink:0;padding:6px 4px;text-align:center">
             <span style="color:#aaa">/</span><input type="number" id="fiy" style="flex:1;padding:6px 4px;text-align:center">
           </div>
         </div>
-        <div class="fg"><label>วันเช็คเอาท์</label>
+        <div class="fg"><label data-i18n="lbl.checkout">วันเช็คเอาท์</label>
           <div style="display:flex;gap:4px;align-items:center">
             <input type="number" id="fod" min="1" max="31" style="width:50px;flex-shrink:0;padding:6px 4px;text-align:center">
             <span style="color:#aaa">/</span><input type="number" id="fom" min="1" max="12" style="width:50px;flex-shrink:0;padding:6px 4px;text-align:center">
@@ -372,50 +372,50 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
         </div>
         <div id="cinputs"></div>
       </div>
-      <div class="fg"><label>🏷️ ส่วนลด</label>
+      <div class="fg"><label data-i18n="lbl.discount">🏷️ ส่วนลด</label>
         <div class="drow"><div class="dg"><input type="number" id="fdisc" value="0" min="0"></div>
           <div class="dtog"><button class="dbt on" id="dpct">%</button><button class="dbt" id="dthb">฿</button></div>
         </div>
       </div>
-      <div class="fg"><label>💳 มัดจำ (%)</label>
+      <div class="fg"><label data-i18n="lbl.deposit">💳 มัดจำ (%)</label>
         <div style="display:flex;gap:7px;align-items:center">
           <input type="number" id="fdep" value="30" min="0" max="100" style="width:74px;flex-shrink:0">
           <input type="range" id="fdepr" min="0" max="100" value="30" style="flex:1;accent-color:var(--p)">
           <span id="fdeplbl" style="font-size:.8rem;font-weight:700;color:var(--p);min-width:34px">30%</span>
         </div>
       </div>
-      <div class="fg"><label>👤 พนักงาน</label><select id="fstaff"></select></div>
+      <div class="fg"><label data-i18n="lbl.staff">👤 พนักงาน</label><select id="fstaff"></select></div>
       <div class="pprev" id="pprev"><div id="pplines"></div><div class="ppt" id="pptot"></div><div class="ppd2" id="ppdep"></div></div>
-      <button class="bbook" id="bbook">ดำเนินการจอง →</button>
+      <button class="bbook" id="bbook" data-i18n="btn.book">ดำเนินการจอง →</button>
       <div id="bmsg"></div>
     </div>
   </div>
 </section>
 
 <section id="s-bookings">
-  <h2>รายการจองทั้งหมด</h2><p class="sub">ข้อมูลการจองที่บันทึกไว้</p>
+  <h2 data-i18n="sec.bookings.title">รายการจองทั้งหมด</h2><p class="sub" data-i18n="sec.bookings.sub">ข้อมูลการจองที่บันทึกไว้</p>
   <div class="stats">
-    <div class="sbox"><div class="snum" id="stot">0</div><div class="slbl">จองทั้งหมด</div></div>
-    <div class="sbox"><div class="snum" id="sav">0</div><div class="slbl">ห้องว่าง</div></div>
-    <div class="sbox"><div class="snum" id="sbk">0</div><div class="slbl">ไม่ว่าง</div></div>
-    <div class="sbox"><div class="snum gd" id="srev">฿0</div><div class="slbl">รายได้รวม</div></div>
-    <div class="sbox"><div class="snum pu" id="scom">฿0</div><div class="slbl">ค่าคอมรวม</div></div>
+    <div class="sbox"><div class="snum" id="stot">0</div><div class="slbl" data-i18n="stat.total">จองทั้งหมด</div></div>
+    <div class="sbox"><div class="snum" id="sav">0</div><div class="slbl" data-i18n="stat.avail">ห้องว่าง</div></div>
+    <div class="sbox"><div class="snum" id="sbk">0</div><div class="slbl" data-i18n="stat.busy">ไม่ว่าง</div></div>
+    <div class="sbox"><div class="snum gd" id="srev">฿0</div><div class="slbl" data-i18n="stat.income">รายได้รวม</div></div>
+    <div class="sbox"><div class="snum pu" id="scom">฿0</div><div class="slbl" data-i18n="stat.comm">ค่าคอมรวม</div></div>
   </div>
   <div id="bklist"></div>
 </section>
 
 <section id="s-summary">
-  <h2>สรุปยอดรายได้</h2><p class="sub">Dashboard ภาพรวมรายได้</p>
+  <h2 data-i18n="sec.summary.title">สรุปยอดรายได้</h2><p class="sub" data-i18n="sec.summary.sub">Dashboard ภาพรวมรายได้</p>
   <div class="dfilter">
-    <button class="dfb on" data-p="all">ทั้งหมด</button>
-    <button class="dfb" data-p="today">วันนี้</button>
-    <button class="dfb" data-p="week">7 วัน</button>
-    <button class="dfb" data-p="month">เดือนนี้</button>
-    <button class="dfb" data-p="custom">กำหนดเอง</button>
+    <button class="dfb on" data-p="all" data-i18n="fil.all">ทั้งหมด</button>
+    <button class="dfb" data-p="today" data-i18n="fil.today">วันนี้</button>
+    <button class="dfb" data-p="week" data-i18n="fil.week">7 วัน</button>
+    <button class="dfb" data-p="month" data-i18n="fil.month">เดือนนี้</button>
+    <button class="dfb" data-p="custom" data-i18n="fil.custom">กำหนดเอง</button>
   </div>
   <div id="custrange" style="display:none" class="drange">
     <input type="date" id="dfrom"><span style="font-size:.76rem;color:#999">ถึง</span>
-    <input type="date" id="dto"><button class="dfb" id="bapply">ค้นหา</button>
+    <input type="date" id="dto"><button class="dfb" id="bapply" data-i18n="fil.apply">ค้นหา</button>
   </div>
   <div class="cwrap"><h4>📊 รายได้ 7 วันล่าสุด</h4><div class="bchart" id="bchart"></div></div>
   <div class="sumhero">
@@ -456,7 +456,7 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 </section>
 
 <section id="s-commission">
-  <h2>ค่าคอมพนักงาน</h2><p class="sub">สรุปค่าคอม</p>
+  <h2 data-i18n="sec.comm.title">ค่าคอมพนักงาน</h2><p class="sub" data-i18n="sec.comm.sub">สรุปค่าคอม</p>
   <div class="comhero">
     <div style="color:#fff"><div style="font-size:.74rem;opacity:.7;margin-bottom:2px">ค่าคอมรวม</div>
       <div style="font-size:1.7rem;font-weight:800;color:#d4b8ff" id="comgrand">฿0</div>
@@ -471,14 +471,14 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
 </section>
 
 <section id="s-members">
-  <h2>ระบบสมาชิก</h2><p class="sub">จัดการข้อมูลลูกค้าและแมว</p>
+  <h2 data-i18n="sec.members.title">ระบบสมาชิก</h2><p class="sub" data-i18n="sec.members.sub">จัดการข้อมูลลูกค้าและแมว</p>
   <div class="addmem" id="memform">
     <h4 id="mftit">➕ เพิ่มสมาชิกใหม่</h4>
     <div class="frow">
-      <div class="fg"><label>ชื่อ</label><input type="text" id="mfname"></div>
-      <div class="fg"><label>เบอร์โทร</label><input type="tel" id="mfph"></div>
+      <div class="fg"><label data-i18n="lbl.mname">ชื่อ</label><input type="text" id="mfname"></div>
+      <div class="fg"><label data-i18n="lbl.mphone">เบอร์โทร</label><input type="tel" id="mfph"></div>
     </div>
-    <div class="fg"><label>📧 อีเมล</label><input type="email" id="mfeml"></div>
+    <div class="fg"><label data-i18n="lbl.email">📧 อีเมล</label><input type="email" id="mfeml"></div>
     <div class="fg"><label>🪪 บัตรประชาชน (เก็บไว้ครั้งต่อไป)</label>
       <div class="slip-box" id="mf-idcard-box" onclick="document.getElementById('mf-idcard-file').click()">
         <input type="file" id="mf-idcard-file" accept="image/*">
@@ -488,15 +488,15 @@ input[type=color]{height:36px;padding:3px 6px;cursor:pointer}
     </div>
     <label style="margin-bottom:4px">🐱 รายชื่อแมว</label>
     <div id="mfcats"></div>
-    <button class="bacat" id="baddcat">+ เพิ่มแมว</button><br>
-    <button style="background:#2d2d2d;color:#fff;border:none;padding:7px 16px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.8rem;margin-top:8px" id="bsavem">💾 บันทึกสมาชิก</button>
+    <button class="bacat" id="baddcat" data-i18n="btn.addcat">+ เพิ่มแมว</button><br>
+    <button style="background:#2d2d2d;color:#fff;border:none;padding:7px 16px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.8rem;margin-top:8px" id="bsavem" data-i18n="btn.savemem">💾 บันทึกสมาชิก</button>
     <div id="mfmsg" style="margin-top:6px;font-size:.74rem"></div>
   </div>
   <div id="memlist"></div>
 </section>
 
 <section id="s-admin">
-  <h2>แอดมิน</h2><p class="sub">จัดการระบบ</p>
+  <h2 data-i18n="sec.admin.title">แอดมิน</h2><p class="sub" data-i18n="sec.admin.sub">จัดการระบบ</p>
   <div class="card"><h4>🏢 ตั้งค่าองค์กร</h4>
     <div class="frow">
       <div class="fg"><label>ชื่อร้าน</label><input type="text" id="oname" placeholder="Abcd Petshop Hotel"></div>
@@ -867,32 +867,113 @@ var TRANS={
   th:{
     'nav.rooms':'ห้องพัก','nav.book':'จองห้อง','nav.bookings':'รายการจอง',
     'nav.summary':'สรุปยอด','nav.commission':'ค่าคอม','nav.members':'สมาชิก','nav.admin':'แอดมิน',
-    'btn.logout':'ออก','btn.gadmin':'👑'
+    'btn.logout':'ออก',
+    'sec.rooms.title':'ห้องพักทั้งหมด','sec.rooms.sub':'คลิกห้องเพื่อดูปฏิทิน',
+    'sec.book.title':'จองห้องพัก','sec.book.sub':'กรอกข้อมูลเพื่อยืนยันการจอง',
+    'sec.bookings.title':'รายการจองทั้งหมด','sec.bookings.sub':'ข้อมูลการจองที่บันทึกไว้',
+    'sec.summary.title':'สรุปยอดรายได้','sec.summary.sub':'Dashboard ภาพรวมรายได้',
+    'sec.comm.title':'ค่าคอมพนักงาน','sec.comm.sub':'สรุปค่าคอม',
+    'sec.members.title':'ระบบสมาชิก','sec.members.sub':'จัดการข้อมูลลูกค้าและแมว',
+    'sec.admin.title':'แอดมิน','sec.admin.sub':'จัดการระบบ',
+    'mode.std.night':'/คืน · ฟรี 1 ตัว','mode.con.night':'/คืน · ฟรี 3 ตัว','mode.night':'/คืน',
+    'st.free':'ว่าง','st.busy':'ไม่ว่าง','st.selected':'เลือกแล้ว','st.partial':'มีจองบางวัน',
+    'lbl.search':'🔍 ค้นหาสมาชิก','lbl.owner':'ชื่อเจ้าของ','lbl.phone':'เบอร์โทรศัพท์',
+    'lbl.checkin':'วันเช็คอิน','lbl.checkout':'วันเช็คเอาท์',
+    'lbl.cats':'🐱 ข้อมูลแมว','lbl.discount':'🏷️ ส่วนลด','lbl.deposit':'💳 มัดจำ (%)','lbl.staff':'👤 พนักงาน',
+    'btn.book':'ดำเนินการจอง →','btn.addcat':'+ เพิ่มแมว','btn.savemem':'💾 บันทึกสมาชิก',
+    'stat.total':'จองทั้งหมด','stat.avail':'ห้องว่าง','stat.busy':'ไม่ว่าง','stat.income':'รายได้รวม','stat.comm':'ค่าคอมรวม',
+    'fil.all':'ทั้งหมด','fil.today':'วันนี้','fil.week':'7 วัน','fil.month':'เดือนนี้','fil.custom':'กำหนดเอง','fil.apply':'ค้นหา',
+    'lbl.mname':'ชื่อ','lbl.mphone':'เบอร์โทร',
+    'lbl.email':'📧 อีเมล','lbl.idcard':'🪪 บัตรประชาชน (ไม่บังคับ)',
+    'cal.select.in':'👆 กดวันเช็คอิน','nosel':'← เลือกห้องในแท็บ "ห้องพัก" ก่อนนะคะ',
+    'empty.book':'🐱 ยังไม่มีการจองค่ะ','empty.mem':'🐱 ยังไม่มีสมาชิกค่ะ'
   },
   en:{
     'nav.rooms':'Rooms','nav.book':'Book','nav.bookings':'Bookings',
     'nav.summary':'Summary','nav.commission':'Commission','nav.members':'Members','nav.admin':'Admin',
-    'btn.logout':'Logout','btn.gadmin':'👑'
+    'btn.logout':'Logout',
+    'sec.rooms.title':'All Rooms','sec.rooms.sub':'Click a room to view calendar',
+    'sec.book.title':'Book a Room','sec.book.sub':'Fill in details to confirm booking',
+    'sec.bookings.title':'All Bookings','sec.bookings.sub':'Saved booking records',
+    'sec.summary.title':'Revenue Summary','sec.summary.sub':'Revenue overview dashboard',
+    'sec.comm.title':'Staff Commission','sec.comm.sub':'Commission summary',
+    'sec.members.title':'Members','sec.members.sub':'Manage customer & cat info',
+    'sec.admin.title':'Admin','sec.admin.sub':'System settings',
+    'mode.std.night':'/night · 1 cat free','mode.con.night':'/night · 3 cats free','mode.night':'/night',
+    'st.free':'Available','st.busy':'Booked','st.selected':'Selected','st.partial':'Partial',
+    'lbl.search':'🔍 Search Member','lbl.owner':'Owner Name','lbl.phone':'Phone',
+    'lbl.checkin':'Check-in','lbl.checkout':'Check-out',
+    'lbl.cats':'🐱 Cat Info','lbl.discount':'🏷️ Discount','lbl.deposit':'💳 Deposit (%)','lbl.staff':'👤 Staff',
+    'btn.book':'Proceed to Book →','btn.addcat':'+ Add Cat','btn.savemem':'💾 Save Member',
+    'stat.total':'Total Bookings','stat.avail':'Available','stat.busy':'Occupied','stat.income':'Revenue','stat.comm':'Commission',
+    'fil.all':'All','fil.today':'Today','fil.week':'7 Days','fil.month':'This Month','fil.custom':'Custom','fil.apply':'Search',
+    'lbl.mname':'Name','lbl.mphone':'Phone',
+    'lbl.email':'📧 Email','lbl.idcard':'🪪 ID Card (optional)',
+    'cal.select.in':'👆 Select check-in date','nosel':'← Select a room in "Rooms" tab first',
+    'empty.book':'🐱 No bookings yet','empty.mem':'🐱 No members yet'
   },
   zh:{
     'nav.rooms':'客房','nav.book':'预订','nav.bookings':'预订列表',
     'nav.summary':'收入汇总','nav.commission':'佣金','nav.members':'会员','nav.admin':'管理',
-    'btn.logout':'退出','btn.gadmin':'👑'
+    'btn.logout':'退出',
+    'sec.rooms.title':'所有客房','sec.rooms.sub':'点击房间查看日历',
+    'sec.book.title':'预订房间','sec.book.sub':'填写信息以确认预订',
+    'sec.bookings.title':'全部预订','sec.bookings.sub':'已保存的预订记录',
+    'sec.summary.title':'收入汇总','sec.summary.sub':'收入概览',
+    'sec.comm.title':'员工佣金','sec.comm.sub':'佣金汇总',
+    'sec.members.title':'会员系统','sec.members.sub':'管理客户和猫咪信息',
+    'sec.admin.title':'管理','sec.admin.sub':'系统设置',
+    'mode.std.night':'/晚 · 免1只','mode.con.night':'/晚 · 免3只','mode.night':'/晚',
+    'st.free':'空房','st.busy':'已预订','st.selected':'已选择','st.partial':'部分预订',
+    'lbl.search':'🔍 搜索会员','lbl.owner':'主人姓名','lbl.phone':'电话',
+    'lbl.checkin':'入住日','lbl.checkout':'退房日',
+    'lbl.cats':'🐱 猫咪信息','lbl.discount':'🏷️ 折扣','lbl.deposit':'💳 押金 (%)','lbl.staff':'👤 员工',
+    'btn.book':'立即预订 →','btn.addcat':'+ 添加猫咪','btn.savemem':'💾 保存会员',
+    'stat.total':'总预订','stat.avail':'空房数','stat.busy':'占用','stat.income':'总收入','stat.comm':'总佣金',
+    'fil.all':'全部','fil.today':'今天','fil.week':'7天','fil.month':'本月','fil.custom':'自定义','fil.apply':'搜索',
+    'lbl.mname':'姓名','lbl.mphone':'电话',
+    'lbl.email':'📧 邮箱','lbl.idcard':'🪪 身份证 (可选)',
+    'cal.select.in':'👆 选择入住日期','nosel':'← 请先在"客房"中选择房间',
+    'empty.book':'🐱 暂无预订记录','empty.mem':'🐱 暂无会员记录'
   },
   ja:{
     'nav.rooms':'客室','nav.book':'予約','nav.bookings':'予約一覧',
     'nav.summary':'収支','nav.commission':'手数料','nav.members':'会員','nav.admin':'管理',
-    'btn.logout':'ログアウト','btn.gadmin':'👑'
+    'btn.logout':'ログアウト',
+    'sec.rooms.title':'全客室','sec.rooms.sub':'客室をクリックしてカレンダーを表示',
+    'sec.book.title':'部屋を予約','sec.book.sub':'情報を入力して予約を確定',
+    'sec.bookings.title':'全予約一覧','sec.bookings.sub':'保存された予約記録',
+    'sec.summary.title':'収入サマリー','sec.summary.sub':'収入概要',
+    'sec.comm.title':'スタッフ手数料','sec.comm.sub':'手数料集計',
+    'sec.members.title':'会員システム','sec.members.sub':'顧客と猫の情報管理',
+    'sec.admin.title':'管理者','sec.admin.sub':'システム設定',
+    'mode.std.night':'/泊 · 猫1匹無料','mode.con.night':'/泊 · 猫3匹無料','mode.night':'/泊',
+    'st.free':'空室','st.busy':'予約済','st.selected':'選択済','st.partial':'一部予約',
+    'lbl.search':'🔍 会員検索','lbl.owner':'飼い主名','lbl.phone':'電話番号',
+    'lbl.checkin':'チェックイン','lbl.checkout':'チェックアウト',
+    'lbl.cats':'🐱 猫情報','lbl.discount':'🏷️ 割引','lbl.deposit':'💳 デポジット (%)','lbl.staff':'👤 スタッフ',
+    'btn.book':'予約する →','btn.addcat':'+ 猫を追加','btn.savemem':'💾 会員を保存',
+    'stat.total':'総予約数','stat.avail':'空室数','stat.busy':'使用中','stat.income':'総収入','stat.comm':'総コミッション',
+    'fil.all':'すべて','fil.today':'今日','fil.week':'7日間','fil.month':'今月','fil.custom':'カスタム','fil.apply':'検索',
+    'lbl.mname':'名前','lbl.mphone':'電話番号',
+    'lbl.email':'📧 メール','lbl.idcard':'🪪 身分証明書 (任意)',
+    'cal.select.in':'👆 チェックイン日を選択','nosel':'← 「客室」タブで部屋を選んでください',
+    'empty.book':'🐱 予約はまだありません','empty.mem':'🐱 会員はまだいません'
   }
 };
 function t(key){var tr=TRANS[lang]||TRANS['th'];return(tr&&tr[key])||((TRANS['th']&&TRANS['th'][key])||key);}
 function applyLang(){
+  // nav buttons
   var navMap={rooms:'nav.rooms',book:'nav.book',bookings:'nav.bookings',summary:'nav.summary',commission:'nav.commission',members:'nav.members',admin:'nav.admin'};
   document.querySelectorAll('.nt[data-s]').forEach(function(btn){
-    var k=navMap[btn.dataset.s];
-    if(k)btn.textContent=t(k);
+    var k=navMap[btn.dataset.s];if(k)btn.textContent=t(k);
   });
+  // logout button
   var bout=el('bout');if(bout)bout.textContent=t('btn.logout');
+  // all data-i18n elements (textContent)
+  document.querySelectorAll('[data-i18n]').forEach(function(e){e.textContent=t(e.dataset.i18n);});
+  // selinfo (no-room-selected text)
+  var si=el('selinfo');if(si&&!el('bform').style.display==='block')si.textContent=t('nosel');
 }
 
 // ══════════════════════════════════════════════
@@ -1278,8 +1359,8 @@ function setMode(m){
 // ══════════════════════════════════════════════
 async function renderRooms(){
   var bks=await loadBks(),td=today(),rooms=getRooms(),g=el('rgrid');
-  el('msd').textContent=fmt(getStdP())+'/คืน · ฟรี 1 ตัว';
-  el('mcd').textContent=fmt(getConP())+'/คืน · ฟรี 3 ตัว';
+  el('msd').textContent=fmt(getStdP())+t('mode.std.night');
+  el('mcd').textContent=fmt(getConP())+t('mode.con.night');
   g.innerHTML='';
   rooms.forEach(function(room){
     var bt=isBkOn(bks,room.id,td),hf=bks.some(function(b){return b.roomIds.includes(room.id)&&b.checkOut>td;});
@@ -1287,12 +1368,12 @@ async function renderRooms(){
     var ph=bmode==='connect'&&sel1&&!sel2&&prt===sel1&&!bt;
     var cls='rc';
     if(s1)cls+=' s1';else if(s2)cls+=' s2';else if(ph)cls+=' ph';else if(bt)cls+=' fb';else if(hf)cls+=' pt';
-    var stT='ว่าง',stC='av';
-    if(bt){stT='ไม่ว่าง';stC='bk';}else if(s1||s2){stT='เลือกแล้ว';stC='sl';}else if(hf){stT='มีจองบางวัน';stC='pt2';}
+    var stT=t('st.free'),stC='av';
+    if(bt){stT=t('st.busy');stC='bk';}else if(s1||s2){stT=t('st.selected');stC='sl';}else if(hf){stT=t('st.partial');stC='pt2';}
     var c=document.createElement('div');c.className=cls;
     c.innerHTML=(s1?'<div class="sbg">1</div>':'')+(s2?'<div class="sbg b2">2</div>':'')+
       '<div class="rico">🛏️</div><div class="rnum">'+(room.name||'ห้อง '+room.id)+'</div>'+
-      '<div class="rprc">'+fmt(room.price)+'/คืน</div><div class="rst '+stC+'">'+stT+'</div>';
+      '<div class="rprc">'+fmt(room.price)+t('mode.night')+'</div><div class="rst '+stC+'">'+stT+'</div>';
     c.addEventListener('click',function(){handleRoom(room.id,bt);});
     g.appendChild(c);
   });
@@ -1751,7 +1832,7 @@ async function renderBookings(){
     '<span class="bsel-cnt" id="bsel-cnt-bk" style="display:none"></span>'+
     '<button class="bdall" id="bdall-bk">🗑 ลบทั้งหมด</button>'+
     '</div>';
-  if(!bks.length){list.innerHTML=toolbar+'<div class="empty">🐱 ยังไม่มีการจองค่ะ</div>';bindBkToolbar();return;}
+  if(!bks.length){list.innerHTML=toolbar+'<div class="empty">'+t('empty.book')+'</div>';bindBkToolbar();return;}
   list.innerHTML=toolbar+bks.slice().reverse().map(function(b){
     var rem=b.totalPrice-b.deposit,isAct=b.checkIn<=td&&b.checkOut>td&&!b.checkedOut;
     var hasSlipDep=!!lsG('slip_dep_'+b.id,null),hasSlipPay=!!lsG('slip_pay_'+b.id,null),hasIdCard=!!lsG('idcard_'+b.id,null)||!!(b.memberId&&lsG('mem_idcard_'+b.memberId,null));
